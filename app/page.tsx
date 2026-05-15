@@ -5,7 +5,6 @@ import ScrollProgress from '@/components/ScrollProgress';
 import TickerTape from '@/components/TickerTape';
 import FeaturedNewsGrid from '@/components/FeaturedNewsGrid';
 import PremiumSponsorBanner from '@/components/PremiumSponsorBanner';
-import HomeAiSection from '@/components/HomeAiSection';
 
 const NewsFeed = dynamic(() => import('@/components/NewsFeed'), {
   ssr: true,
@@ -20,7 +19,6 @@ export default function Home() {
       <FeaturedNewsGrid />
       <PremiumSponsorBanner />
       <NewsFeed />
-      <HomeAiSection />
       <Footer />
     </main>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Youtube, BrainCircuit, Menu, X, Newspaper, Activity, Book, BarChart3, Flame } from 'lucide-react';
+import { Youtube, Menu, X, Newspaper, Activity, Book, BarChart3, Flame } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -10,17 +10,14 @@ export default function Navbar() {
 
   return (
     <nav className="w-full px-6 py-4 flex justify-between items-center border-b border-white/5 bg-[#020617]/90 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300">
-      <Link href="/" className="group cursor-pointer shrink-0" aria-label="Știrile Crypto — Acasă">
-        <div className="flex items-center gap-3">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="group-hover:scale-105 transition-transform duration-300" aria-hidden="true">
-            <rect width="40" height="40" rx="8" fill="#020617"/>
-            <path d="M10 28L18 18L24 22L32 12" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M32 12V20M32 12H24" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            <circle cx="10" cy="28" r="2" fill="#60A5FA"/>
-          </svg>
+      <Link href="/" className="shrink-0" aria-label="Știrile Crypto — Acasă">
+        <div className="flex items-center gap-2 group cursor-pointer">
+          <div className="bg-blue-600 w-8 h-8 flex items-center justify-center">
+            <span className="font-bold text-white text-xl font-mono leading-none tracking-tighter">ȘC</span>
+          </div>
           <div className="flex flex-col justify-center">
-            <span className="font-bold text-lg leading-none tracking-tight text-white font-[var(--font-space)]">ȘTIRILE CRYPTO</span>
-            <span className="text-[10px] font-mono text-blue-400 tracking-[0.1em] uppercase leading-none mt-1">Terminal</span>
+            <span className="font-extrabold text-xl leading-none tracking-tight text-white uppercase font-sans">Știrile Crypto</span>
+            <span className="text-[9px] font-mono text-slate-400 tracking-[0.2em] uppercase leading-none mt-1">Intelligence</span>
           </div>
         </div>
       </Link>
@@ -40,10 +37,6 @@ export default function Navbar() {
             <Link href="/lichidari" className="hover:text-orange-400 transition-colors flex items-center gap-2 group">
                 <Flame size={16} className="group-hover:scale-110 transition-transform"/> Lichidări
             </Link>
-            <div className="w-px h-4 bg-white/10 mx-1"></div>
-            <a href="/#ai" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
-                <BrainCircuit size={16} className="group-hover:animate-pulse"/> AI
-            </a>
           </div>
 
           <div className="w-px h-8 bg-white/10 mx-2"></div>
@@ -71,7 +64,6 @@ export default function Navbar() {
              <Link href="/academie" onClick={() => setMobileMenuOpen(false)} className="text-cyan-400 py-2 border-b border-white/5 font-bold flex items-center gap-2"><Book size={18}/> Academia</Link>
              <Link href="/lichidari" onClick={() => setMobileMenuOpen(false)} className="text-orange-400 py-2 border-b border-white/5 font-bold flex items-center gap-2"><Flame size={18}/> Lichidări</Link>
              <Link href="/raport-strategic" onClick={() => setMobileMenuOpen(false)} className="text-gray-300 py-2 border-b border-white/5 font-bold flex items-center gap-2"><BarChart3 size={18}/> Raport Strategic</Link>
-             <a href="/#ai" onClick={() => setMobileMenuOpen(false)} className="text-blue-400 py-2 font-bold flex items-center gap-2"><BrainCircuit size={18}/> AI Terminal</a>
         </div>
       )}
     </nav>
