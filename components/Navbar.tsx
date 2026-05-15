@@ -7,9 +7,9 @@ import { usePathname } from 'next/navigation';
 
 const CENTER_LINKS = [
   { href: '/stiri', label: 'Știri' },
-  { href: '/market', label: 'Market' },
-  { href: '/academie', label: 'Academia' },
-  { href: '/lichidari', label: 'Lichidări' },
+  { href: '/market', label: 'Date Piață' },
+  { href: '/academie', label: 'Educație' },
+  { href: '/lichidari', label: 'Radar Lichidări' },
 ] as const;
 
 function isPathActive(pathname: string, href: string): boolean {
@@ -68,7 +68,7 @@ export default function Navbar() {
             isPathActive(pathname, '/raport-strategic') ? 'ring-2 ring-white/30' : ''
           }`}
         >
-          Raport Strategic
+          Analiză Premium
         </Link>
         <a
           href="https://www.youtube.com/@DanielMihaiCrypto"
@@ -114,7 +114,7 @@ export default function Navbar() {
                 : 'bg-white text-black'
             }`}
           >
-            Raport Strategic
+            Analiză Premium
           </Link>
           <a
             href="https://www.youtube.com/@DanielMihaiCrypto"
