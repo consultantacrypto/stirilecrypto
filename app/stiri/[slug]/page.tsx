@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!article) return { title: 'Articol Inexistent' };
 
   return {
-    title: `${article.title} | Mihai Daniel`,
+    title: `${article.title} | Știrile Crypto`,
     description: article.summary,
     openGraph: {
       images: [article.image],
@@ -111,7 +111,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     'headline': article.title,
     'image': [article.image],
     'datePublished': new Date(article.date).toISOString(),
-    'author': [{ '@type': 'Person', 'name': 'Mihai Daniel', 'url': 'https://mihaidaniel.ro' }]
+    'author': [{ '@type': 'Organization', 'name': 'Știrile Crypto', 'url': 'https://www.stirilecrypto.ro' }]
   };
 
   return (
@@ -168,7 +168,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 <div className="bg-[#0a1025] border border-gray-800 p-6 rounded-xl mb-8 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-4 opacity-5"><BrainCircuit size={100} className="text-white"/></div>
                     <h3 className={`${theme.accent} font-bold mb-2 font-[var(--font-space)] flex items-center gap-2`}>
-                        <span className={`w-2 h-2 bg-current rounded-full animate-pulse`}></span> Mihai's Take:
+                        <span className={`w-2 h-2 bg-current rounded-full animate-pulse`}></span> Take Editorial:
                     </h3>
                     <p className="text-sm italic text-gray-300 relative z-10">"{article.mihaiTake}"</p>
                 </div>
@@ -185,7 +185,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             
             <div className="relative z-10 p-8 md:p-12 text-center">
                 <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/30 border ${theme.border} text-xs font-bold uppercase tracking-widest ${theme.accent} mb-6`}>
-                    <CheckCircle2 size={12} /> Locuri Limitate Ianuarie 2026
+                    <CheckCircle2 size={12} /> Redacție Știrile Crypto
                 </div>
                 
                 <h3 className="text-3xl font-black text-white mb-4 font-[var(--font-space)]">
@@ -195,11 +195,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     {theme.ctaText}
                 </p>
                 
-                <Link href="/#consultanta" className={`group inline-flex items-center gap-3 bg-white hover:bg-gray-100 ${theme.btnText} font-black text-lg px-10 py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transform hover:-translate-y-1`}>
+                <Link href="/contact" className={`group inline-flex items-center gap-3 bg-white hover:bg-gray-100 ${theme.btnText} font-black text-lg px-10 py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transform hover:-translate-y-1`}>
                     <CtaIcon size={20} className="group-hover:scale-110 transition-transform"/> 
-                    Rezervă Sesiunea ($250)
+                    Contactează Redacția
                 </Link>
-                <p className="text-xs text-gray-500 mt-4">Sesiune 1-la-1 • Strategie Personalizată</p>
+                <p className="text-xs text-gray-500 mt-4">Contact editorial • Răspuns în 24-48h</p>
             </div>
         </div>
 
@@ -215,7 +215,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         {/* FOOTER ARTICOL */}
         <div className="mt-8 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">
-                Autor: <span className="text-white font-bold">Mihai Daniel</span> • Analist
+                Autor: <span className="text-white font-bold">Știrile Crypto</span> • Redacție
             </div>
             
             <div className="flex flex-col gap-2 w-full md:w-auto">
@@ -227,7 +227,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       </article>
 
       <footer className="border-t border-white/5 py-12 bg-black/50 text-center text-gray-600 text-sm font-[var(--font-inter)]">
-          <div className="container mx-auto px-6">© 2026 Mihai Daniel. Toate drepturile rezervate.</div>
+          <div className="container mx-auto px-6">© 2026 Știrile Crypto. Toate drepturile rezervate.</div>
       </footer>
     </main>
   );

@@ -76,7 +76,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/pages/cursuri',
-        destination: '/#curs',
+        destination: '/academie',
+        permanent: true,
+      },
+      {
+        source: '/curs',
+        destination: '/academie',
         permanent: true,
       },
       {
@@ -86,12 +91,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/products/consultanta-crypto',
-        destination: '/#consultanta',
+        destination: '/contact',
         permanent: true,
       },
       {
         source: '/products/consultanta',
-        destination: '/#consultanta',
+        destination: '/contact',
         permanent: true,
       },
     ];

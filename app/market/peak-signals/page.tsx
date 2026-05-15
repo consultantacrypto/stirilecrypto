@@ -7,7 +7,7 @@ import { ArrowLeft, BrainCircuit } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Bitcoin Peak Signals | Analiză On-Chain Mihai Daniel',
+  title: 'Bitcoin Peak Signals | Analiză On-Chain Știrile Crypto',
   description: 'Grafice avansate pentru detectarea vârfurilor de ciclu Bitcoin. 2-Year MA Multiplier.',
 };
 

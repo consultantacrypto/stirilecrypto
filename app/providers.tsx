@@ -11,7 +11,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 const projectId = 'f09e5e3fbd7859c34fa66ef408846d75';
 
 const config = getDefaultConfig({
-  appName: 'Mihai Daniel Website',
+  appName: 'Știrile Crypto',
   projectId: projectId,
   chains: [mainnet, bsc, polygon, arbitrum, base],
   ssr: true, // Server Side Rendering activat

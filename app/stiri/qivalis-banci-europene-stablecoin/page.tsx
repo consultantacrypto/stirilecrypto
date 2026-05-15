@@ -42,7 +42,7 @@ export default function ArticlePage() {
         </div>
       </article>
       <footer className="border-t border-white/5 py-12 bg-black/50 text-center text-gray-600 text-sm font-[var(--font-inter)]">
-          <div className="container mx-auto px-6">© 2026 Mihai Daniel.</div>
+          <div className="container mx-auto px-6">© 2026 Știrile Crypto.</div>
       </footer>
     </main>
   );

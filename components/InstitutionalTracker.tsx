@@ -371,7 +371,7 @@ export default function InstitutionalTracker() {
       <div className="mt-3 flex flex-col md:flex-row items-center justify-between text-[10px] text-gray-600 px-2 gap-2">
         <div className="flex items-center gap-1.5">
           <Shield className="w-3 h-3" />
-          <span>Analiză independentă MihaiDaniel.ro. Datele pot varia.</span>
+          <span>Analiză independentă stirilecrypto.ro. Datele pot varia.</span>
         </div>
         <div className="font-mono">Sursa: 13F Filings / Rapoarte Anuale 2025</div>
       </div>

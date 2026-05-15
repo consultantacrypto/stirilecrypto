@@ -23,13 +23,13 @@ export default function Termeni() {
                     <ShieldAlert size={20}/> DISCLAIMER IMPORTANT
                 </h3>
                 <p className="mb-0 text-sm">
-                    Acest site are un scop exclusiv educativ. <strong>Mihai Daniel NU oferă consultanță financiară autorizată.</strong> 
+                    Acest site are un scop exclusiv educativ. <strong>Știrile Crypto NU oferă consultanță financiară autorizată.</strong> 
                     Piața criptomonedelor este volatilă și implică riscuri majore. Nu investiți bani pe care nu vă permiteți să-i pierdeți.
                 </p>
             </div>
 
             <h3>1. Acceptarea Termenilor</h3>
-            <p>Prin accesarea și utilizarea site-ului mihaidaniel.ro, acceptați acești termeni și condiții în totalitate. Dacă nu sunteți de acord cu acești termeni, vă rugăm să nu utilizați acest site.</p>
+            <p>Prin accesarea și utilizarea site-ului stirilecrypto.ro, acceptați acești termeni și condiții în totalitate. Dacă nu sunteți de acord cu acești termeni, vă rugăm să nu utilizați acest site.</p>
 
             <h3>2. Natura Informațiilor</h3>
             <p>Toate articolele, analizele, datele din Terminalul Market și materialele video reprezintă opiniile personale ale autorului sau date agregate de la terți. Ele nu constituie o ofertă de vânzare sau o solicitare de a cumpăra orice instrument financiar.</p>
@@ -38,7 +38,7 @@ export default function Termeni() {
             <p>Conținutul acestui site (texte, logo-uri, elemente de design, structura "MD Terminal") este protejat de legea drepturilor de autor. Este interzisă reproducerea integrală sau parțială fără acordul scris al proprietarului.</p>
 
             <h3>4. Limitarea Răspunderii</h3>
-            <p>Echipa Mihai Daniel nu va fi răspunzătoare pentru nicio pierdere financiară sau daune directe/indirecte rezultate din utilizarea informațiilor prezente pe acest site. Utilizatorul își asumă întreaga responsabilitate pentru propriile decizii de investiții.</p>
+            <p>Echipa Știrile Crypto nu va fi răspunzătoare pentru nicio pierdere financiară sau daune directe/indirecte rezultate din utilizarea informațiilor prezente pe acest site. Utilizatorul își asumă întreaga responsabilitate pentru propriile decizii de investiții.</p>
         </div>
       </div>
 

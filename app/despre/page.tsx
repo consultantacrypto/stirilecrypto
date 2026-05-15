@@ -18,7 +18,7 @@ export default function AboutPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#02050a] via-transparent to-transparent z-10"></div>
                     <img 
                         src="/mihai-daniel-consultanta.jpg" 
-                        alt="Mihai Daniel" 
+                        alt="Știrile Crypto" 
                         className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-500"
                     />
                 </div>
@@ -33,10 +33,10 @@ export default function AboutPage() {
                     <span className="text-blue-500">Suntem aici să înțelegem jocul.</span>
                 </h1>
                 <p className="text-gray-400 text-lg mb-6 leading-relaxed">
-                    Salut, sunt <strong>Mihai Daniel</strong>. Platforma aceasta a luat naștere dintr-o frustrare personală: zgomotul asurzitor din piața crypto.
+                    <strong>Știrile Crypto</strong> a luat naștere din frustrarea investitorilor față de zgomotul din piața crypto și lipsa contextului real.
                 </p>
                 <p className="text-gray-400 text-lg mb-8 leading-relaxed">
-                    Într-o lume plină de "experți" care îți promit îmbogățirea peste noapte, misiunea mea este diferită: <strong>Educație Financiară Brută & Analiză Instituțională.</strong> Nu vând vise, vând claritate.
+                    Într-o lume plină de headline-uri fără substanță, misiunea noastră este clară: <strong>știri filtrate, analiză on-chain și educație financiară aplicată.</strong> Nu promitem îmbogățire peste noapte — oferim claritate.
                 </p>
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -90,7 +90,7 @@ export default function AboutPage() {
             <h3 className="text-lg font-bold text-white mb-4">Politică Editorială & Disclaimer</h3>
             <div className="space-y-4 text-sm text-gray-500">
                 <p>
-                    <strong>Disclaimer Financiar:</strong> Conținutul de pe acest site este strict în scop educațional și informativ. Mihai Daniel și echipa sa nu sunt consultanți financiari acreditați. Investițiile în criptomonede implică riscuri majore, inclusiv pierderea totală a capitalului. Fă-ți propriul research (DYOR) înainte de a investi.
+                    <strong>Disclaimer Financiar:</strong> Conținutul de pe acest site este strict în scop educațional și informativ. Știrile Crypto și echipa sa nu sunt consultanți financiari acreditați. Investițiile în criptomonede implică riscuri majore, inclusiv pierderea totală a capitalului. Fă-ți propriul research (DYOR) înainte de a investi.
                 </p>
                 <p>
                     <strong>Transparență Afiliere:</strong> Unele link-uri de pe acest site pot fi link-uri de afiliere. Asta înseamnă că, dacă te înregistrezi folosind aceste link-uri, platforma poate primi un mic comision, fără costuri suplimentare pentru tine. Acest lucru ne ajută să menținem conținutul gratuit și calitativ. Recomandăm doar platforme pe care le folosim personal (ex: Binance, Bybit, Ledger).

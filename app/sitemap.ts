@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { articles } from '@/lib/articles';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.mihaidaniel.ro';
+  const baseUrl = 'https://www.stirilecrypto.ro';
 
   // 1. Pagini statice
   const staticPages = [

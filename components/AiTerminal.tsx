@@ -8,7 +8,7 @@ import Image from 'next/image';
 export default function AiTerminal() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; text: string }[]>([
-    { role: 'ai', text: 'INITIALIZING MIHAI DANIEL CORE v3.0...\n\nSistemele sunt online. Sunt conectat la matricea pieței.\n\nSpune-mi, tati, astăzi facem bani sau doar ne uităm?' }
+    { role: 'ai', text: 'INITIALIZING Știrile Crypto CORE v3.0...\n\nSistemele sunt online. Sunt conectat la matricea pieței.\n\nSpune-mi, tati, astăzi facem bani sau doar ne uităm?' }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);

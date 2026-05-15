@@ -1,7 +1,7 @@
 'use client';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Youtube, BrainCircuit, Menu, X, Newspaper, Activity, Book, GraduationCap, Coins } from 'lucide-react';
+import { Youtube, BrainCircuit, Menu, X, Newspaper, Activity, Book, BarChart3, Flame } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -10,7 +10,7 @@ export default function Navbar() {
 
   return (
     <nav className="w-full px-6 py-4 flex justify-between items-center border-b border-white/5 bg-[#020617]/90 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300">
-      <Link href="/" className="flex items-center gap-3 group cursor-pointer" aria-label="Mihai Daniel Home">
+      <Link href="/" className="flex items-center gap-3 group cursor-pointer" aria-label="Știrile Crypto — Acasă">
           {/* LOGO */}
           <div className="relative w-12 h-12 flex items-center justify-center bg-[#020617] rounded-xl border border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.3)] group-hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] transition-all duration-500 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -26,8 +26,8 @@ export default function Navbar() {
               </svg>
           </div>
           <div className="leading-none hidden sm:block">
-              <div className="font-bold text-lg tracking-wide text-white group-hover:text-blue-200 transition-colors font-[var(--font-space)]">MIHAI DANIEL</div>
-              <div className="text-[9px] text-blue-400 font-mono tracking-[0.2em] uppercase mt-1">Future Ready</div>
+              <div className="font-bold text-lg tracking-wide text-white group-hover:text-blue-200 transition-colors font-[var(--font-space)]">ȘTIRILE CRYPTO</div>
+              <div className="text-[9px] text-blue-400 font-mono tracking-[0.2em] uppercase mt-1">Web3 &amp; Finanțe</div>
           </div>
       </Link>
       
@@ -50,6 +50,10 @@ export default function Navbar() {
                 <Book size={16} className="group-hover:scale-110 transition-transform"/> Academia
             </Link>
 
+            <Link href="/lichidari" className="hover:text-orange-400 transition-colors flex items-center gap-2 group">
+                <Flame size={16} className="group-hover:scale-110 transition-transform"/> Lichidări
+            </Link>
+
             <div className="w-px h-4 bg-white/10 mx-1"></div>
             
             <a href="/#ai" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
@@ -59,17 +63,9 @@ export default function Navbar() {
 
           <div className="w-px h-8 bg-white/10 mx-2"></div>
 
-          {/* 3. BUTOANE PRODUSE (DREAPTA) */}
-
-          {/* BUTON CURS */}
-          <Link href="/curs" className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white border border-blue-400/20 px-5 py-2.5 rounded-xl font-bold transition-all hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:-translate-y-0.5">
-            <GraduationCap size={18}/> Curs
+          <Link href="/raport-strategic" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors px-4 py-2 rounded-full border border-white/10 hover:border-white/20">
+            <BarChart3 size={16}/> Raport Strategic
           </Link>
-
-          {/* BUTON CONSULTANȚĂ */}
-          <a href="/#consultanta" className="flex items-center gap-2 bg-white text-black border border-white px-5 py-2.5 rounded-xl font-bold hover:bg-gray-200 transition-all hover:scale-105">
-            <Coins size={16}/> Consultanță
-          </a>
           
           <a href="https://www.youtube.com/@DanielMihaiCrypto" target="_blank" className="text-gray-400 hover:text-red-500 transition-colors ml-2" aria-label="YouTube">
               <Youtube size={20}/> 
@@ -90,16 +86,9 @@ export default function Navbar() {
              <Link href="/market" onClick={() => setMobileMenuOpen(false)} className="text-green-400 py-2 border-b border-white/5 font-bold flex items-center gap-2"><Activity size={18}/> Market Data</Link>
              <Link href="/stiri" onClick={() => setMobileMenuOpen(false)} className="text-white py-2 border-b border-white/5 font-bold flex items-center gap-2"><Newspaper size={18}/> Știri</Link>
              <Link href="/academie" onClick={() => setMobileMenuOpen(false)} className="text-cyan-400 py-2 border-b border-white/5 font-bold flex items-center gap-2"><Book size={18}/> Academia</Link>
-             
-             {/* Butoane Mobile */}
-             <div className="grid grid-cols-2 gap-4 mt-2">
-                <Link href="/curs" onClick={() => setMobileMenuOpen(false)} className="bg-blue-600 text-white py-3 rounded-lg font-bold text-center flex justify-center items-center gap-2">
-                    <GraduationCap size={18}/> Curs
-                </Link>
-                <a href="/#consultanta" onClick={() => setMobileMenuOpen(false)} className="bg-white text-black py-3 rounded-lg font-bold text-center flex justify-center items-center gap-2">
-                    <Coins size={18}/> Consultanță
-                </a>
-             </div>
+             <Link href="/lichidari" onClick={() => setMobileMenuOpen(false)} className="text-orange-400 py-2 border-b border-white/5 font-bold flex items-center gap-2"><Flame size={18}/> Lichidări</Link>
+             <Link href="/raport-strategic" onClick={() => setMobileMenuOpen(false)} className="text-gray-300 py-2 border-b border-white/5 font-bold flex items-center gap-2"><BarChart3 size={18}/> Raport Strategic</Link>
+             <a href="/#ai" onClick={() => setMobileMenuOpen(false)} className="text-blue-400 py-2 font-bold flex items-center gap-2"><BrainCircuit size={18}/> AI Terminal</a>
         </div>
       )}
     </nav>

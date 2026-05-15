@@ -13,7 +13,7 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   
   // Construim link-ul complet
-  const url = `https://mihaidaniel.ro/stiri/${slug}`;
+  const url = `https://www.stirilecrypto.ro/stiri/${slug}`;
   const text = `${title} \n\nCitește analiza completă aici:`;
 
   const shareLinks = {

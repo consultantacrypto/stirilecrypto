@@ -4,7 +4,7 @@ import { articles } from '@/lib/articles';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const baseUrl = 'https://mihaidaniel.ro';
+  const baseUrl = 'https://www.stirilecrypto.ro';
   
   // Funcție pentru a "traduce" caracterele interzise în XML
   const escapeXml = (unsafe: string) => {
@@ -24,9 +24,9 @@ export async function GET() {
   const rssHeader = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mihai Daniel - Stiri Crypto &amp; Analize</title>
+    <title>Știrile Crypto - Stiri Web3 &amp; Finanțe</title>
     <link>${baseUrl}</link>
-    <description>Cele mai importante stiri crypto, analize on-chain si educatie financiara explicate de Mihai Daniel.</description>
+    <description>Cele mai importante stiri crypto, analize on-chain si context de piata de la Știrile Crypto.</description>
     <language>ro</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${baseUrl}/feed.xml" rel="self" type="application/rss+xml"/>

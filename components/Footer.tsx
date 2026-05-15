@@ -14,11 +14,11 @@ export default function Footer() {
           {/* 1. BRAND & SOCIAL */}
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2 group">
-               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:rotate-12 transition-transform">MD</div>
-               <span className="text-xl font-black text-white font-[var(--font-space)]">MIHAI DANIEL</span>
+               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:rotate-12 transition-transform">SC</div>
+               <span className="text-xl font-black text-white font-[var(--font-space)]">Știrile Crypto</span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Analiză tehnică, educație financiară și strategii crypto. Transformăm complexitatea pieței în decizii clare.
+              Știri crypto, analiză on-chain și intelligence de piață. Transformăm complexitatea pieței în context clar pentru investitori.
             </p>
             <div className="flex gap-4">
               <SocialLink href="https://www.youtube.com/@DanielMihaiCrypto" icon={<Youtube size={20} />} label="YouTube" />
@@ -36,14 +36,14 @@ export default function Footer() {
                 <li><Link href="/market" className="hover:text-blue-400 transition-colors">Market Data (Live)</Link></li>
                 <li><Link href="/stiri" className="hover:text-blue-400 transition-colors">Știri & Analize</Link></li>
                 <li><Link href="/academie" className="hover:text-blue-400 transition-colors">Academia Crypto</Link></li>
+                <li><Link href="/lichidari" className="hover:text-blue-400 transition-colors">Lichidări Live</Link></li>
                 <li><Link href="/#newsletter" className="hover:text-blue-400 transition-colors">Newsletter</Link></li>
             </ul>
           </div>
 
-          {/* 3. COMPANIE */}
           <div>
             <h3 className="text-white font-bold mb-6 flex items-center gap-2">
-                <ShieldCheck size={18} className="text-green-500"/> Companie
+                <ShieldCheck size={18} className="text-green-500"/> Editorial
             </h3>
             <ul className="space-y-4 text-sm text-gray-400">
                 <li>
@@ -56,8 +56,8 @@ export default function Footer() {
                         Contact & Suport
                     </Link>
                 </li>
-                <li><Link href="/despre" className="hover:text-green-400 transition-colors">Politică Editorială</Link></li>
-                <li><Link href="/despre" className="hover:text-green-400 transition-colors">Termeni & Condiții</Link></li>
+                <li><Link href="/termeni" className="hover:text-green-400 transition-colors">Termeni & Condiții</Link></li>
+                <li><Link href="/confidentialitate" className="hover:text-green-400 transition-colors">Confidențialitate</Link></li>
             </ul>
           </div>
 
@@ -88,7 +88,7 @@ export default function Footer() {
         {/* DISCLAIMER */}
         <div className="border-t border-white/5 pt-8 mb-8">
             <p className="text-xs text-gray-500 leading-relaxed text-justify opacity-70 hover:opacity-100 transition-opacity">
-                Informațiile de pe mihaidaniel.ro au caracter educativ și NU reprezintă sfaturi financiare. 
+                Informațiile de pe stirilecrypto.ro au caracter educativ și NU reprezintă sfaturi financiare. 
                 Investițiile crypto implică riscuri majore. Performanțele trecute nu garantează rezultatele viitoare.
             </p>
         </div>
@@ -96,7 +96,7 @@ export default function Footer() {
         {/* COPYRIGHT */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-gray-600">
-            &copy; {currentYear} Mihai Daniel. Toate drepturile rezervate.
+            &copy; {currentYear} Știrile Crypto. Toate drepturile rezervate.
           </p>
           <div className="flex items-center gap-2 px-3 py-1 bg-green-500/5 rounded-full border border-green-500/10">
              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>

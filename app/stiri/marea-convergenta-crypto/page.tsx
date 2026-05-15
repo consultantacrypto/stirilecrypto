@@ -96,7 +96,7 @@ export default function ArticlePage() {
         {/* Footer Articol */}
         <div className="mt-16 pt-8 border-t border-white/10 flex justify-between items-center font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">
-                Autor: <span className="text-white font-bold">Mihai Daniel AI</span>
+                Autor: <span className="text-white font-bold">Știrile Crypto AI</span>
             </div>
             <button className="flex items-center gap-2 text-sm font-bold text-blue-400 hover:text-white transition-colors">
                 <Share2 size={16}/> Distribuie
@@ -107,7 +107,7 @@ export default function ArticlePage() {
 
       <footer className="border-t border-white/5 py-12 bg-black/50 text-center text-gray-600 text-sm font-[var(--font-inter)]">
           <div className="container mx-auto px-6">
-              © 2026 Mihai Daniel. Toate drepturile rezervate.
+              © 2026 Știrile Crypto. Toate drepturile rezervate.
           </div>
       </footer>
     </main>

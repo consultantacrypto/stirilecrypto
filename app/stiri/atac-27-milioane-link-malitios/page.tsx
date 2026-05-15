@@ -18,8 +18,8 @@ export default function ArticlePage() {
     'dateModified': '2025-12-05T09:20:00+02:00',
     'author': [{
       '@type': 'Person',
-      'name': 'Mihai Daniel',
-      'url': 'https://mihaidaniel.ro',
+      'name': 'Știrile Crypto',
+      'url': 'https://www.stirilecrypto.ro',
       'sameAs': [
         'https://x.com/MIhaiDanielWeb3',
         'https://www.youtube.com/@DanielMihaiCrypto',
@@ -171,7 +171,7 @@ export default function ArticlePage() {
         {/* Footer Articol */}
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">
-                Autor: <span className="text-white font-bold">Mihai Daniel</span> • Analist Crypto
+                Autor: <span className="text-white font-bold">Știrile Crypto</span> • Analist Crypto
             </div>
             <div className="flex gap-4">
                 <a href="https://x.com/MIhaiDanielWeb3" target="_blank" className="flex items-center gap-2 text-sm font-bold text-blue-400 hover:text-white transition-colors bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/20">
@@ -186,7 +186,7 @@ export default function ArticlePage() {
             <p className="text-gray-300 mb-6 max-w-xl mx-auto">
                 Securitatea nu este un produs, este un proces. Dacă ai sume semnificative în crypto și nu ai o strategie clară de Cold Storage, ești expus.
             </p>
-            <Link href="/#consultanta" className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(234,179,8,0.2)]">
+            <Link href="/contact" className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(234,179,8,0.2)]">
                 <Lock size={18}/> Rezervă o Ședință de Securitate
             </Link>
         </div>
@@ -195,7 +195,7 @@ export default function ArticlePage() {
 
       <footer className="border-t border-white/5 py-12 bg-black/50 text-center text-gray-600 text-sm font-[var(--font-inter)]">
           <div className="container mx-auto px-6">
-              © 2026 Mihai Daniel. Toate drepturile rezervate.
+              © 2026 Știrile Crypto. Toate drepturile rezervate.
           </div>
       </footer>
     </main>

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/private/', // Opțional, dacă ai zone private
     },
-    sitemap: 'https://www.mihaidaniel.ro/sitemap.xml',
+    sitemap: 'https://www.stirilecrypto.ro/sitemap.xml',
   }
 }

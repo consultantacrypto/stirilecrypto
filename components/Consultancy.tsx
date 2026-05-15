@@ -88,7 +88,7 @@ export default function Consultancy() {
                     <div className="relative rounded-2xl overflow-hidden border border-yellow-500/30 shadow-2xl group aspect-[3/4]">
                         <Image 
                             src="/mihai-daniel-consultanta.jpg" 
-                            alt="Consultanță Mihai Daniel" 
+                            alt="Consultanță Știrile Crypto" 
                             fill
                             className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000"
                             sizes="(max-width: 768px) 100vw, 500px"

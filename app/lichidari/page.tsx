@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Lichidări Crypto Global Live | Mihai Daniel',
+  title: 'Lichidări Crypto Global Live | Știrile Crypto',
   description: 'Vezi lichidările în timp real de pe Binance, Bybit și OKX. Analiză de piață profesională.',
 };
 
@@ -111,7 +111,7 @@ export default function LiquidationsPage() {
                 </div>
 
                 {/* 3. CONSULTANȚĂ (High Ticket) */}
-                <Link href="/#consultanta" className="block mt-8 group">
+                <Link href="/contact" className="block mt-8 group">
                     <div className="bg-gradient-to-r from-yellow-600/20 to-yellow-900/20 border border-yellow-500/30 p-6 rounded-2xl text-center relative overflow-hidden hover:border-yellow-500 transition-all">
                         <div className="absolute inset-0 bg-yellow-500/5 group-hover:bg-yellow-500/10 transition-colors"></div>
                         <Crown size={32} className="text-yellow-500 mx-auto mb-3" />

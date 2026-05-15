@@ -18,8 +18,8 @@ export default function ArticlePage() {
     'dateModified': '2025-12-07T16:00:00+02:00',
     'author': [{
       '@type': 'Person',
-      'name': 'Mihai Daniel',
-      'url': 'https://mihaidaniel.ro'
+      'name': 'Știrile Crypto',
+      'url': 'https://www.stirilecrypto.ro'
     }]
   };
 
@@ -131,7 +131,7 @@ export default function ArticlePage() {
 
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">
-                Autor: <span className="text-white font-bold">Mihai Daniel</span> • Psihologia Pieței
+                Autor: <span className="text-white font-bold">Știrile Crypto</span> • Psihologia Pieței
             </div>
             
             <div className="flex flex-col gap-2 w-full md:w-auto">
@@ -149,7 +149,7 @@ export default function ArticlePage() {
             <p className="text-gray-300 mb-6 max-w-xl mx-auto">
                 Dacă te simți panicat de știri, înseamnă că nu ai o strategie clară. În consultanța 1-la-1, eliminăm zgomotul și construim un plan bazat pe date istorice și macroeconomice, nu pe frică.
             </p>
-            <Link href="/#consultanta" className="inline-flex items-center gap-2 bg-white text-black hover:bg-gray-200 font-bold px-8 py-3 rounded-xl transition-all shadow-lg transform hover:-translate-y-1">
+            <Link href="/contact" className="inline-flex items-center gap-2 bg-white text-black hover:bg-gray-200 font-bold px-8 py-3 rounded-xl transition-all shadow-lg transform hover:-translate-y-1">
                 <Lightbulb size={18}/> Vreau Claritate și Strategie
             </Link>
         </div>
@@ -158,7 +158,7 @@ export default function ArticlePage() {
 
       <footer className="border-t border-white/5 py-12 bg-black/50 text-center text-gray-600 text-sm font-[var(--font-inter)]">
           <div className="container mx-auto px-6">
-              © 2026 Mihai Daniel. Toate drepturile rezervate.
+              © 2026 Știrile Crypto. Toate drepturile rezervate.
           </div>
       </footer>
     </main>

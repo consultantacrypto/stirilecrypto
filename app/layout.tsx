@@ -3,7 +3,6 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import Script from "next/script";
-// ✅ IMPORT Componenta Structurată
 import StructuredData from "@/components/StructuredData";
 
 const spaceGrotesk = Space_Grotesk({ 
@@ -19,28 +18,27 @@ const inter = Inter({
   display: 'swap', 
 });
 
-// ✅ METADATA OPTIMIZATĂ (Tier 1 SEO)
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.mihaidaniel.ro'),
+  metadataBase: new URL('https://www.stirilecrypto.ro'),
   title: {
-    default: "Mihai Daniel | Web3 Investor & Crypto Mentor",
-    template: "%s | Mihai Daniel"
+    default: "Știrile Crypto | Web3, Bitcoin & Finanțe",
+    template: "%s | Știrile Crypto"
   },
-  description: "Învață trading și investiții crypto de la Mihai Daniel. Cursuri premium, consultanță 1-la-1 și analiză de piață cu AI. 280K+ followers pe social media.",
+  description: "Portal media dedicat piețelor crypto și finanțelor: știri, analize on-chain, date de piață live și educație financiară pentru investitori din România.",
   keywords: [
-    "crypto romania", 
-    "trading crypto", 
-    "curs bitcoin", 
-    "mihai daniel crypto",
-    "investitii blockchain",
-    "consultanta crypto",
-    "analiza tehnica",
-    "educatie financiara"
+    "stiri crypto romania",
+    "bitcoin romania",
+    "analiza on-chain",
+    "web3 romania",
+    "piata crypto",
+    "finante digitale",
+    "ethereum stiri",
+    "educatie financiara crypto"
   ],
   
-  authors: [{ name: "Mihai Daniel", url: "https://www.mihaidaniel.ro" }],
-  creator: "Mihai Daniel",
-  publisher: "Mihai Daniel",
+  authors: [{ name: "Știrile Crypto", url: "https://www.stirilecrypto.ro" }],
+  creator: "Știrile Crypto",
+  publisher: "Știrile Crypto",
   
   verification: {
     google: 'vHIFda0TK5EKXwxKHpAN_eJr2vG6fbPR6uIGvFOZn6o',
@@ -52,31 +50,29 @@ export const metadata: Metadata = {
     apple: '/icon.svg',
   },
 
-  // ✅ OPEN GRAPH (Facebook/LinkedIn)
   openGraph: {
     type: 'website',
     locale: 'ro_RO',
-    url: 'https://www.mihaidaniel.ro',
-    siteName: 'Mihai Daniel - Crypto Expert',
-    title: 'Mihai Daniel | Web3 Investor & Crypto Mentor',
-    description: 'Scapă de mentalitatea de parior. Învață trading instituțional și strategii crypto validate.',
+    url: 'https://www.stirilecrypto.ro',
+    siteName: 'Știrile Crypto',
+    title: 'Știrile Crypto | Web3, Bitcoin & Finanțe',
+    description: 'Știri crypto, analize strategice și date de piață — tot ce ai nevoie pentru decizii informate.',
     images: [
       {
-        url: '/mihai-daniel-consultanta.jpg', // Folosim imaginea existentă
+        url: '/mihai-daniel-consultanta.jpg',
         width: 1200,
         height: 630,
-        alt: 'Mihai Daniel - Crypto Expert',
+        alt: 'Știrile Crypto — Portal Web3 & Finanțe',
       },
     ],
   },
 
-  // ✅ TWITTER CARD (Critic pentru share-uri pe X)
   twitter: {
     card: 'summary_large_image',
     site: '@MIhaiDanielWeb3',
     creator: '@MIhaiDanielWeb3',
-    title: 'Mihai Daniel | Web3 Investor & Crypto Mentor',
-    description: 'Învață trading și investiții crypto. 280K+ followers pe social media.',
+    title: 'Știrile Crypto | Web3, Bitcoin & Finanțe',
+    description: 'Știri crypto, analize on-chain și intelligence de piață pentru investitori.',
     images: ['/mihai-daniel-consultanta.jpg'],
   },
 
@@ -101,11 +97,8 @@ export default function RootLayout({
   return (
     <html lang="ro">
       <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased`}>
-        
-        {/* ✅ Date Structurate pentru Google */}
         <StructuredData />
 
-        {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZYYJ251HYH"
           strategy="afterInteractive"

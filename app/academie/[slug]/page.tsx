@@ -66,7 +66,7 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
         {/* MIHAI'S TAKE - PRIMUL LUCRU PE CARE ÎL VEZI */}
         <div className="relative bg-gradient-to-r from-blue-900/20 to-black border-l-4 border-cyan-500 rounded-r-xl p-8 mb-12 shadow-2xl">
             <div className="absolute -top-3 -left-3 bg-cyan-500 text-black p-1 rounded-full"><Zap size={20}/></div>
-            <h3 className="text-cyan-400 font-black text-xs uppercase tracking-[0.2em] mb-3">Mihai's Take</h3>
+            <h3 className="text-cyan-400 font-black text-xs uppercase tracking-[0.2em] mb-3">Take Editorial</h3>
             <p className="text-xl text-white font-medium italic leading-relaxed">
                 "{term.mihaiTake}"
             </p>
@@ -93,7 +93,7 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
              <h4 className="text-2xl font-bold text-white mb-2">Vrei să treci de la teorie la profit?</h4>
              <p className="text-gray-400 mb-6 max-w-lg mx-auto">Învață cum să tranzacționezi {term.term} corect, fără să pierzi bani din greșeli de începător.</p>
-             <Link href="/#curs" className="inline-block bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 px-10 rounded-xl transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:scale-105">
+             <Link href="/academie" className="inline-block bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 px-10 rounded-xl transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:scale-105">
                 Accesează Cursul Complet
              </Link>
         </div>

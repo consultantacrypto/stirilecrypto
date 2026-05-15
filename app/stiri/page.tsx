@@ -10,7 +10,7 @@ import { Calendar, ArrowRight, TrendingUp, TrendingDown, Minus, ChevronLeft, Che
 
 export const metadata = {
   title: 'Market Intelligence | Știri Crypto Explicate',
-  description: 'Analize de piață, știri crypto traduse și explicate de Mihai Daniel.',
+  description: 'Analize de piață, știri crypto traduse și explicate de Știrile Crypto.',
 };
 
 const ITEMS_PER_PAGE = 6;
