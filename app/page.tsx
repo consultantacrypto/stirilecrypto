@@ -12,7 +12,7 @@ const NewsFeed = dynamic(() => import('@/components/NewsFeed'), {
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col bg-[#020617] text-white font-sans selection:bg-blue-500/30 overflow-x-hidden">
+    <main className="min-h-screen flex flex-col bg-black text-white font-sans selection:bg-blue-500/30 overflow-x-hidden">
       <ScrollProgress />
       <Navbar />
       <TickerTape />

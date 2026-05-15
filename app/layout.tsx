@@ -96,7 +96,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ro">
-      <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased`}>
+      <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased bg-black text-white`}>
         <StructuredData />
 
         <Script
