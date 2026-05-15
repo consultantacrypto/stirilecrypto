@@ -1,19 +1,14 @@
-'use client';
-
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
-import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import ScrollProgress from '@/components/ScrollProgress';
 import TickerTape from '@/components/TickerTape';
+import FeaturedNewsGrid from '@/components/FeaturedNewsGrid';
+import PremiumSponsorBanner from '@/components/PremiumSponsorBanner';
+import HomeAiSection from '@/components/HomeAiSection';
 
-const NewsFeed = dynamic(() => import('@/components/NewsFeed'), { 
-  ssr: true 
-});
-
-const AiTerminal = dynamic(() => import('@/components/AiTerminal'), { 
-  ssr: false, 
-  loading: () => <div className="min-h-[600px] w-full bg-[#01030c] animate-pulse" />
+const NewsFeed = dynamic(() => import('@/components/NewsFeed'), {
+  ssr: true,
 });
 
 export default function Home() {
@@ -22,9 +17,10 @@ export default function Home() {
       <ScrollProgress />
       <Navbar />
       <TickerTape />
-      <Hero />
+      <FeaturedNewsGrid />
+      <PremiumSponsorBanner />
       <NewsFeed />
-      <AiTerminal />
+      <HomeAiSection />
       <Footer />
     </main>
   );

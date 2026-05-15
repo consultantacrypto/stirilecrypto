@@ -4,8 +4,12 @@ import { TrendingUp, TrendingDown, Minus, BrainCircuit, ArrowRight } from 'lucid
 import Link from 'next/link';
 import { articles } from '@/lib/articles';
 
+/** Must match FeaturedNewsGrid lead count (articles.slice(0, 4)) */
+const FEATURED_ARTICLE_COUNT = 4;
+const FEED_PAGE_SIZE = 6;
+
 export default function NewsFeed() {
-  const latestNews = articles.slice(0, 6);
+  const latestNews = articles.slice(FEATURED_ARTICLE_COUNT, FEATURED_ARTICLE_COUNT + FEED_PAGE_SIZE);
 
   return (
     <section id="news" className="py-24 container mx-auto px-6 relative border-t border-white/5 bg-[#020617]">
