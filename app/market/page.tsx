@@ -9,7 +9,7 @@ import WhaleWallWidget from '@/components/WhaleWallWidget';
 import AltcoinSeasonWidget from '@/components/AltcoinSeasonWidget';
 
 import { getGlobalData, getFearGreed } from '@/lib/market-api';
-import { Activity, DollarSign, Layers, BarChart3, Zap, Calendar, Flame, Clock, TrendingUp, Skull, ArrowRight, BrainCircuit, LineChart } from 'lucide-react';
+import { Activity, DollarSign, Layers, BarChart3, Zap, TrendingUp, Skull, ArrowRight, BrainCircuit, LineChart } from 'lucide-react';
 import Link from 'next/link';
 
 // --- TIPURI ---
@@ -106,49 +106,25 @@ export default async function MarketPage() {
             <div className="xl:col-span-9 space-y-8">
                 
                 {/* 1. METRICS CARDS */}
-                <div className="flex gap-4 md:gap-6 overflow-x-auto pb-4 md:pb-0 md:grid md:grid-cols-5 snap-x hide-scrollbar">
-                    {/* Calendar */}
-                    <div className="min-w-[200px] flex-shrink-0 bg-[#0b1221] p-4 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors snap-start flex flex-col justify-between h-full mr-2 md:mr-0">
-                        <div className="text-indigo-300 text-xs font-bold uppercase mb-2 flex items-center gap-1">
-                            <Calendar size={12}/> Calendar Economic
-                        </div>
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center text-xs border-b border-white/5 pb-1">
-                                <span className="text-gray-400 flex items-center gap-1"><Clock size={10}/> Miercuri</span>
-                                <span className="text-white font-bold">ADP Employment</span>
-                            </div>
-                            <div className="flex justify-between items-center text-xs border-b border-white/5 pb-1">
-                                <span className="text-gray-400 flex items-center gap-1"><Clock size={10}/> Joi</span>
-                                <span className="text-white font-bold">Jobless Claims</span>
-                            </div>
-                            <div className="flex justify-between items-center text-xs">
-                                <span className="text-gray-400 flex items-center gap-1"><Clock size={10}/> Vineri</span>
-                                <span className="text-white font-bold flex items-center gap-1">NFP & Unempl. <Flame size={10} className="text-red-500"/></span>
-                            </div>
-                        </div>
-                    </div>
-                    {/* Market Cap */}
-                    <div className="min-w-[160px] flex-shrink-0 bg-[#0b1221] p-4 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors snap-start flex flex-col justify-center h-full">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+                    <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><DollarSign size={12}/> Market Cap</div>
                         <div className="text-2xl font-black text-white font-[var(--font-space)]">{marketCap}</div>
                         <div className={`text-xs font-bold ${Number(change) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {Number(change) >= 0 ? '▲' : '▼'} {change}% (24h)
                         </div>
                     </div>
-                    {/* Volume */}
-                    <div className="min-w-[160px] flex-shrink-0 bg-[#0b1221] p-4 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors snap-start flex flex-col justify-center h-full">
+                    <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><BarChart3 size={12}/> Volum 24h</div>
                         <div className="text-2xl font-black text-white font-[var(--font-space)]">{volume}</div>
                         <div className="text-xs text-gray-400">Lichiditate Globală</div>
                     </div>
-                    {/* Dominance */}
-                    <div className="min-w-[160px] flex-shrink-0 bg-[#0b1221] p-4 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors snap-start flex flex-col justify-center h-full">
+                    <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><Layers size={12}/> BTC Dominance</div>
                         <div className="text-2xl font-black text-yellow-500 font-[var(--font-space)]">{dominance}</div>
                         <div className="text-xs text-gray-400">Restul e Altseason?</div>
                     </div>
-                    {/* Fear & Greed */}
-                    <div className="min-w-[160px] flex-shrink-0 bg-[#0b1221] p-4 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors snap-start flex flex-col justify-center h-full">
+                    <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><Zap size={12}/> Frică & Lăcomie</div>
                         <div className={`text-2xl font-black font-[var(--font-space)] ${fgColor}`}>{fgValue}</div>
                         <div className={`text-xs font-bold uppercase ${fgColor}`}>{fgText}</div>

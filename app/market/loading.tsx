@@ -23,8 +23,8 @@ export default function MarketLoading() {
         </div>
 
         {/* 3. Metrics Grid Skeleton (Cu efect de VAL - Staggered) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-            {[1, 2, 3, 4, 5].map((i) => (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+            {[1, 2, 3, 4].map((i) => (
                 <div 
                     key={i} 
                     className="h-32 bg-white/5 rounded-xl border border-white/5 animate-pulse"
