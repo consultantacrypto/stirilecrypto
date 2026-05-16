@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ['rss-parser'],
   // @ts-ignore - Ignorăm eroarea de tip, proprietatea e validă pentru Next.js 16+
   turbopack: {},
 
