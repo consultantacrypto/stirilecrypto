@@ -1,13 +1,12 @@
-import { Suspense } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import AffiliateSection from '@/components/AffiliateSection'; 
-import TickerTape from '@/components/TickerTape'; 
-import InstitutionalTracker from '@/components/InstitutionalTracker';
-import WhaleWallWidget from '@/components/WhaleWallWidget'; 
-// ✅ IMPORT NOU: Altcoin Season Widget
-import AltcoinSeasonWidget from '@/components/AltcoinSeasonWidget';
-
+import AffiliateSection from '@/components/AffiliateSection';
+import {
+  TickerTape,
+  InstitutionalTracker,
+  AltcoinSeasonWidget,
+  WhaleWallWidget,
+} from '@/components/lazy/market-widgets';
 import { getGlobalData, getFearGreed } from '@/lib/market-api';
 import { Activity, DollarSign, Layers, BarChart3, Zap, TrendingUp, Skull, ArrowRight, BrainCircuit, LineChart } from 'lucide-react';
 import Link from 'next/link';
@@ -94,9 +93,7 @@ export default async function MarketPage() {
 
         {/* TICKER */}
         <div className="mb-8">
-            <Suspense fallback={<div className="h-10 bg-white/5 rounded animate-pulse"></div>}>
-                <TickerTape />
-            </Suspense>
+            <TickerTape />
         </div>
 
         {/* GRID LAYOUT */}

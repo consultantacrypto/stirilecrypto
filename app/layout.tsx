@@ -21,61 +21,58 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.stirilecrypto.ro'),
   title: {
-    default: "Știrile Crypto | Web3, Bitcoin & Finanțe",
-    template: "%s | Știrile Crypto"
+    template: '%s | Știrile Crypto',
+    default: 'Știrile Crypto | Informație Financiară & Date On-Chain',
   },
-  description: "Portal media dedicat piețelor crypto și finanțelor: știri, analize on-chain, date de piață live și educație financiară pentru investitori din România.",
+  description:
+    'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.',
   keywords: [
-    "stiri crypto romania",
-    "bitcoin romania",
-    "analiza on-chain",
-    "web3 romania",
-    "piata crypto",
-    "finante digitale",
-    "ethereum stiri",
-    "educatie financiara crypto"
+    'stiri crypto romania',
+    'bitcoin romania',
+    'analiza on-chain',
+    'web3 romania',
+    'piata crypto',
+    'finante digitale',
+    'ethereum stiri',
+    'educatie financiara crypto',
   ],
-  
-  authors: [{ name: "Știrile Crypto", url: "https://www.stirilecrypto.ro" }],
-  creator: "Știrile Crypto",
-  publisher: "Știrile Crypto",
-  
+  authors: [{ name: 'Știrile Crypto', url: 'https://www.stirilecrypto.ro' }],
+  creator: 'Știrile Crypto',
+  publisher: 'Știrile Crypto',
   verification: {
     google: 'vHIFda0TK5EKXwxKHpAN_eJr2vG6fbPR6uIGvFOZn6o',
   },
-
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',
     apple: '/icon.svg',
   },
-
   openGraph: {
     type: 'website',
     locale: 'ro_RO',
     url: 'https://www.stirilecrypto.ro',
     siteName: 'Știrile Crypto',
-    title: 'Știrile Crypto | Web3, Bitcoin & Finanțe',
-    description: 'Știri crypto, analize strategice și date de piață — tot ce ai nevoie pentru decizii informate.',
+    title: 'Știrile Crypto | Informație Financiară & Date On-Chain',
+    description:
+      'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.',
     images: [
       {
         url: '/mihai-daniel-consultanta.jpg',
         width: 1200,
         height: 630,
-        alt: 'Știrile Crypto — Portal Web3 & Finanțe',
+        alt: 'Știrile Crypto — Informație Financiară & Date On-Chain',
       },
     ],
   },
-
   twitter: {
     card: 'summary_large_image',
     site: '@MIhaiDanielWeb3',
     creator: '@MIhaiDanielWeb3',
-    title: 'Știrile Crypto | Web3, Bitcoin & Finanțe',
-    description: 'Știri crypto, analize on-chain și intelligence de piață pentru investitori.',
+    title: 'Știrile Crypto | Informație Financiară & Date On-Chain',
+    description:
+      'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.',
     images: ['/mihai-daniel-consultanta.jpg'],
   },
-
   robots: {
     index: true,
     follow: true,
@@ -100,7 +97,7 @@ export default function RootLayout({
         <StructuredData />
 
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-ZYYJ251HYH"
+          src="https://www.googletagmanager.com/gtag/js?id=G-94JGNJHNBZ"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -108,7 +105,7 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-ZYYJ251HYH');
+            gtag('config', 'G-94JGNJHNBZ');
           `}
         </Script>
 

@@ -1,12 +1,8 @@
-import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ScrollProgress from '@/components/ScrollProgress';
-import TickerTape from '@/components/TickerTape';
 import FeaturedNewsGrid from '@/components/FeaturedNewsGrid';
-const NewsFeed = dynamic(() => import('@/components/NewsFeed'), {
-  ssr: true,
-});
+import { TickerTape, NewsFeed } from '@/components/lazy/home-widgets';
 
 export default function Home() {
   return (

@@ -1,32 +1,56 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 import { articles } from '@/lib/articles';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.stirilecrypto.ro';
+const BASE_URL = 'https://www.stirilecrypto.ro';
 
-  // 1. Pagini statice
-  const staticPages = [
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const now = new Date();
+
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
+      url: BASE_URL,
+      lastModified: now,
+      changeFrequency: 'hourly',
       priority: 1,
     },
     {
-      url: `${baseUrl}/stiri`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
+      url: `${BASE_URL}/stiri`,
+      lastModified: now,
+      changeFrequency: 'hourly',
       priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/market`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/academie`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/lichidari`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/raport-strategic`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.7,
     },
   ];
 
-  // 2. Pagini dinamice (Articolele)
-  const articlePages = articles.map((article) => ({
-    url: `${baseUrl}/stiri/${article.slug}`,
-    lastModified: new Date(article.date), // Sau data curentă
-    changeFrequency: 'weekly' as const,
+  const articleRoutes: MetadataRoute.Sitemap = articles.map((article) => ({
+    url: `${BASE_URL}/stiri/${article.slug}`,
+    lastModified: new Date(article.date),
+    changeFrequency: 'weekly',
     priority: 0.8,
   }));
 
-  return [...staticPages, ...articlePages];
+  return [...staticRoutes, ...articleRoutes];
 }
