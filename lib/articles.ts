@@ -6,7 +6,7 @@ export const articles = [
     title: '🧠 PERSPECTIVA ESTE TOTUL: DE CE FRICA DE AZI (SCOR 5) LA $60K ESTE CEA MAI BUNĂ VESTE POSIBILĂ',
     summary: 'Suntem mai speriați acum la $60k decât eram la FTX la $15k. Imaginea care demonstrează că "Podeaua" pieței a crescut exponențial, chiar dacă moralul e la pământ.',
     category: 'PSIHOLOGIE DE PIAȚĂ',
-    image: '/hero-btc-v2.jpg',
+    image: '/perspectivabtc.jpg',
     date: '11 Feb 2026',
     readTime: '4 min',
     author: 'Mihai Daniel',
