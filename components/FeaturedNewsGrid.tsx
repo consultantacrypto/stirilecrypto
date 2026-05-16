@@ -70,9 +70,8 @@ export default function FeaturedNewsGrid() {
                   src={hero.image}
                   alt={hero.title}
                   fill
-                  priority
+                  priority={true}
                   fetchPriority="high"
-                  unoptimized
                   sizes="(max-width: 1024px) 100vw, 66vw"
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                 />

@@ -1,15 +1,22 @@
 'use client';
 
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo, useState } from 'react';
 
 function TickerTape() {
   const container = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if (container.current && !container.current.querySelector("script")) {
-      const script = document.createElement("script");
-      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
-      script.type = "text/javascript";
+    const timer = setTimeout(() => setIsMounted(true), 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    if (container.current && !container.current.querySelector('script')) {
+      const script = document.createElement('script');
+      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+      script.type = 'text/javascript';
       script.async = true;
       script.innerHTML = `
         {
@@ -55,14 +62,19 @@ function TickerTape() {
         }`;
       container.current.appendChild(script);
     }
-  }, []);
+  }, [isMounted]);
+
+  if (!isMounted) {
+    return <div className="h-10 bg-white/5 rounded animate-pulse hidden md:block" />;
+  }
 
   return (
-    // ✅ FIX: Am adăugat 'h-[50px]' și 'overflow-hidden' pentru mobil
-    <div className="w-full h-[50px] bg-[#020617] border-b border-white/5 relative z-40 overflow-hidden">
+    <div className="hidden md:block">
+      <div className="w-full h-[50px] bg-[#020617] border-b border-white/5 relative z-40 overflow-hidden">
         <div className="tradingview-widget-container" ref={container}>
-           <div className="tradingview-widget-container__widget"></div>
+          <div className="tradingview-widget-container__widget"></div>
         </div>
+      </div>
     </div>
   );
 }
