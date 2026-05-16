@@ -15,6 +15,8 @@ export type HotKeyword = {
 const FEEDS = [
   { url: 'https://cointelegraph.com/rss', source: 'Cointelegraph' },
   { url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', source: 'CoinDesk' },
+  { url: 'https://beincrypto.com/feed/', source: 'BeInCrypto' },
+  { url: 'https://u.today/rss', source: 'U.Today' },
 ] as const;
 
 const parser = new Parser({
