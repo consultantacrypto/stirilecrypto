@@ -12,10 +12,41 @@ function getSideTimestamp(index: number): string {
 function Pill({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold backdrop-blur-md ${className}`}
+      className={`inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold border border-white/10 bg-[#1c1c1e] ${className}`}
     >
       {children}
     </span>
+  );
+}
+
+function ConsultingWidget() {
+  return (
+    <aside
+      aria-label="Mentorat privat crypto"
+      className="bg-[#1c1c1e] border border-white/5 rounded-3xl p-8 flex flex-col justify-between h-full relative overflow-hidden"
+    >
+      <div>
+        <span className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3 block">
+          MENTORAT PRIVAT
+        </span>
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4">
+          Portofoliul tău nu are nevoie de noroc. Are nevoie de o strategie.
+        </h2>
+        <p className="text-slate-400 text-sm leading-relaxed mb-6">
+          Oprește pierderile provocate de zgomotul din social media. Navighează piața crypto
+          alături de un mentor cu experiență reală, prin sesiuni private, aplicate 100% pe
+          capitalul tău.
+        </p>
+      </div>
+      <a
+        href="https://mihaidaniel.ro"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-full text-center bg-white text-black font-bold py-3.5 rounded-xl text-sm transition-transform hover:scale-[1.02] block mt-auto"
+      >
+        Rezervă O Sesiune Privată &rarr;
+      </a>
+    </aside>
   );
 }
 
@@ -27,11 +58,12 @@ export default function FeaturedNewsGrid() {
 
   return (
     <section aria-label="Știri principale" className="bg-black border-b border-white/5">
-      <div className="container mx-auto px-4 sm:px-6 py-12 lg:py-16 max-w-7xl">        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          <article className="lg:col-span-2 flex flex-col gap-6">
+      <div className="container mx-auto px-4 sm:px-6 py-12 lg:py-16 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch mb-12">
+          <article className="lg:col-span-8 flex flex-col h-full">
             <Link
               href={`/stiri/${hero.slug}`}
-              className="group flex flex-col gap-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-3xl"
+              className="group flex flex-col gap-6 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-3xl"
             >
               <div className="relative w-full aspect-[16/10] overflow-hidden rounded-3xl bg-[#1c1c1e]">
                 <Image
@@ -41,14 +73,15 @@ export default function FeaturedNewsGrid() {
                   priority
                   fetchPriority="high"
                   unoptimized
-                  sizes="(max-width: 768px) 100vw, 66vw"
+                  sizes="(max-width: 1024px) 100vw, 66vw"
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                 />
               </div>
 
-              <div className="flex flex-col gap-4 px-1">                <div className="flex flex-wrap items-center gap-2">
-                  <Pill className="bg-red-500/20 text-red-400">Breaking</Pill>
-                  <Pill className="bg-blue-500/20 text-blue-400">{hero.category}</Pill>
+              <div className="flex flex-col gap-4 px-1 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Pill className="text-red-400 border-red-500/20">Breaking</Pill>
+                  <Pill className="text-blue-400 border-blue-500/20">{hero.category}</Pill>
                 </div>
                 <p className="text-xs font-medium text-slate-500 flex items-center gap-2">
                   <Clock size={12} />
@@ -60,7 +93,7 @@ export default function FeaturedNewsGrid() {
                 <p className="text-slate-300 text-base leading-relaxed line-clamp-3 max-w-3xl">
                   {hero.summary}
                 </p>
-                <span className="inline-flex items-center gap-2 text-sm font-semibold text-white group-hover:text-blue-400 transition-colors">
+                <span className="inline-flex items-center gap-2 text-sm font-semibold text-white group-hover:text-blue-400 transition-colors mt-auto">
                   Citește analiza
                   <ArrowRight size={16} />
                 </span>
@@ -68,12 +101,18 @@ export default function FeaturedNewsGrid() {
             </Link>
           </article>
 
-          <div className="flex flex-col gap-8 lg:col-span-1">
+          <div className="lg:col-span-4 flex flex-col min-h-[280px] lg:min-h-0">
+            <ConsultingWidget />
+          </div>
+        </div>
+
+        {sideArticles.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sideArticles.map((item, index) => (
-              <article key={item.slug} className="border border-white/5 rounded-3xl bg-[#1c1c1e] p-4">
+              <article key={item.slug} className="border border-white/5 rounded-3xl bg-[#1c1c1e] p-4 h-full">
                 <Link
                   href={`/stiri/${item.slug}`}
-                  className="group flex flex-col gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-2xl"
+                  className="group flex flex-col gap-4 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-2xl"
                 >
                   <div className="relative w-full aspect-[4/3] overflow-hidden rounded-2xl bg-black">
                     <Image
@@ -81,14 +120,14 @@ export default function FeaturedNewsGrid() {
                       alt={item.title}
                       fill
                       unoptimized
-                      sizes="(max-width: 768px) 100vw, 120px"
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                     />
                   </div>
-                  <div className="flex flex-col gap-2 px-1">
+                  <div className="flex flex-col gap-2 px-1 flex-1">
                     <div className="flex items-center gap-2">
                       {index === 0 && (
-                        <Pill className="bg-orange-500/20 text-orange-400">Hot</Pill>
+                        <Pill className="text-orange-400 border-orange-500/20">Hot</Pill>
                       )}
                       <span className="text-[11px] font-medium text-slate-500 flex items-center gap-1">
                         <Clock size={10} />
@@ -98,13 +137,13 @@ export default function FeaturedNewsGrid() {
                     <h2 className="text-base font-bold tracking-tight text-white line-clamp-3 group-hover:text-blue-400 transition-colors duration-300">
                       {item.title}
                     </h2>
-                    <Pill className="bg-white/5 text-slate-400 w-fit">{item.category}</Pill>
+                    <Pill className="text-slate-400 w-fit">{item.category}</Pill>
                   </div>
                 </Link>
               </article>
             ))}
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
