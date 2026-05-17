@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ScrollProgress from '@/components/ScrollProgress';
 import HeroNewsPortal from '@/components/hero-concepts/HeroNewsPortal';
+import ConsultingBanner from '@/components/ConsultingBanner';
 import { TickerTape, NewsFeed } from '@/components/lazy/home-widgets';
 
 /*
@@ -23,6 +24,9 @@ export default function Home() {
       <TickerTape />
       <HeroNewsPortal />
       <NewsFeed />
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl mt-16 mb-8 lg:mb-12">
+        <ConsultingBanner />
+      </div>
       <Footer />
     </main>
   );
