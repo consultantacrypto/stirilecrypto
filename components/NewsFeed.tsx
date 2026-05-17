@@ -18,7 +18,7 @@ export default function NewsFeed() {
   const latestNews = articles.slice(FEATURED_ARTICLE_COUNT, FEATURED_ARTICLE_COUNT + FEED_PAGE_SIZE);
 
   return (
-    <section id="news" className="py-16 lg:py-24 bg-black border-t border-white/5">
+    <section id="news-feed" className="py-16 lg:py-24 bg-black border-t border-white/5 scroll-mt-20">
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         <div className="text-center mb-12 lg:mb-16">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">
