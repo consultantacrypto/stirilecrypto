@@ -1,58 +1,83 @@
-import { articles } from '@/lib/articles';
+import { getAllPublishedArticles } from '@/lib/articles-db';
+import type { Stire } from '@/lib/types/stiri';
 
-// Forțăm randarea dinamică pentru a avea mereu date proaspete
+const BASE_URL = 'https://www.stirilecrypto.ro';
+
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  const baseUrl = 'https://www.stirilecrypto.ro';
-  
-  // Funcție pentru a "traduce" caracterele interzise în XML
-  const escapeXml = (unsafe: string) => {
-    return unsafe.replace(/[<>&'"]/g, (c) => {
-      switch (c) {
-        case '<': return '&lt;';
-        case '>': return '&gt;';
-        case '&': return '&amp;';
-        case '\'': return '&apos;';
-        case '"': return '&quot;';
-        default: return c;
-      }
-    });
-  };
+function escapeXml(unsafe: string): string {
+  return unsafe.replace(/[<>&'"]/g, (c) => {
+    switch (c) {
+      case '<':
+        return '&lt;';
+      case '>':
+        return '&gt;';
+      case '&':
+        return '&amp;';
+      case "'":
+        return '&apos;';
+      case '"':
+        return '&quot;';
+      default:
+        return c;
+    }
+  });
+}
 
-  // 1. Header-ul RSS
-  const rssHeader = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Știrile Crypto - Stiri Web3 &amp; Finanțe</title>
-    <link>${baseUrl}</link>
-    <description>Cele mai importante stiri crypto, analize on-chain si context de piata de la Știrile Crypto.</description>
-    <language>ro</language>
-    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <atom:link href="${baseUrl}/feed.xml" rel="self" type="application/rss+xml"/>
-  `;
+function toRssPubDate(article: Stire): string {
+  const iso = article.published_at ?? article.created_at;
+  const date = iso ? new Date(iso) : new Date();
+  return date.toUTCString();
+}
 
-  // 2. Generăm articolele (AICI ERA PROBLEMA - am aplicat escapeXml pe link-uri)
-  const rssItems = articles.map((article) => {
-    const safeImage = escapeXml(article.image); // Curățăm link-ul imaginii (& -> &amp;)
-    const safeLink = escapeXml(`${baseUrl}/stiri/${article.slug}`);
+function buildRssItem(article: Stire): string {
+  const link = `${BASE_URL}/stiri/${article.slug}`;
+  const safeLink = escapeXml(link);
+  const pubDate = toRssPubDate(article);
 
-    return `
+  const enclosure =
+    article.image_url && article.image_url.trim() !== ''
+      ? `\n      <enclosure url="${escapeXml(article.image_url)}" length="0" type="image/jpeg"/>`
+      : '';
+
+  return `
     <item>
       <title><![CDATA[${article.title}]]></title>
       <link>${safeLink}</link>
-      <guid isPermaLink="true">${safeLink}</guid>
-      <description><![CDATA[${article.summary}]]></description>
-      <pubDate>${new Date(article.date).toUTCString()}</pubDate>
-      <enclosure url="${safeImage}" length="0" type="image/jpeg"/>
+      <description><![CDATA[${article.excerpt}]]></description>
+      <pubDate>${pubDate}</pubDate>
+      <guid isPermaLink="true">${safeLink}</guid>${enclosure}
     </item>`;
-  }).join('');
+}
+
+export async function GET() {
+  let published: Stire[] = [];
+
+  try {
+    published = await getAllPublishedArticles();
+  } catch (err) {
+    console.error('[feed.xml] Failed to fetch published articles:', err);
+  }
+
+  const lastBuildDate = new Date().toUTCString();
+
+  const rssHeader = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Știrile Crypto</title>
+    <link>${BASE_URL}</link>
+    <description>Știri crypto, analize on-chain și context de piață de la Știrile Crypto.</description>
+    <language>ro</language>
+    <lastBuildDate>${lastBuildDate}</lastBuildDate>
+    <atom:link href="${BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
+`;
+
+  const rssItems = published.map(buildRssItem).join('');
 
   const rssFooter = `
   </channel>
 </rss>`;
 
-  // 3. Asamblăm
   const xml = rssHeader + rssItems + rssFooter;
 
   return new Response(xml, {
