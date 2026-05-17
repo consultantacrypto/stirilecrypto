@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { articles } from '@/lib/articles';
 import { ArrowRight } from 'lucide-react';
+import { getRelatedArticles } from '@/lib/articles-db';
 
-export default function RelatedArticles({ currentSlug }: { currentSlug: string }) {
-  // Filtrăm să nu arătăm articolul curent și luăm primele 3
-  const related = articles
-    .filter(a => a.slug !== currentSlug)
-    .slice(0, 3);
+export default async function RelatedArticles({ currentSlug }: { currentSlug: string }) {
+  const related = await getRelatedArticles(currentSlug, 3);
+
+  if (related.length === 0) return null;
 
   return (
     <div className="border-t border-white/10 pt-12 mt-12">
@@ -18,18 +17,26 @@ export default function RelatedArticles({ currentSlug }: { currentSlug: string }
 
       <div className="grid md:grid-cols-3 gap-6">
         {related.map((article) => (
-          <Link key={article.slug} href={`/stiri/${article.slug}`} className="group bg-[#0a0f1e] border border-white/5 hover:border-white/20 rounded-2xl overflow-hidden transition-all hover:-translate-y-1">
-            <div className="relative h-40 w-full overflow-hidden">
-              <Image 
-                src={article.image} 
-                alt={article.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            </div>
+          <Link
+            key={article.slug}
+            href={`/stiri/${article.slug}`}
+            className="group bg-[#0a0f1e] border border-white/5 hover:border-white/20 rounded-2xl overflow-hidden transition-all hover:-translate-y-1"
+          >
+            {article.image_url && (
+              <div className="relative h-40 w-full overflow-hidden">
+                <Image
+                  src={article.image_url}
+                  alt={article.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
+            )}
             <div className="p-5">
-              <div className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-2">{article.category}</div>
+              <div className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-2">
+                {article.category}
+              </div>
               <h4 className="text-white font-bold leading-tight mb-4 group-hover:text-blue-400 transition-colors line-clamp-2">
                 {article.title}
               </h4>

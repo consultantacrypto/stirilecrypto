@@ -3,7 +3,8 @@ import Footer from '@/components/Footer';
 import ScrollProgress from '@/components/ScrollProgress';
 import HeroNewsPortal from '@/components/hero-concepts/HeroNewsPortal';
 import ConsultingBanner from '@/components/ConsultingBanner';
-import { TickerTape, NewsFeed } from '@/components/lazy/home-widgets';
+import NewsFeed from '@/components/NewsFeed';
+import { TickerTape } from '@/components/lazy/home-widgets';
 
 /*
  * HERO CONCEPT GALLERY — swap the active hero for A/B testing:
