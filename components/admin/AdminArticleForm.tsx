@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react';
 import { Upload, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 import { slugify, sanitizeFileName } from '@/lib/slugify';
 import type { ArticleStatus } from '@/lib/types/stiri';
 
@@ -77,6 +77,11 @@ export default function AdminArticleForm() {
   }, []);
 
   const uploadCover = async (file: File): Promise<string> => {
+    const supabase = getSupabase();
+    if (!supabase) {
+      throw new Error('Supabase nu este configurat. Verifică variabilele de mediu.');
+    }
+
     const uniqueName = `${Date.now()}-${sanitizeFileName(file.name)}`;
     const { error: uploadError } = await supabase.storage
       .from(STORAGE_BUCKET)
@@ -127,6 +132,11 @@ export default function AdminArticleForm() {
 
       const publishedAt =
         form.status === 'published' ? new Date().toISOString() : null;
+
+      const supabase = getSupabase();
+      if (!supabase) {
+        throw new Error('Supabase nu este configurat. Verifică variabilele de mediu.');
+      }
 
       const { error: insertError } = await supabase.from('stiri').insert({
         title: form.title.trim(),

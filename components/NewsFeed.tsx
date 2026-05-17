@@ -1,19 +1,19 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { getPublishedArticles, formatArticleDate } from '@/lib/articles-db';
+import { getHomeFeedArticles } from '@/lib/articles-db';
 
 const FEED_PAGE_SIZE = 6;
 
 export default async function NewsFeed() {
-  const latestNews = await getPublishedArticles(FEED_PAGE_SIZE);
+  const latestNews = await getHomeFeedArticles(FEED_PAGE_SIZE);
 
   return (
     <section id="news-feed" className="pb-12 lg:pb-16 bg-black scroll-mt-20">
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         {latestNews.length === 0 ? (
           <p className="mt-12 text-center text-slate-500 text-sm">
-            Nu există articole publicate momentan.
+            Nu există articole disponibile momentan.
           </p>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-12 pt-2">
@@ -43,7 +43,7 @@ export default async function NewsFeed() {
                       {item.category}
                     </span>
                     <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wide">
-                      {formatArticleDate(item.published_at)}
+                      {item.dateLabel}
                     </span>
                     <h3 className="text-xl font-bold tracking-tight text-white line-clamp-2 group-hover:text-blue-400 transition-colors duration-300">
                       {item.title}
