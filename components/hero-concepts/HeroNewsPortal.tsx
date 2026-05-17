@@ -2,31 +2,34 @@ export default function HeroNewsPortal() {
   return (
     <section
       aria-label="Știrile Crypto — portal de știri și date on-chain"
-      className="relative overflow-hidden bg-black px-4 sm:px-6 py-8 lg:py-10 border-b border-white/5"
+      className="relative overflow-hidden bg-black px-4 sm:px-6 py-8 lg:py-10"
     >
       <style>{`
-        @keyframes hero-news-aurora {
-          0%, 100% { opacity: 0.4; transform: translate(-8%, -4%) scale(1); }
-          50% { opacity: 0.65; transform: translate(6%, 4%) scale(1.06); }
+        @keyframes hero-liquid-drift-a {
+          0%, 100% { transform: translate(-50%, -20%) scale(1); opacity: 0.55; }
+          50% { transform: translate(-42%, -8%) scale(1.12); opacity: 0.85; }
         }
-        .hero-news-aurora {
-          animation: hero-news-aurora 18s ease-in-out infinite;
+        @keyframes hero-liquid-drift-b {
+          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+          50% { transform: translate(12%, -10%) scale(1.08); opacity: 0.7; }
+        }
+        .hero-liquid-orb-a {
+          animation: hero-liquid-drift-a 14s ease-in-out infinite;
+        }
+        .hero-liquid-orb-b {
+          animation: hero-liquid-drift-b 18s ease-in-out infinite;
         }
       `}</style>
 
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 hero-news-aurora"
-        style={{
-          background:
-            'radial-gradient(ellipse 80% 55% at 50% 0%, rgba(56, 189, 248, 0.1) 0%, transparent 55%), radial-gradient(ellipse 55% 45% at 75% 35%, rgba(99, 102, 241, 0.06) 0%, transparent 50%)',
-        }}
-      />
-
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:linear-gradient(to_bottom,black_0%,black_25%,transparent_85%)]"
-      />
+        className="absolute inset-0 -z-10 overflow-hidden pointer-events-none bg-black"
+      >
+        <div className="hero-liquid-orb-a absolute top-0 left-1/2 w-[min(90vw,520px)] h-[min(90vw,520px)] bg-blue-900/30 rounded-full blur-[120px]" />
+        <div className="hero-liquid-orb-b absolute top-1/4 -left-24 w-[min(70vw,420px)] h-[min(70vw,420px)] bg-indigo-600/25 rounded-full blur-[100px]" />
+        <div className="absolute top-1/3 right-0 w-[min(60vw,380px)] h-[min(60vw,380px)] bg-violet-900/20 rounded-full blur-[110px] animate-pulse [animation-duration:12s]" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black via-black/80 to-transparent" />
+      </div>
 
       <div className="relative z-10 w-full max-w-5xl mx-auto text-center flex flex-col items-center gap-4 md:gap-5">
         <div className="flex items-center gap-4 w-full max-w-md" aria-hidden>

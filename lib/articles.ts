@@ -379,7 +379,7 @@ export const articles = [
     title: '📉 ANALIZĂ DE PIAȚĂ: DE CE BITCOIN ESTE MATEMATIC MAI APROAPE DE "BOTTOM" DECÂT DE "TOP" (FEBRUARIE 2026)',
     summary: 'Frica e mare după crash, dar matematica ne contrazice emoțiile. 3 argumente structurale care arată că suntem la baza muntelui, nu pe vârf.',
     category: 'ANALIZĂ TEHNICĂ & MACRO',
-    image: '/hero-btc-v2.jpg',
+    image: '/6febbtc.jpg',
     date: '06 Feb 2026',
     readTime: '5 min',
     author: 'Mihai Daniel',

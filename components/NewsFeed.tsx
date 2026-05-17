@@ -18,18 +18,9 @@ export default function NewsFeed() {
   const latestNews = articles.slice(FEATURED_ARTICLE_COUNT, FEATURED_ARTICLE_COUNT + FEED_PAGE_SIZE);
 
   return (
-    <section id="news-feed" className="py-12 lg:py-16 bg-black scroll-mt-20">
+    <section id="news-feed" className="pb-12 lg:pb-16 bg-black scroll-mt-20">
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
-        <div className="text-center mb-10 lg:mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-3">
-            Ultimele analize
-          </h2>
-          <p className="text-slate-400 text-base max-w-2xl mx-auto">
-            Context editorial și date on-chain, fără zgomot.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-12 pt-2">
           {latestNews.map((item) => (
             <article
               key={item.slug}
