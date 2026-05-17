@@ -31,14 +31,13 @@ export default function NewsFeed() {
                 className="group flex flex-col gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-2xl"
               >
                 <div className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl bg-black">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    unoptimized
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                  />
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
                 </div>
 
                 <div className="flex flex-col gap-3 px-1 pb-2">

@@ -196,7 +196,6 @@ function ArticleCard({ item, isRead }: { item: AcademyItem, isRead: boolean }) {
                     alt={item.term} 
                     fill 
                     className={`object-cover transition-transform duration-700 ${isRead ? 'grayscale group-hover:grayscale-0' : 'group-hover:scale-105'}`}
-                    unoptimized={true}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] to-transparent opacity-60"></div>
                 

@@ -18,9 +18,10 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // 2. Optimizare Imagini
+  // 2. Optimizare Imagini — AVIF/WebP on-the-fly, cache optimized derivatives
   images: {
     formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
     remotePatterns: [
       {
         protocol: 'https',

@@ -41,7 +41,6 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
                 fill 
                 className="object-cover opacity-50"
                 priority
-                unoptimized={true}
             />
           )}
           <div className="container mx-auto px-6 relative z-20 h-full flex flex-col justify-end pb-12">
