@@ -6,6 +6,8 @@ import ConsultingBanner from '@/components/ConsultingBanner';
 import NewsFeed from '@/components/NewsFeed';
 import { TickerTape } from '@/components/lazy/home-widgets';
 
+export const revalidate = 0;
+
 /*
  * HERO CONCEPT GALLERY — swap the active hero for A/B testing:
  *

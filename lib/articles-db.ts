@@ -1,6 +1,9 @@
+import { unstable_noStore as noStore } from 'next/cache';
 import { articles } from '@/lib/articles';
 import { getSupabase } from '@/lib/supabase';
 import type { Stire } from '@/lib/types/stiri';
+
+const PUBLISHED_STATUS = 'published';
 
 /** Matches legacy homepage slice: skip first N featured static articles */
 const FEATURED_ARTICLE_COUNT = 4;
@@ -58,6 +61,7 @@ function getStaticFeedArticles(limit: number): NewsFeedItem[] {
  * When Supabase has rows, appends non-duplicate static articles up to `limit`.
  */
 export async function getHomeFeedArticles(limit = 6): Promise<NewsFeedItem[]> {
+  noStore();
   const fromDb = await getPublishedArticles(limit);
 
   if (!fromDb || fromDb.length === 0) {
@@ -77,14 +81,16 @@ export async function getHomeFeedArticles(limit = 6): Promise<NewsFeedItem[]> {
 }
 
 export async function getPublishedArticles(limit = 6): Promise<Stire[]> {
+  noStore();
+
   const supabase = getSupabase();
   if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('stiri')
     .select('*')
-    .eq('status', 'published')
-    .order('published_at', { ascending: false })
+    .eq('status', PUBLISHED_STATUS)
+    .order('published_at', { ascending: false, nullsFirst: false })
     .limit(limit);
 
   if (error) {
@@ -96,6 +102,8 @@ export async function getPublishedArticles(limit = 6): Promise<Stire[]> {
 }
 
 export async function getArticleBySlug(slug: string): Promise<Stire | null> {
+  noStore();
+
   const supabase = getSupabase();
   if (!supabase) return null;
 
@@ -103,7 +111,7 @@ export async function getArticleBySlug(slug: string): Promise<Stire | null> {
     .from('stiri')
     .select('*')
     .eq('slug', slug)
-    .eq('status', 'published')
+    .eq('status', PUBLISHED_STATUS)
     .maybeSingle();
 
   if (error) {
@@ -115,13 +123,15 @@ export async function getArticleBySlug(slug: string): Promise<Stire | null> {
 }
 
 export async function getPublishedSlugs(): Promise<{ slug: string }[]> {
+  noStore();
+
   const supabase = getSupabase();
   if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('stiri')
     .select('slug')
-    .eq('status', 'published');
+    .eq('status', PUBLISHED_STATUS);
 
   if (error) {
     console.error('[getPublishedSlugs]', error.message);
@@ -138,7 +148,7 @@ export async function getRelatedArticles(currentSlug: string, limit = 3): Promis
   const { data, error } = await supabase
     .from('stiri')
     .select('*')
-    .eq('status', 'published')
+    .eq('status', PUBLISHED_STATUS)
     .neq('slug', currentSlug)
     .order('published_at', { ascending: false })
     .limit(limit);

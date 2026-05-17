@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { getHomeFeedArticles } from '@/lib/articles-db';
 
+export const revalidate = 0;
+
 const FEED_PAGE_SIZE = 6;
 
 export default async function NewsFeed() {

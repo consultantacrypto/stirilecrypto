@@ -22,6 +22,8 @@ import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
+export const revalidate = 0;
+
 export async function generateStaticParams() {
   const slugs = await getPublishedSlugs();
   return slugs.map(({ slug }) => ({ slug }));
