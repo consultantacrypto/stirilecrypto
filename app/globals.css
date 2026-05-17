@@ -45,3 +45,17 @@ body::before {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* TipTap / ProseMirror (admin rich text editor) */
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror-focused {
+  outline: none;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.25rem;
+}

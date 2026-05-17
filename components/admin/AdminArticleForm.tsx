@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Upload, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 import { createClient } from '@/lib/supabase/client';
 import { slugify, sanitizeFileName } from '@/lib/slugify';
 import type { ArticleStatus, Stire } from '@/lib/types/stiri';
@@ -130,7 +131,8 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
       return 'Slug-ul poate conține doar litere mici, cifre și cratime.';
     }
     if (!form.excerpt.trim()) return 'Excerpt-ul este obligatoriu.';
-    if (!form.content.trim()) return 'Conținutul este obligatoriu.';
+    const contentText = form.content.replace(/<[^>]*>/g, '').trim();
+    if (!contentText) return 'Conținutul este obligatoriu.';
     if (!form.category) return 'Selectează o categorie.';
     if (!form.image_url && !coverFile) return 'Încarcă o imagine de copertă.';
     return null;
@@ -322,21 +324,16 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         </div>
 
         <div className="md:col-span-2 space-y-2">
-          <label htmlFor="content" className="text-xs font-bold uppercase tracking-widest text-slate-400">
-            Conținut (HTML sau Markdown)
-          </label>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
+            Conținut (editor vizual)
+          </span>
           <p className="text-xs text-slate-500 font-[var(--font-inter)]">
-            HTML: <code className="text-slate-400">&lt;p&gt;...&lt;/p&gt;</code> sau linkuri{' '}
-            <code className="text-slate-400">&lt;a href=&quot;...&quot;&gt;</code>. Markdown:{' '}
-            <code className="text-slate-400">[text affiliate](https://...)</code>
+            Formatare Notion-style. Linkurile affiliate se adaugă din toolbar (iconița Link). Conținutul
+            se salvează ca HTML în Supabase.
           </p>
-          <textarea
-            id="content"
-            rows={14}
+          <RichTextEditor
             value={form.content}
-            onChange={(e) => updateField('content', e.target.value)}
-            className="w-full rounded-xl border border-white/10 bg-[#1c1c1e] px-4 py-3 text-white font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            placeholder="<p>Paragraf HTML</p> sau [Link affiliate](https://partner.example)"
+            onChange={(html) => updateField('content', html)}
           />
         </div>
       </div>
