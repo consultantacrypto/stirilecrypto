@@ -122,6 +122,94 @@ export async function getArticleBySlug(slug: string): Promise<Stire | null> {
   return data as Stire | null;
 }
 
+export type ArticleImpact = 'bullish' | 'bearish' | 'neutral';
+
+/** Normalized article for detail page (Supabase + legacy static) */
+export interface ArticlePageData {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  image_url: string | null;
+  dateLabel: string;
+  readTime: string;
+  mihaiTake: string | null;
+  impact: ArticleImpact;
+}
+
+function parseStaticImpact(impact: string | undefined): ArticleImpact {
+  if (impact === 'bullish' || impact === 'bearish' || impact === 'neutral') {
+    return impact;
+  }
+  return 'neutral';
+}
+
+function staticArticleToPageData(article: StaticArticle): ArticlePageData {
+  return {
+    id: article.id,
+    slug: article.slug,
+    title: article.title,
+    excerpt: article.summary,
+    content: article.content,
+    category: article.category,
+    image_url: resolveImageUrl({ image: article.image }),
+    dateLabel: article.date,
+    readTime: article.readTime ?? '5 min',
+    mihaiTake: 'mihaiTake' in article && article.mihaiTake ? article.mihaiTake : null,
+    impact: parseStaticImpact(article.impact),
+  };
+}
+
+function stireToPageData(stire: Stire): ArticlePageData {
+  return {
+    id: stire.id,
+    slug: stire.slug,
+    title: stire.title,
+    excerpt: stire.excerpt,
+    content: stire.content,
+    category: stire.category,
+    image_url: resolveImageUrl(stire),
+    dateLabel: formatArticleDate(stire.published_at),
+    readTime: '5 min',
+    mihaiTake: null,
+    impact: 'neutral',
+  };
+}
+
+export function getStaticArticleBySlug(slug: string): ArticlePageData | null {
+  const article = articles.find((a) => a.slug === slug);
+  if (!article) return null;
+  return staticArticleToPageData(article);
+}
+
+/** Supabase first, then legacy `lib/articles` — never 404 if static entry exists */
+export async function getArticleForPage(slug: string): Promise<ArticlePageData | null> {
+  noStore();
+
+  const fromDb = await getArticleBySlug(slug);
+  if (fromDb) return stireToPageData(fromDb);
+
+  return getStaticArticleBySlug(slug);
+}
+
+export async function getAllArticleSlugs(): Promise<{ slug: string }[]> {
+  noStore();
+
+  const dbSlugs = await getPublishedSlugs();
+  const seen = new Set(dbSlugs.map((s) => s.slug));
+
+  for (const article of articles) {
+    if (!seen.has(article.slug)) {
+      dbSlugs.push({ slug: article.slug });
+      seen.add(article.slug);
+    }
+  }
+
+  return dbSlugs;
+}
+
 export async function getPublishedSlugs(): Promise<{ slug: string }[]> {
   noStore();
 
