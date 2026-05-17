@@ -5,7 +5,7 @@ import BybitPromo from '@/components/BybitPromo';
 import RelatedArticles from '@/components/RelatedArticles';
 import ReadingProgress from '@/components/ReadingProgress';
 import CryptoTicker from '@/components/CryptoTicker';
-import { enhanceContent } from '@/lib/dictionary';
+import { prepareArticleContent } from '@/lib/article-content';
 import {
   getArticleForPage,
   getAllArticleSlugs,
@@ -35,15 +35,11 @@ import type { LucideIcon } from 'lucide-react';
 export const revalidate = 0;
 
 const ARTICLE_BODY_CLASSES = [
-  'article-body space-y-6',
-  '[&_p]:text-base [&_p]:md:text-lg [&_p]:text-gray-300 [&_p]:leading-relaxed [&_p]:mb-6',
-  '[&_h2]:text-xl [&_h2]:md:text-2xl [&_h2]:font-bold [&_h2]:text-white [&_h2]:mt-10 [&_h2]:mb-4',
-  '[&_h3]:text-lg [&_h3]:md:text-xl [&_h3]:font-bold [&_h3]:text-white [&_h3]:mt-8 [&_h3]:mb-3',
-  '[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 [&_ul]:text-gray-300 [&_ul]:mb-6',
-  '[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-2 [&_ol]:text-gray-300 [&_ol]:mb-6',
-  '[&_li]:text-gray-300 [&_li]:leading-relaxed',
-  '[&_a]:text-blue-400 [&_a]:hover:text-blue-300 [&_a]:underline [&_a]:transition-colors [&_a]:font-medium',
-  '[&_strong]:text-white [&_strong]:font-semibold',
+  'article-body prose prose-invert prose-lg md:prose-xl max-w-none',
+  'prose-headings:text-white prose-a:text-blue-400 hover:prose-a:text-blue-300',
+  'prose-strong:text-white prose-p:text-gray-300 prose-p:leading-relaxed prose-li:text-gray-300',
+  'prose-headings:font-bold prose-h2:mt-10 prose-h2:mb-4 prose-h3:mt-8 prose-h3:mb-3',
+  '[&_a]:underline [&_a]:transition-colors [&_a]:font-medium',
   '[&_blockquote]:border-l-4 [&_blockquote]:border-blue-500/50 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-400',
 ].join(' ');
 
@@ -130,7 +126,7 @@ export default async function ArticlePage({
 }
 
 function ArticlePageContent({ article }: { article: ArticlePageData }) {
-  const contentWithTooltips = enhanceContent(article.content);
+  const { html: contentWithTooltips, usePreWrap } = prepareArticleContent(article.content);
   const theme = getTheme(article.impact);
   const ThemeIcon = theme.icon;
   const CtaIcon = theme.ctaIcon as LucideIcon;
@@ -238,7 +234,7 @@ function ArticlePageContent({ article }: { article: ArticlePageData }) {
             )}
 
             <div
-              className={ARTICLE_BODY_CLASSES}
+              className={`${ARTICLE_BODY_CLASSES}${usePreWrap ? ' whitespace-pre-wrap' : ''}`}
               dangerouslySetInnerHTML={{ __html: contentWithTooltips }}
             />
 

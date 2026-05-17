@@ -101,6 +101,83 @@ export async function getPublishedArticles(limit = 6): Promise<Stire[]> {
   return (data ?? []) as Stire[];
 }
 
+/** All published rows from Supabase (no limit) — for /stiri listing */
+export async function getAllPublishedArticles(): Promise<Stire[]> {
+  noStore();
+
+  const supabase = getSupabase();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('*')
+    .eq('status', PUBLISHED_STATUS)
+    .order('published_at', { ascending: false, nullsFirst: false });
+
+  if (error) {
+    console.error('[getAllPublishedArticles]', error.message);
+    return [];
+  }
+
+  return (data ?? []) as Stire[];
+}
+
+/** Card shape for /stiri grid — Supabase + legacy static */
+export interface NewsListingItem {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  category: string;
+  image: string | null;
+  date: string;
+  impact: ArticleImpact;
+}
+
+function stireToListingItem(stire: Stire): NewsListingItem {
+  return {
+    id: stire.id,
+    slug: stire.slug,
+    title: stire.title,
+    summary: stire.excerpt,
+    category: stire.category,
+    image: resolveImageUrl(stire),
+    date: formatArticleDate(stire.published_at),
+    impact: 'neutral',
+  };
+}
+
+function staticArticleToListingItem(article: StaticArticle): NewsListingItem {
+  return {
+    id: article.id,
+    slug: article.slug,
+    title: article.title,
+    summary: article.summary,
+    category: article.category,
+    image: resolveImageUrl({ image: article.image }),
+    date: article.date,
+    impact: parseStaticImpact(article.impact),
+  };
+}
+
+/**
+ * /stiri listing: Supabase published first, then static articles.
+ * Duplicate slugs: Supabase wins; static entry is skipped.
+ */
+export async function getMergedNewsListingArticles(): Promise<NewsListingItem[]> {
+  noStore();
+
+  const fromDb = await getAllPublishedArticles();
+  const dbSlugs = new Set(fromDb.map((s) => s.slug));
+  const dbItems = fromDb.map(stireToListingItem);
+
+  const staticItems = articles
+    .filter((article) => !dbSlugs.has(article.slug))
+    .map(staticArticleToListingItem);
+
+  return [...dbItems, ...staticItems];
+}
+
 export async function getArticleBySlug(slug: string): Promise<Stire | null> {
   noStore();
 
