@@ -1,41 +1,48 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
-import AdminArticleForm from '@/components/admin/AdminArticleForm';
-import AdminSignOutButton from '@/components/admin/AdminSignOutButton';
+import { Plus } from 'lucide-react';
+import AdminShell from '@/components/admin/AdminShell';
+import AdminArticlesTable from '@/components/admin/AdminArticlesTable';
+import { createClient } from '@/lib/supabase/server';
+import type { Stire } from '@/lib/types/stiri';
 
 export const metadata: Metadata = {
-  title: 'Admin — Știri',
+  title: 'Admin Dashboard | Știrile Crypto',
   robots: { index: false, follow: false },
 };
 
-export default function AdminPage() {
-  return (
-    <main className="min-h-screen bg-black text-white">
-      <header className="border-b border-white/5 bg-[#0a0a0a]">
-        <div className="container mx-auto max-w-4xl px-4 sm:px-6 py-6 flex items-center justify-between gap-4 flex-wrap">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-blue-400 mb-1">
-              Admin Panel
-            </p>
-            <h1 className="text-2xl font-bold tracking-tight">Publică articol nou</h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
-            >
-              <ArrowLeft size={16} />
-              Site
-            </Link>
-            <AdminSignOutButton />
-          </div>
-        </div>
-      </header>
+export const dynamic = 'force-dynamic';
 
-      <div className="container mx-auto max-w-4xl px-4 sm:px-6 py-10 lg:py-14">
-        <AdminArticleForm />
+export default async function AdminDashboardPage() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('[admin dashboard]', error.message);
+  }
+
+  const articles = (data ?? []) as Stire[];
+
+  return (
+    <AdminShell title="Management Articole" backHref="/" backLabel="Site">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <p className="text-slate-400 text-sm font-[var(--font-inter)]">
+          {articles.length} articol{articles.length === 1 ? '' : 'e'} în baza de date (draft + publicat).
+        </p>
+        <Link
+          href="/admin/create"
+          className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-3 rounded-xl transition-colors shadow-lg shadow-blue-900/20 text-sm"
+        >
+          <Plus size={18} />
+          Create New Article
+        </Link>
       </div>
-    </main>
+
+      <AdminArticlesTable articles={articles} />
+    </AdminShell>
   );
 }

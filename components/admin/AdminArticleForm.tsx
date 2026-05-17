@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Upload, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { slugify, sanitizeFileName } from '@/lib/slugify';
-import type { ArticleStatus } from '@/lib/types/stiri';
+import type { ArticleStatus, Stire } from '@/lib/types/stiri';
 
 const STORAGE_BUCKET = 'imagini-stiri';
 
@@ -29,7 +30,7 @@ type FormState = {
   image_url: string;
 };
 
-const initialForm: FormState = {
+const emptyForm: FormState = {
   title: '',
   slug: '',
   excerpt: '',
@@ -39,17 +40,48 @@ const initialForm: FormState = {
   image_url: '',
 };
 
-export default function AdminArticleForm() {
-  const [form, setForm] = useState<FormState>(initialForm);
-  const [slugTouched, setSlugTouched] = useState(false);
+function formFromArticle(article: Stire): FormState {
+  return {
+    title: article.title,
+    slug: article.slug,
+    excerpt: article.excerpt,
+    content: article.content,
+    category: article.category,
+    status: article.status,
+    image_url: article.image_url ?? '',
+  };
+}
+
+export type AdminArticleFormProps = {
+  initialData?: Stire;
+};
+
+export default function AdminArticleForm({ initialData }: AdminArticleFormProps) {
+  const router = useRouter();
+  const isEditing = Boolean(initialData);
+
+  const [form, setForm] = useState<FormState>(() =>
+    initialData ? formFromArticle(initialData) : emptyForm
+  );
+  const [slugTouched, setSlugTouched] = useState(isEditing);
   const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(
+    initialData?.image_url ?? null
+  );
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const categoryOptions = useMemo(() => {
+    const base = [...CATEGORIES];
+    if (form.category && !base.includes(form.category as (typeof CATEGORIES)[number])) {
+      return [form.category, ...base];
+    }
+    return base;
+  }, [form.category]);
 
   const updateField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -127,10 +159,11 @@ export default function AdminArticleForm() {
       }
 
       const publishedAt =
-        form.status === 'published' ? new Date().toISOString() : null;
+        form.status === 'published'
+          ? initialData?.published_at ?? new Date().toISOString()
+          : null;
 
-      const supabase = createClient();
-      const { error: insertError } = await supabase.from('stiri').insert({
+      const payload = {
         title: form.title.trim(),
         slug: form.slug.trim(),
         excerpt: form.excerpt.trim(),
@@ -139,22 +172,44 @@ export default function AdminArticleForm() {
         status: form.status,
         image_url: imageUrl,
         published_at: publishedAt,
-      });
+      };
 
-      if (insertError) {
-        throw new Error(insertError.message);
+      const supabase = createClient();
+
+      if (initialData) {
+        const { error: updateError } = await supabase
+          .from('stiri')
+          .update(payload)
+          .eq('id', initialData.id);
+
+        if (updateError) {
+          throw new Error(updateError.message);
+        }
+
+        setSuccess(
+          form.status === 'published'
+            ? 'Articol actualizat și publicat!'
+            : 'Draft actualizat cu succes!'
+        );
+        router.refresh();
+      } else {
+        const { error: insertError } = await supabase.from('stiri').insert(payload);
+
+        if (insertError) {
+          throw new Error(insertError.message);
+        }
+
+        setSuccess(
+          form.status === 'published'
+            ? 'Articol publicat cu succes!'
+            : 'Draft salvat cu succes!'
+        );
+        setForm(emptyForm);
+        setSlugTouched(false);
+        setCoverFile(null);
+        setCoverPreview(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
       }
-
-      setSuccess(
-        form.status === 'published'
-          ? 'Articol publicat cu succes!'
-          : 'Draft salvat cu succes!'
-      );
-      setForm(initialForm);
-      setSlugTouched(false);
-      setCoverFile(null);
-      setCoverPreview(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Eroare la salvare.');
     } finally {
@@ -162,6 +217,8 @@ export default function AdminArticleForm() {
       setIsUploading(false);
     }
   };
+
+  const submitLabel = isEditing ? 'Actualizează Articolul' : 'Salvează Articolul';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -227,7 +284,7 @@ export default function AdminArticleForm() {
             onChange={(e) => updateField('category', e.target.value)}
             className="w-full rounded-xl border border-white/10 bg-[#1c1c1e] px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           >
-            {CATEGORIES.map((cat) => (
+            {categoryOptions.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
               </option>
@@ -334,7 +391,7 @@ export default function AdminArticleForm() {
             </>
           )}
         </div>
-        {form.image_url && !coverPreview && (
+        {form.image_url && !coverFile && (
           <p className="text-xs text-slate-500 truncate">URL curent: {form.image_url}</p>
         )}
       </div>
@@ -345,7 +402,11 @@ export default function AdminArticleForm() {
         className="inline-flex items-center justify-center gap-2 w-full md:w-auto bg-white text-black font-bold px-8 py-4 rounded-xl hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {(isSubmitting || isUploading) && <Loader2 size={18} className="animate-spin" />}
-        {isUploading ? 'Se încarcă imaginea...' : isSubmitting ? 'Se salvează...' : 'Salvează articolul'}
+        {isUploading
+          ? 'Se încarcă imaginea...'
+          : isSubmitting
+            ? 'Se salvează...'
+            : submitLabel}
       </button>
     </form>
   );
