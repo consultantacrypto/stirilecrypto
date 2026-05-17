@@ -326,6 +326,16 @@ export async function getRelatedArticles(currentSlug: string, limit = 3): Promis
   return (data ?? []) as Stire[];
 }
 
+/** Related feed: merged Supabase + static, excludes current article, max `limit` */
+export async function getMergedRelatedArticles(
+  currentSlug: string,
+  limit = 3
+): Promise<NewsListingItem[]> {
+  noStore();
+  const merged = await getMergedNewsListingArticles();
+  return merged.filter((item) => item.slug !== currentSlug).slice(0, limit);
+}
+
 export function formatArticleDate(iso: string | null): string {
   if (!iso) return 'Recent';
   return new Date(iso).toLocaleDateString('ro-RO', {

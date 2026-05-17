@@ -1,24 +1,22 @@
 import Navbar from '@/components/Navbar';
 import ShareButtons from '@/components/ShareButtons';
-import { isHtmlArticleContent } from '@/lib/article-content';
+import ArticleContent from '@/components/ArticleContent';
+import AffiliatePartnerBox from '@/components/AffiliatePartnerBox';
+import RelatedArticles from '@/components/RelatedArticles';
+import { splitArticleContent } from '@/lib/split-article-content';
 import {
   getArticleForPage,
   getAllArticleSlugs,
   type ArticlePageData,
 } from '@/lib/articles-db';
-import { Calendar, Clock, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Script from 'next/script';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
 export const revalidate = 0;
-
-const CONTENT_WRAPPER_CLASSES =
-  'prose prose-invert prose-lg max-w-none text-gray-300 font-[var(--font-inter)] leading-relaxed prose-headings:font-[var(--font-space)] prose-a:text-blue-500 hover:prose-a:text-blue-400 prose-strong:text-white';
 
 export async function generateStaticParams() {
   return getAllArticleSlugs();
@@ -59,7 +57,7 @@ export default async function ArticlePage({
 }
 
 function ArticlePageContent({ article }: { article: ArticlePageData }) {
-  const isLegacyHtml = isHtmlArticleContent(article.content);
+  const { main, conclusion } = splitArticleContent(article.content);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -77,15 +75,17 @@ function ArticlePageContent({ article }: { article: ArticlePageData }) {
   };
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#020617] text-white">
+    <main className="min-h-screen flex flex-col bg-[#020617] text-white selection:bg-blue-500/30">
       <Script
         id="article-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
       <Navbar />
 
       <article className="flex-1 container mx-auto px-6 py-12 max-w-4xl">
+        {/* Top navigation */}
         <div className="mb-8">
           <Link
             href="/stiri"
@@ -95,18 +95,24 @@ function ArticlePageContent({ article }: { article: ArticlePageData }) {
           </Link>
         </div>
 
-        <header className="mb-10">
-          <div className="flex flex-wrap items-center gap-4 text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 font-[var(--font-space)]">
-            <span className="text-blue-400">{article.category}</span>
-            <span className="flex items-center gap-1">
+        {/* Meta header */}
+        <header className="mb-10 text-center md:text-left">
+          <div className="flex flex-wrap items-center gap-4 text-xs font-bold uppercase tracking-widest text-blue-400 mb-4 justify-center md:justify-start font-[var(--font-space)]">
+            <span className="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 flex items-center gap-2">
+              {article.category}
+            </span>
+            <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
               <Calendar size={12} /> {article.dateLabel}
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
               <Clock size={12} /> {article.readTime} citire
+            </span>
+            <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)] normal-case">
+              <User size={12} /> Știrile Crypto • Redacție
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-black leading-tight mb-6 text-white font-[var(--font-space)]">
+          <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight mb-6 text-white font-[var(--font-space)]">
             {article.title}
           </h1>
 
@@ -115,37 +121,60 @@ function ArticlePageContent({ article }: { article: ArticlePageData }) {
           </p>
         </header>
 
+        {/* Hero image */}
         {article.image_url && (
-          <div className="relative w-full aspect-video mb-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+          <div className="relative w-full aspect-video mb-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group">
+            <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent z-10 opacity-60" />
             <Image
               src={article.image_url}
               alt={article.title}
               fill
               priority
               sizes="(max-width: 896px) 100vw, 896px"
-              className="object-cover"
+              className="object-cover transform group-hover:scale-105 transition-transform duration-1000"
             />
           </div>
         )}
 
-        {isLegacyHtml ? (
-          <div
-            className={CONTENT_WRAPPER_CLASSES}
-            dangerouslySetInnerHTML={{ __html: article.content }}
-          />
-        ) : (
-          <div className={CONTENT_WRAPPER_CLASSES}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{article.content}</ReactMarkdown>
-          </div>
-        )}
+        {/* Main article body */}
+        {main ? <ArticleContent content={main} /> : null}
 
-        <div className="mt-12 pt-8 border-t border-white/10">
-          <span className="text-xs text-gray-500 uppercase tracking-widest font-bold font-[var(--font-space)] block mb-4">
-            Distribuie analiza:
-          </span>
-          <ShareButtons title={article.title} slug={article.slug} />
+        {/* Universal affiliate block */}
+        <AffiliatePartnerBox />
+
+        {/* Conclusion zone */}
+        {conclusion ? (
+          <aside
+            className="bg-slate-900/40 border-l-4 border-emerald-500/40 p-6 rounded-r-2xl my-8 text-gray-200 [&_p]:italic [&_li]:text-gray-200"
+            aria-label="Concluzie"
+          >
+            <ArticleContent content={conclusion} />
+          </aside>
+        ) : null}
+
+        {/* Share */}
+        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
+          <div className="text-sm text-gray-500">
+            Autor: <span className="text-white font-bold">Știrile Crypto</span> • Redacție
+          </div>
+
+          <div className="flex flex-col gap-2 w-full md:w-auto">
+            <span className="text-xs text-gray-500 uppercase tracking-widest font-bold font-[var(--font-space)]">
+              Distribuie analiza:
+            </span>
+            <ShareButtons title={article.title} slug={article.slug} />
+          </div>
         </div>
+
+        {/* Related feed — exactly 3 */}
+        <RelatedArticles currentSlug={article.slug} />
       </article>
+
+      <footer className="border-t border-white/5 py-12 bg-black/50 text-center text-gray-600 text-sm font-[var(--font-inter)]">
+        <div className="container mx-auto px-6">
+          © 2026 Știrile Crypto. Toate drepturile rezervate.
+        </div>
+      </footer>
     </main>
   );
 }

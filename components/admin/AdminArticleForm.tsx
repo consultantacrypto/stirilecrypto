@@ -266,15 +266,20 @@ export default function AdminArticleForm() {
 
         <div className="md:col-span-2 space-y-2">
           <label htmlFor="content" className="text-xs font-bold uppercase tracking-widest text-slate-400">
-            Conținut (HTML permis)
+            Conținut (HTML sau Markdown)
           </label>
+          <p className="text-xs text-slate-500 font-[var(--font-inter)]">
+            HTML: <code className="text-slate-400">&lt;p&gt;...&lt;/p&gt;</code> sau linkuri{' '}
+            <code className="text-slate-400">&lt;a href=&quot;...&quot;&gt;</code>. Markdown:{' '}
+            <code className="text-slate-400">[text affiliate](https://...)</code>
+          </p>
           <textarea
             id="content"
             rows={14}
             value={form.content}
             onChange={(e) => updateField('content', e.target.value)}
             className="w-full rounded-xl border border-white/10 bg-[#1c1c1e] px-4 py-3 text-white font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            placeholder="<p>Conținutul articolului...</p>"
+            placeholder="<p>Paragraf HTML</p> sau [Link affiliate](https://partner.example)"
           />
         </div>
       </div>
