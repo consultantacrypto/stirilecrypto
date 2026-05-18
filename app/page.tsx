@@ -4,6 +4,7 @@ import ScrollProgress from '@/components/ScrollProgress';
 import HeroNewsPortal from '@/components/hero-concepts/HeroNewsPortal';
 import ConsultingBanner from '@/components/ConsultingBanner';
 import NewsFeed from '@/components/NewsFeed';
+import TrendingArticles from '@/components/TrendingArticles';
 import { TickerTape } from '@/components/lazy/home-widgets';
 
 export const revalidate = 0;
@@ -26,7 +27,16 @@ export default function Home() {
       <Navbar />
       <TickerTape />
       <HeroNewsPortal />
-      <NewsFeed />
+      <section className="container mx-auto px-4 sm:px-6 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          <div className="lg:col-span-8 min-w-0">
+            <NewsFeed />
+          </div>
+          <aside className="lg:col-span-4 lg:sticky lg:top-24 w-full">
+            <TrendingArticles />
+          </aside>
+        </div>
+      </section>
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl mt-16 mb-8 lg:mb-12">
         <ConsultingBanner />
       </div>

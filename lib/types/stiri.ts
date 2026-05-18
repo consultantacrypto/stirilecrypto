@@ -11,6 +11,7 @@ export interface Stire {
   image_url: string | null;
   published_at: string | null;
   created_at?: string | null;
+  views?: number | null;
 }
 
 export interface StireInsert {

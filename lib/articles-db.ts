@@ -214,6 +214,39 @@ export interface ArticlePageData {
   readTime: string;
   mihaiTake: string | null;
   impact: ArticleImpact;
+  views: number;
+}
+
+/** Trending sidebar / homepage */
+export interface TrendingArticle {
+  slug: string;
+  title: string;
+  views: number;
+}
+
+export async function getTrendingArticles(limit = 4): Promise<TrendingArticle[]> {
+  noStore();
+
+  const supabase = getSupabase();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('slug, title, views')
+    .eq('status', PUBLISHED_STATUS)
+    .order('views', { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error('[getTrendingArticles]', error.message);
+    return [];
+  }
+
+  return (data ?? []).map((row) => ({
+    slug: row.slug as string,
+    title: row.title as string,
+    views: typeof row.views === 'number' ? row.views : Number(row.views ?? 0),
+  }));
 }
 
 function parseStaticImpact(impact: string | undefined): ArticleImpact {
@@ -236,6 +269,7 @@ function staticArticleToPageData(article: StaticArticle): ArticlePageData {
     readTime: article.readTime ?? '5 min',
     mihaiTake: 'mihaiTake' in article && article.mihaiTake ? article.mihaiTake : null,
     impact: parseStaticImpact(article.impact),
+    views: 0,
   };
 }
 
@@ -252,6 +286,7 @@ function stireToPageData(stire: Stire): ArticlePageData {
     readTime: '5 min',
     mihaiTake: null,
     impact: 'neutral',
+    views: typeof stire.views === 'number' ? stire.views : Number(stire.views ?? 0),
   };
 }
 

@@ -3,6 +3,7 @@ import ShareButtons from '@/components/ShareButtons';
 import ArticleContent from '@/components/ArticleContent';
 import AffiliatePartnerBox from '@/components/AffiliatePartnerBox';
 import EmailCaptureBox from '@/components/EmailCaptureBox';
+import ViewTracker from '@/components/ViewTracker';
 import RelatedArticles from '@/components/RelatedArticles';
 import { splitArticleContent } from '@/lib/split-article-content';
 import {
@@ -10,7 +11,7 @@ import {
   getAllArticleSlugs,
   type ArticlePageData,
 } from '@/lib/articles-db';
-import { Calendar, Clock, ArrowLeft, User } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, User, Eye } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Script from 'next/script';
@@ -106,6 +107,8 @@ function ArticlePageContent({ article }: { article: ArticlePageData }) {
 
       <Navbar />
 
+      <ViewTracker slug={article.slug} />
+
       <article className="flex-1 container mx-auto px-6 py-12 max-w-4xl">
         {/* Top navigation */}
         <div className="mb-8">
@@ -128,6 +131,9 @@ function ArticlePageContent({ article }: { article: ArticlePageData }) {
             </span>
             <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
               <Clock size={12} /> {article.readTime} citire
+            </span>
+            <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
+              <Eye size={12} /> {article.views || 0} vizualizări
             </span>
             <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)] normal-case">
               <User size={12} /> Știrile Crypto • Redacție
