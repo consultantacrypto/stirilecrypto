@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar';
 import ShareButtons from '@/components/ShareButtons';
 import ArticleContent from '@/components/ArticleContent';
 import AffiliatePartnerBox from '@/components/AffiliatePartnerBox';
+import EmailCaptureBox from '@/components/EmailCaptureBox';
 import RelatedArticles from '@/components/RelatedArticles';
 import { splitArticleContent } from '@/lib/split-article-content';
 import {
@@ -162,6 +163,8 @@ function ArticlePageContent({ article }: { article: ArticlePageData }) {
 
         {/* Universal affiliate block */}
         <AffiliatePartnerBox />
+
+        <EmailCaptureBox />
 
         {/* Conclusion zone */}
         {conclusion ? (
