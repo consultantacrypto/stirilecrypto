@@ -32,11 +32,32 @@ export async function generateMetadata({
 
   if (!article) return { title: 'Articol Inexistent' };
 
+  const encodedTitle = encodeURIComponent(article.title);
+  const encodedCategory = encodeURIComponent(article.category);
+  const ogImageUrl = `https://www.stirilecrypto.ro/api/og?title=${encodedTitle}&category=${encodedCategory}`;
+
   return {
     title: `${article.title} | Știrile Crypto`,
     description: article.excerpt,
     openGraph: {
-      images: article.image_url ? [article.image_url] : [],
+      title: article.title,
+      description: article.excerpt,
+      type: 'article',
+      url: `https://www.stirilecrypto.ro/stiri/${slug}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.excerpt,
+      images: [ogImageUrl],
     },
   };
 }
