@@ -82,6 +82,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [coverLibraryOpen, setCoverLibraryOpen] = useState(false);
+  const [openClawSeoLoading, setOpenClawSeoLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const categoryOptions = useMemo(() => {
@@ -102,6 +103,52 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
     updateField('image_url', url);
     setCoverPreview(url);
     setCoverFile(null);
+  };
+
+  const generateSeoWithOpenClaw = async () => {
+    const source =
+      form.content.trim() ||
+      [form.title, form.excerpt].filter(Boolean).join('\n\n');
+
+    if (!source.trim()) {
+      setError('Adaugă conținut în editor sau un titlu înainte de a genera SEO.');
+      return;
+    }
+
+    setOpenClawSeoLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/openclaw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'seo', content: source }),
+      });
+
+      const data = (await res.json()) as {
+        metaTitle?: string;
+        metaDescription?: string;
+        error?: string;
+        mock?: boolean;
+      };
+
+      if (!res.ok) {
+        throw new Error(data.error ?? 'OpenClaw nu a putut genera SEO.');
+      }
+
+      if (data.metaTitle) updateField('meta_title', data.metaTitle);
+      if (data.metaDescription) updateField('meta_description', data.metaDescription);
+
+      setSuccess(
+        data.mock
+          ? 'SEO generat (mod demo OpenClaw — configurează OPENCLAW_API_URL și OPENCLAW_API_KEY).'
+          : 'SEO generat cu OpenClaw.'
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Eroare la generarea SEO.');
+    } finally {
+      setOpenClawSeoLoading(false);
+    }
   };
 
   const handleTitleChange = (title: string) => {
@@ -353,6 +400,22 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
             title={form.title}
             excerpt={form.excerpt}
           />
+
+          <button
+            type="button"
+            onClick={() => void generateSeoWithOpenClaw()}
+            disabled={openClawSeoLoading}
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 via-blue-600 to-cyan-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-900/30 hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
+          >
+            {openClawSeoLoading ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                OpenClaw analizează...
+              </>
+            ) : (
+              <>🪄 Generează SEO cu OpenClaw</>
+            )}
+          </button>
 
           <div className="grid grid-cols-1 gap-6">
             <div className="space-y-2">

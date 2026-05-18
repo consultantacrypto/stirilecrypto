@@ -14,6 +14,8 @@ import {
   ListOrdered,
   Link2,
   ImageIcon,
+  Wand2,
+  Loader2,
 } from 'lucide-react';
 import MediaLibraryModal from '@/components/admin/MediaLibraryModal';
 
@@ -25,18 +27,26 @@ type RichTextEditorProps = {
 type ToolbarButtonProps = {
   onClick: () => void;
   isActive?: boolean;
+  disabled?: boolean;
   label: string;
   children: React.ReactNode;
 };
 
-function ToolbarButton({ onClick, isActive, label, children }: ToolbarButtonProps) {
+function ToolbarButton({
+  onClick,
+  isActive,
+  disabled,
+  label,
+  children,
+}: ToolbarButtonProps) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       title={label}
       aria-label={label}
-      className={`inline-flex items-center justify-center w-9 h-9 rounded-lg border transition-colors ${
+      className={`inline-flex items-center justify-center w-9 h-9 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
         isActive
           ? 'bg-blue-600/20 border-blue-500/50 text-blue-400'
           : 'border-white/10 bg-white/5 text-slate-400 hover:text-white hover:border-white/20'
@@ -49,6 +59,7 @@ function ToolbarButton({ onClick, isActive, label, children }: ToolbarButtonProp
 
 export default function RichTextEditor({ value, onChange }: RichTextEditorProps) {
   const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
+  const [openClawFormatLoading, setOpenClawFormatLoading] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -110,6 +121,48 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
   const insertImage = (url: string) => {
     if (!editor) return;
     editor.chain().focus().setImage({ src: url }).run();
+  };
+
+  const formatSelectionWithOpenClaw = async () => {
+    if (!editor || openClawFormatLoading) return;
+
+    const { from, to, empty } = editor.state.selection;
+    if (empty) {
+      window.alert('Selectează un fragment de text în editor, apoi apasă OpenClaw.');
+      return;
+    }
+
+    const selectedText = editor.state.doc.textBetween(from, to, '\n');
+    if (!selectedText.trim()) return;
+
+    setOpenClawFormatLoading(true);
+
+    try {
+      const res = await fetch('/api/openclaw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'format', content: selectedText }),
+      });
+
+      const data = (await res.json()) as { text?: string; error?: string };
+
+      if (!res.ok || !data.text) {
+        throw new Error(data.error ?? 'OpenClaw nu a putut formata textul.');
+      }
+
+      editor
+        .chain()
+        .focus()
+        .deleteRange({ from, to })
+        .insertContentAt(from, data.text)
+        .run();
+    } catch (err) {
+      window.alert(
+        err instanceof Error ? err.message : 'Eroare la formatarea cu OpenClaw.'
+      );
+    } finally {
+      setOpenClawFormatLoading(false);
+    }
   };
 
   if (!editor) {
@@ -179,6 +232,19 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
             onClick={() => setMediaLibraryOpen(true)}
           >
             <ImageIcon size={16} />
+          </ToolbarButton>
+          <span className="w-px h-6 bg-white/10 mx-1" aria-hidden />
+          <ToolbarButton
+            label="OpenClaw — formatează selecția"
+            onClick={() => void formatSelectionWithOpenClaw()}
+            disabled={openClawFormatLoading}
+            isActive={openClawFormatLoading}
+          >
+            {openClawFormatLoading ? (
+              <Loader2 size={16} className="animate-spin text-violet-400" />
+            ) : (
+              <Wand2 size={16} className="text-violet-400" />
+            )}
           </ToolbarButton>
         </div>
 
