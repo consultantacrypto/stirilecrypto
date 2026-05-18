@@ -2,32 +2,44 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-type OpenClawAction = 'seo' | 'format';
+/**
+ * OpenClaw API Bridge — Next.js Admin Panel ↔ isolated Docker agent.
+ *
+ * This route does NOT import anything from `openclaw-agent/` (strict separation).
+ * It proxies requests to the local OpenClaw Gateway container.
+ *
+ * Gateway (Docker): http://127.0.0.1:18789  (localhost-only bind in docker-compose)
+ * Override for remote agent host: OPENCLAW_GATEWAY_URL in .env.local
+ *
+ * POST body examples:
+ *   { "action": "seo",    "content": "<p>HTML sau text articol...</p>" }
+ *   { "action": "format", "content": "text selectat din editor" }
+ *   { "action": "draft",  "content": "brief sau markdown", "title": "...", "excerpt": "..." }
+ *
+ * Responses:
+ *   seo    → { metaTitle, metaDescription }
+ *   format → { text }
+ *   draft  → { id, slug, status: "draft" }
+ */
+const OPENCLAW_GATEWAY_URL =
+  process.env.OPENCLAW_GATEWAY_URL?.replace(/\/$/, '') || 'http://127.0.0.1:18789';
+
+const GATEWAY_RUN_PATH = '/v1/run';
+
+type OpenClawAction = 'seo' | 'format' | 'draft';
 
 type RequestBody = {
   action: OpenClawAction;
   content: string;
+  title?: string;
+  excerpt?: string;
+  category?: string;
 };
-
-// ---------------------------------------------------------------------------
-// OpenClaw configuration — insert your credentials in .env.local:
-//   OPENCLAW_API_URL=https://your-openclaw-host/api/v1/chat   (your endpoint)
-//   OPENCLAW_API_KEY=your-secret-api-key
-// ---------------------------------------------------------------------------
-const OPENCLAW_API_URL = process.env.OPENCLAW_API_URL;
-const OPENCLAW_API_KEY = process.env.OPENCLAW_API_KEY;
-
-function isOpenClawConfigured(): boolean {
-  return Boolean(OPENCLAW_API_URL?.trim() && OPENCLAW_API_KEY?.trim());
-}
 
 function stripHtml(html: string): string {
   return html
     .replace(/<[^>]*>/g, ' ')
     .replace(/&nbsp;/gi, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -37,38 +49,13 @@ function truncate(text: string, max: number): string {
   return `${text.slice(0, max - 1).trim()}…`;
 }
 
-function parseSeoResponse(raw: string): { metaTitle: string; metaDescription: string } | null {
-  const jsonMatch = raw.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) return null;
-
-  try {
-    const parsed = JSON.parse(jsonMatch[0]) as {
-      metaTitle?: string;
-      meta_description?: string;
-      metaDescription?: string;
-      meta_title?: string;
-    };
-    const metaTitle = (parsed.metaTitle ?? parsed.meta_title ?? '').trim();
-    const metaDescription = (
-      parsed.metaDescription ?? parsed.meta_description ?? ''
-    ).trim();
-    if (!metaTitle || !metaDescription) return null;
-    return {
-      metaTitle: truncate(metaTitle, 60),
-      metaDescription: truncate(metaDescription, 160),
-    };
-  } catch {
-    return null;
-  }
-}
-
-function mockSeoResponse(content: string): { metaTitle: string; metaDescription: string } {
+function mockSeo(content: string) {
   const plain = stripHtml(content) || 'Articole crypto și analiză de piață';
   const words = plain.split(/\s+/).filter(Boolean);
   const titleBase = words.slice(0, 8).join(' ') || 'Știri Crypto — analiză de piață';
   const descBase =
     words.slice(0, 24).join(' ') ||
-    'Descoperă analize crypto, context macro și perspective on-chain de la Știrile Crypto.';
+    'Descoperă analize crypto, context macro și perspective on-chain.';
 
   return {
     metaTitle: truncate(`${titleBase} | Știrile Crypto`, 60),
@@ -76,72 +63,69 @@ function mockSeoResponse(content: string): { metaTitle: string; metaDescription:
       `${descBase} Citește analiza completă pe stirilecrypto.ro.`,
       160
     ),
+    mock: true,
+    gatewayUnreachable: true,
   };
 }
 
-function mockFormatResponse(content: string): string {
+function mockFormat(content: string) {
   const plain = stripHtml(content) || content;
-  if (!plain.trim()) return content;
-
-  return plain
-    .replace(/\s+/g, ' ')
-    .replace(/\. /g, '. ')
-    .trim()
-    .replace(/^(.)/, (m) => m.toUpperCase());
+  return {
+    text: plain.trim() ? plain.charAt(0).toUpperCase() + plain.slice(1) : content,
+    mock: true,
+    gatewayUnreachable: true,
+  };
 }
 
-const SEO_SYSTEM_PROMPT = `Ești OpenClaw, asistent editorial SEO pentru un site de știri crypto în limba română.
-Generează un Meta Title click-worthy (maxim 60 caractere) și o Meta Description pentru Google (maxim 160 caractere).
-Răspunde DOAR cu JSON valid, fără markdown:
-{"metaTitle":"...","metaDescription":"..."}`;
+async function proxyToGateway(body: RequestBody): Promise<{
+  ok: boolean;
+  status: number;
+  data: Record<string, unknown>;
+}> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 60_000);
 
-const FORMAT_SYSTEM_PROMPT = `Ești OpenClaw, editor senior de jurnalism crypto în limba română.
-Rescrie și rafinează textul primit într-un ton premium, profesionist, clar și captivant — stil publicație financiară de top.
-Păstrează sensul factual. Returnează DOAR textul final polizat, fără explicații sau prefixe.`;
+  try {
+    const response = await fetch(`${OPENCLAW_GATEWAY_URL}${GATEWAY_RUN_PATH}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+      cache: 'no-store',
+    });
 
-async function callOpenClaw(systemPrompt: string, userContent: string): Promise<string> {
-  if (!isOpenClawConfigured()) {
-    throw new Error('OPENCLAW_NOT_CONFIGURED');
+    const data = (await response.json().catch(() => ({}))) as Record<string, unknown>;
+
+    return { ok: response.ok, status: response.status, data };
+  } finally {
+    clearTimeout(timeout);
   }
+}
 
-  // ---------------------------------------------------------------------------
-  // OpenClaw API request — adjust headers/body to match your OpenClaw contract.
-  // Example below assumes an OpenAI-compatible chat completions endpoint.
-  // ---------------------------------------------------------------------------
-  const response = await fetch(OPENCLAW_API_URL!, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${OPENCLAW_API_KEY}`,
-    },
-    body: JSON.stringify({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userContent },
-      ],
-      temperature: 0.6,
-    }),
-  });
-
-  if (!response.ok) {
-    const errText = await response.text().catch(() => '');
-    throw new Error(`OpenClaw API error ${response.status}: ${errText}`);
+export async function GET() {
+  try {
+    const res = await fetch(`${OPENCLAW_GATEWAY_URL}/health`, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5_000),
+    });
+    const data = await res.json().catch(() => ({}));
+    return NextResponse.json({
+      bridge: 'ok',
+      gateway: res.ok ? data : { status: 'unreachable', gateway: OPENCLAW_GATEWAY_URL },
+    });
+  } catch {
+    return NextResponse.json(
+      {
+        bridge: 'ok',
+        gateway: {
+          status: 'unreachable',
+          url: OPENCLAW_GATEWAY_URL,
+          hint: 'Start agent: cd openclaw-agent && docker compose up -d',
+        },
+      },
+      { status: 503 }
+    );
   }
-
-  const data = (await response.json()) as {
-    choices?: { message?: { content?: string } }[];
-    output?: string;
-    text?: string;
-    content?: string;
-  };
-
-  return (
-    data.choices?.[0]?.message?.content ??
-    data.output ??
-    data.text ??
-    data.content ??
-    ''
-  ).trim();
 }
 
 export async function POST(req: Request) {
@@ -149,9 +133,9 @@ export async function POST(req: Request) {
     const body = (await req.json()) as RequestBody;
     const { action, content } = body;
 
-    if (!action || (action !== 'seo' && action !== 'format')) {
+    if (!action || !['seo', 'format', 'draft'].includes(action)) {
       return NextResponse.json(
-        { error: 'Invalid action. Use "seo" or "format".' },
+        { error: 'Invalid action. Use "seo", "format", or "draft".' },
         { status: 400 }
       );
     }
@@ -160,58 +144,50 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Content is required.' }, { status: 400 });
     }
 
-    const plainContent = stripHtml(content);
-
-    if (action === 'seo') {
-      if (!isOpenClawConfigured()) {
-        const mock = mockSeoResponse(plainContent);
-        return NextResponse.json({
-          ...mock,
-          mock: true,
-        });
-      }
-
-      try {
-        const raw = await callOpenClaw(
-          SEO_SYSTEM_PROMPT,
-          `Conținut articol:\n\n${plainContent.slice(0, 6000)}`
-        );
-        const parsed = parseSeoResponse(raw);
-        if (parsed) {
-          return NextResponse.json(parsed);
-        }
-        return NextResponse.json(mockSeoResponse(plainContent), { mock: true });
-      } catch {
-        return NextResponse.json(mockSeoResponse(plainContent), { mock: true });
-      }
-    }
-
-    // action === 'format'
-    if (!isOpenClawConfigured()) {
-      return NextResponse.json({
-        text: mockFormatResponse(plainContent),
-        mock: true,
-      });
-    }
-
     try {
-      const polished = await callOpenClaw(
-        FORMAT_SYSTEM_PROMPT,
-        plainContent.slice(0, 8000)
+      const { ok, status, data } = await proxyToGateway(body);
+
+      if (ok) {
+        return NextResponse.json(data, { status: status === 201 ? 201 : 200 });
+      }
+
+      if (action === 'seo') {
+        return NextResponse.json(mockSeo(content), { status: 200 });
+      }
+      if (action === 'format') {
+        return NextResponse.json(mockFormat(content), { status: 200 });
+      }
+
+      return NextResponse.json(
+        {
+          error:
+            (data.error as string) ||
+            'OpenClaw gateway error. Verifică docker compose și .env din openclaw-agent.',
+          ...data,
+        },
+        { status: status >= 400 ? status : 503 }
       );
-      return NextResponse.json({
-        text: polished || mockFormatResponse(plainContent),
-      });
     } catch {
-      return NextResponse.json({
-        text: mockFormatResponse(plainContent),
-        mock: true,
-      });
+      if (action === 'seo') {
+        return NextResponse.json(mockSeo(content));
+      }
+      if (action === 'format') {
+        return NextResponse.json(mockFormat(content));
+      }
+
+      return NextResponse.json(
+        {
+          error:
+            'OpenClaw gateway unreachable. Rulează: cd openclaw-agent && docker compose up -d',
+          gateway: OPENCLAW_GATEWAY_URL,
+        },
+        { status: 503 }
+      );
     }
   } catch (err) {
-    console.error('[openclaw]', err);
+    console.error('[openclaw bridge]', err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'OpenClaw request failed.' },
+      { error: err instanceof Error ? err.message : 'OpenClaw bridge failed.' },
       { status: 500 }
     );
   }
