@@ -215,6 +215,8 @@ export interface ArticlePageData {
   mihaiTake: string | null;
   impact: ArticleImpact;
   views: number;
+  meta_title: string | null;
+  meta_description: string | null;
 }
 
 /** Trending sidebar / homepage */
@@ -270,6 +272,8 @@ function staticArticleToPageData(article: StaticArticle): ArticlePageData {
     mihaiTake: 'mihaiTake' in article && article.mihaiTake ? article.mihaiTake : null,
     impact: parseStaticImpact(article.impact),
     views: 0,
+    meta_title: null,
+    meta_description: null,
   };
 }
 
@@ -287,6 +291,8 @@ function stireToPageData(stire: Stire): ArticlePageData {
     mihaiTake: null,
     impact: 'neutral',
     views: typeof stire.views === 'number' ? stire.views : Number(stire.views ?? 0),
+    meta_title: stire.meta_title ?? null,
+    meta_description: stire.meta_description ?? null,
   };
 }
 

@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Upload, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import GoogleSeoPreview from '@/components/admin/GoogleSeoPreview';
 import { createClient } from '@/lib/supabase/client';
 import { slugify, sanitizeFileName } from '@/lib/slugify';
 import type { ArticleStatus, Stire } from '@/lib/types/stiri';
@@ -29,6 +30,8 @@ type FormState = {
   category: string;
   status: ArticleStatus;
   image_url: string;
+  meta_title: string;
+  meta_description: string;
 };
 
 const emptyForm: FormState = {
@@ -39,6 +42,8 @@ const emptyForm: FormState = {
   category: CATEGORIES[0],
   status: 'draft',
   image_url: '',
+  meta_title: '',
+  meta_description: '',
 };
 
 function formFromArticle(article: Stire): FormState {
@@ -50,6 +55,8 @@ function formFromArticle(article: Stire): FormState {
     category: article.category,
     status: article.status,
     image_url: article.image_url ?? '',
+    meta_title: article.meta_title ?? '',
+    meta_description: article.meta_description ?? '',
   };
 }
 
@@ -174,6 +181,8 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         status: form.status,
         image_url: imageUrl,
         published_at: publishedAt,
+        meta_title: form.meta_title.trim() || null,
+        meta_description: form.meta_description.trim() || null,
       };
 
       const supabase = createClient();
@@ -260,23 +269,6 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="slug" className="text-xs font-bold uppercase tracking-widest text-slate-400">
-            Slug (URL)
-          </label>
-          <input
-            id="slug"
-            type="text"
-            value={form.slug}
-            onChange={(e) => {
-              setSlugTouched(true);
-              updateField('slug', slugify(e.target.value));
-            }}
-            className="w-full rounded-xl border border-white/10 bg-[#1c1c1e] px-4 py-3 text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            placeholder="slug-articol"
-          />
-        </div>
-
-        <div className="space-y-2">
           <label htmlFor="category" className="text-xs font-bold uppercase tracking-widest text-slate-400">
             Categorie
           </label>
@@ -335,6 +327,90 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
             value={form.content}
             onChange={(html) => updateField('content', html)}
           />
+        </div>
+
+        <div className="md:col-span-2 rounded-2xl border border-white/10 bg-[#0a0f1e]/80 p-6 md:p-8 space-y-6">
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-blue-400 font-[var(--font-space)]">
+              SEO &amp; Metadata
+            </h3>
+            <p className="mt-1 text-xs text-slate-500 font-[var(--font-inter)]">
+              Optimizează cum apare articolul în Google și pe rețelele sociale.
+            </p>
+          </div>
+
+          <GoogleSeoPreview
+            slug={form.slug}
+            metaTitle={form.meta_title}
+            metaDescription={form.meta_description}
+            title={form.title}
+            excerpt={form.excerpt}
+          />
+
+          <div className="grid grid-cols-1 gap-6">
+            <div className="space-y-2">
+              <label
+                htmlFor="seo-slug"
+                className="text-xs font-bold uppercase tracking-widest text-slate-400"
+              >
+                Custom Slug (URL)
+              </label>
+              <input
+                id="seo-slug"
+                type="text"
+                value={form.slug}
+                onChange={(e) => {
+                  setSlugTouched(true);
+                  updateField('slug', slugify(e.target.value));
+                }}
+                className="w-full rounded-xl border border-white/10 bg-[#1c1c1e] px-4 py-3 text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                placeholder="slug-articol-personalizat"
+              />
+              <p className="text-xs text-slate-600 font-mono">/stiri/{form.slug || 'slug'}</p>
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="meta_title"
+                className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-slate-400"
+              >
+                <span>Meta Title</span>
+                <span className="font-normal normal-case text-slate-600">
+                  {form.meta_title.length}/60 recomandat
+                </span>
+              </label>
+              <input
+                id="meta_title"
+                type="text"
+                maxLength={120}
+                value={form.meta_title}
+                onChange={(e) => updateField('meta_title', e.target.value)}
+                className="w-full rounded-xl border border-white/10 bg-[#1c1c1e] px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                placeholder={form.title || 'Titlu pentru Google (lasă gol = titlul articolului)'}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="meta_description"
+                className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-slate-400"
+              >
+                <span>Meta Description</span>
+                <span className="font-normal normal-case text-slate-600">
+                  {form.meta_description.length}/160 recomandat
+                </span>
+              </label>
+              <textarea
+                id="meta_description"
+                rows={3}
+                maxLength={320}
+                value={form.meta_description}
+                onChange={(e) => updateField('meta_description', e.target.value)}
+                className="w-full rounded-xl border border-white/10 bg-[#1c1c1e] px-4 py-3 text-white resize-y focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                placeholder={form.excerpt || 'Descriere pentru Google (lasă gol = excerpt)'}
+              />
+            </div>
+          </div>
         </div>
       </div>
 

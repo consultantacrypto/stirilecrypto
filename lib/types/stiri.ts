@@ -12,6 +12,8 @@ export interface Stire {
   published_at: string | null;
   created_at?: string | null;
   views?: number | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
 }
 
 export interface StireInsert {
@@ -23,4 +25,6 @@ export interface StireInsert {
   status: ArticleStatus;
   image_url: string | null;
   published_at: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
 }

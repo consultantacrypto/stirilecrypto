@@ -34,16 +34,18 @@ export async function generateMetadata({
 
   if (!article) return { title: 'Articol Inexistent' };
 
-  const encodedTitle = encodeURIComponent(article.title);
+  const seoTitle = article.meta_title?.trim() || article.title;
+  const seoDescription = article.meta_description?.trim() || article.excerpt;
+  const encodedTitle = encodeURIComponent(seoTitle);
   const encodedCategory = encodeURIComponent(article.category);
   const ogImageUrl = `https://www.stirilecrypto.ro/api/og?title=${encodedTitle}&category=${encodedCategory}`;
 
   return {
-    title: `${article.title} | Știrile Crypto`,
-    description: article.excerpt,
+    title: `${seoTitle} | Știrile Crypto`,
+    description: seoDescription,
     openGraph: {
-      title: article.title,
-      description: article.excerpt,
+      title: seoTitle,
+      description: seoDescription,
       type: 'article',
       url: `https://www.stirilecrypto.ro/stiri/${slug}`,
       images: [
@@ -51,14 +53,14 @@ export async function generateMetadata({
           url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: article.title,
+          alt: seoTitle,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: article.title,
-      description: article.excerpt,
+      title: seoTitle,
+      description: seoDescription,
       images: [ogImageUrl],
     },
   };
