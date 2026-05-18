@@ -2,9 +2,10 @@
 
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Upload, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { Upload, CheckCircle2, AlertCircle, Loader2, ImageIcon } from 'lucide-react';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 import GoogleSeoPreview from '@/components/admin/GoogleSeoPreview';
+import MediaLibraryModal from '@/components/admin/MediaLibraryModal';
 import { createClient } from '@/lib/supabase/client';
 import { slugify, sanitizeFileName } from '@/lib/slugify';
 import type { ArticleStatus, Stire } from '@/lib/types/stiri';
@@ -76,11 +77,11 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
   const [coverPreview, setCoverPreview] = useState<string | null>(
     initialData?.image_url ?? null
   );
-  const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [coverLibraryOpen, setCoverLibraryOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const categoryOptions = useMemo(() => {
@@ -95,6 +96,12 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
     setForm((prev) => ({ ...prev, [key]: value }));
     setError(null);
     setSuccess(null);
+  };
+
+  const selectCoverFromLibrary = (url: string) => {
+    updateField('image_url', url);
+    setCoverPreview(url);
+    setCoverFile(null);
   };
 
   const handleTitleChange = (title: string) => {
@@ -418,28 +425,48 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
           Imagine copertă
         </span>
-        <div
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
-          onDragOver={(e) => {
-            e.preventDefault();
-            setIsDragging(true);
-          }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setIsDragging(false);
-            const file = e.dataTransfer.files?.[0];
-            handleFile(file ?? null);
-          }}
-          onClick={() => fileInputRef.current?.click()}
-          className={`relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-6 py-12 cursor-pointer transition-colors ${
-            isDragging
-              ? 'border-blue-500 bg-blue-500/10'
-              : 'border-white/15 bg-[#1c1c1e] hover:border-white/30'
-          }`}
-        >
+        <div className="rounded-2xl border border-white/10 bg-[#1c1c1e] p-5 space-y-4">
+          {coverPreview || form.image_url ? (
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              <div className="relative w-full sm:w-48 aspect-video rounded-xl overflow-hidden border border-white/10 bg-black shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={coverPreview || form.image_url}
+                  alt="Previzualizare copertă"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCoverLibraryOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:border-blue-500/40 transition-colors"
+                >
+                  <ImageIcon size={16} />
+                  Schimbă imaginea
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center justify-center gap-2 text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  <Upload size={14} />
+                  Sau încarcă fișier local
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setCoverLibraryOpen(true)}
+              className="flex w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-white/15 px-6 py-10 hover:border-blue-500/40 hover:bg-blue-500/5 transition-colors"
+            >
+              <ImageIcon size={32} className="text-blue-400" />
+              <span className="text-sm font-bold text-white">Select Cover Image</span>
+              <span className="text-xs text-slate-500">Din Media Library (imagini-stiri)</span>
+            </button>
+          )}
+
           <input
             ref={fileInputRef}
             type="file"
@@ -447,25 +474,13 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
             className="hidden"
             onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
           />
-          {coverPreview ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={coverPreview}
-              alt="Previzualizare copertă"
-              className="max-h-48 rounded-lg object-contain"
-            />
-          ) : (
-            <>
-              <Upload className="text-slate-500" size={32} />
-              <p className="text-slate-400 text-sm text-center">
-                Trage imaginea aici sau click pentru a selecta
-              </p>
-              <p className="text-slate-600 text-xs">JPG, PNG, WebP — upload în bucket imagini-stiri</p>
-            </>
-          )}
         </div>
-        {form.image_url && !coverFile && (
-          <p className="text-xs text-slate-500 truncate">URL curent: {form.image_url}</p>
+
+        {coverLibraryOpen && (
+          <MediaLibraryModal
+            onClose={() => setCoverLibraryOpen(false)}
+            onSelect={selectCoverFromLibrary}
+          />
         )}
       </div>
 

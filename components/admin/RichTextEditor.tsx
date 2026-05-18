@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
+import Image from '@tiptap/extension-image';
 import {
   Bold,
   Italic,
@@ -12,7 +13,9 @@ import {
   List,
   ListOrdered,
   Link2,
+  ImageIcon,
 } from 'lucide-react';
+import MediaLibraryModal from '@/components/admin/MediaLibraryModal';
 
 type RichTextEditorProps = {
   value: string;
@@ -45,6 +48,8 @@ function ToolbarButton({ onClick, isActive, label, children }: ToolbarButtonProp
 }
 
 export default function RichTextEditor({ value, onChange }: RichTextEditorProps) {
+  const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -58,13 +63,18 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           rel: 'noopener noreferrer sponsored',
         },
       }),
+      Image.configure({
+        HTMLAttributes: {
+          class: 'rounded-lg max-w-full h-auto my-4',
+        },
+      }),
     ],
     content: value || '<p></p>',
     immediatelyRender: false,
     editorProps: {
       attributes: {
         class:
-          'prose prose-invert max-w-none focus:outline-none p-4 min-h-[360px] text-gray-300 font-[var(--font-inter)] leading-relaxed prose-headings:font-[var(--font-space)] prose-headings:text-white prose-a:text-blue-500 prose-a:underline prose-strong:text-white',
+          'prose prose-invert max-w-none focus:outline-none p-4 min-h-[360px] text-gray-300 font-[var(--font-inter)] leading-relaxed prose-headings:font-[var(--font-space)] prose-headings:text-white prose-a:text-blue-500 prose-a:underline prose-strong:text-white prose-img:rounded-lg',
       },
     },
     onUpdate: ({ editor: ed }) => {
@@ -97,6 +107,11 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
   };
 
+  const insertImage = (url: string) => {
+    if (!editor) return;
+    editor.chain().focus().setImage({ src: url }).run();
+  };
+
   if (!editor) {
     return (
       <div className="rounded-xl border border-white/10 bg-gray-900 min-h-[400px] animate-pulse" />
@@ -104,66 +119,81 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
   }
 
   return (
-    <div className="rounded-xl border border-white/10 overflow-hidden bg-gray-900 shadow-inner">
-      <div className="flex flex-wrap items-center gap-1.5 p-2 border-b border-white/10 bg-[#0a0f1e]">
-        <ToolbarButton
-          label="Bold"
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          isActive={editor.isActive('bold')}
-        >
-          <Bold size={16} />
-        </ToolbarButton>
-        <ToolbarButton
-          label="Italic"
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          isActive={editor.isActive('italic')}
-        >
-          <Italic size={16} />
-        </ToolbarButton>
-        <span className="w-px h-6 bg-white/10 mx-1" aria-hidden />
-        <ToolbarButton
-          label="Heading 2"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          isActive={editor.isActive('heading', { level: 2 })}
-        >
-          <Heading2 size={16} />
-        </ToolbarButton>
-        <ToolbarButton
-          label="Heading 3"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          isActive={editor.isActive('heading', { level: 3 })}
-        >
-          <Heading3 size={16} />
-        </ToolbarButton>
-        <span className="w-px h-6 bg-white/10 mx-1" aria-hidden />
-        <ToolbarButton
-          label="Bullet list"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          isActive={editor.isActive('bulletList')}
-        >
-          <List size={16} />
-        </ToolbarButton>
-        <ToolbarButton
-          label="Ordered list"
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          isActive={editor.isActive('orderedList')}
-        >
-          <ListOrdered size={16} />
-        </ToolbarButton>
-        <span className="w-px h-6 bg-white/10 mx-1" aria-hidden />
-        <ToolbarButton
-          label="Link"
-          onClick={setLink}
-          isActive={editor.isActive('link')}
-        >
-          <Link2 size={16} />
-        </ToolbarButton>
+    <>
+      <div className="rounded-xl border border-white/10 overflow-hidden bg-gray-900 shadow-inner">
+        <div className="flex flex-wrap items-center gap-1.5 p-2 border-b border-white/10 bg-[#0a0f1e]">
+          <ToolbarButton
+            label="Bold"
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            isActive={editor.isActive('bold')}
+          >
+            <Bold size={16} />
+          </ToolbarButton>
+          <ToolbarButton
+            label="Italic"
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            isActive={editor.isActive('italic')}
+          >
+            <Italic size={16} />
+          </ToolbarButton>
+          <span className="w-px h-6 bg-white/10 mx-1" aria-hidden />
+          <ToolbarButton
+            label="Heading 2"
+            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            isActive={editor.isActive('heading', { level: 2 })}
+          >
+            <Heading2 size={16} />
+          </ToolbarButton>
+          <ToolbarButton
+            label="Heading 3"
+            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+            isActive={editor.isActive('heading', { level: 3 })}
+          >
+            <Heading3 size={16} />
+          </ToolbarButton>
+          <span className="w-px h-6 bg-white/10 mx-1" aria-hidden />
+          <ToolbarButton
+            label="Bullet list"
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            isActive={editor.isActive('bulletList')}
+          >
+            <List size={16} />
+          </ToolbarButton>
+          <ToolbarButton
+            label="Ordered list"
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            isActive={editor.isActive('orderedList')}
+          >
+            <ListOrdered size={16} />
+          </ToolbarButton>
+          <span className="w-px h-6 bg-white/10 mx-1" aria-hidden />
+          <ToolbarButton
+            label="Link"
+            onClick={setLink}
+            isActive={editor.isActive('link')}
+          >
+            <Link2 size={16} />
+          </ToolbarButton>
+          <ToolbarButton
+            label="Insert Image"
+            onClick={() => setMediaLibraryOpen(true)}
+          >
+            <ImageIcon size={16} />
+          </ToolbarButton>
+        </div>
+
+        <EditorContent
+          editor={editor}
+          className="prose prose-invert max-w-none focus:outline-none min-h-[400px] bg-gray-900"
+        />
       </div>
 
-      <EditorContent
-        editor={editor}
-        className="prose prose-invert max-w-none focus:outline-none min-h-[400px] bg-gray-900"
-      />
-    </div>
+      {mediaLibraryOpen && (
+        <MediaLibraryModal
+          onClose={() => setMediaLibraryOpen(false)}
+          onSelect={insertImage}
+        />
+      )}
+    </>
   );
 }
