@@ -1,9 +1,17 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { Upload, CheckCircle2, AlertCircle, Loader2, ImageIcon } from 'lucide-react';
+import {
+  Upload,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  ImageIcon,
+  Cloud,
+  CloudOff,
+} from 'lucide-react';
 import GoogleSeoPreview from '@/components/admin/GoogleSeoPreview';
 
 const RichTextEditor = dynamic(() => import('@/components/admin/RichTextEditor'), {
@@ -71,18 +79,41 @@ function formFromArticle(article: Stire): FormState {
   };
 }
 
+type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+const AUTO_SAVE_DEBOUNCE_MS = 5000;
+const AUTO_SAVE_INTERVAL_MS = 30000;
+
+function serializeFormSnapshot(form: FormState): string {
+  return JSON.stringify(form);
+}
+
+function canAutoSave(form: FormState): boolean {
+  const hasTitle = form.title.trim().length > 0;
+  const hasContent = form.content.replace(/<[^>]*>/g, '').trim().length > 0;
+  return hasTitle || hasContent;
+}
+
+/** Auto-save never promotes draft → published; only keeps published if already live in DB. */
+function autoSaveStatus(
+  articleId: string | undefined,
+  persistedStatus: ArticleStatus
+): ArticleStatus {
+  if (!articleId) return 'draft';
+  return persistedStatus === 'published' ? 'published' : 'draft';
+}
+
 export type AdminArticleFormProps = {
   initialData?: Stire;
 };
 
 export default function AdminArticleForm({ initialData }: AdminArticleFormProps) {
   const router = useRouter();
-  const isEditing = Boolean(initialData);
+  const initialForm = initialData ? formFromArticle(initialData) : emptyForm;
 
-  const [form, setForm] = useState<FormState>(() =>
-    initialData ? formFromArticle(initialData) : emptyForm
-  );
-  const [slugTouched, setSlugTouched] = useState(isEditing);
+  const [articleId, setArticleId] = useState<string | undefined>(initialData?.id);
+  const [form, setForm] = useState<FormState>(initialForm);
+  const [slugTouched, setSlugTouched] = useState(Boolean(initialData));
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(
     initialData?.image_url ?? null
@@ -93,7 +124,19 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
   const [success, setSuccess] = useState<string | null>(null);
   const [coverLibraryOpen, setCoverLibraryOpen] = useState(false);
   const [openClawSeoLoading, setOpenClawSeoLoading] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+  const [lastSavedTime, setLastSavedTime] = useState<Date | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef(form);
+  const persistedStatusRef = useRef<ArticleStatus>(initialData?.status ?? 'draft');
+  const publishedAtRef = useRef<string | null>(initialData?.published_at ?? null);
+  const lastSavedSnapshotRef = useRef<string>(serializeFormSnapshot(initialForm));
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isAutoSavingRef = useRef(false);
+
+  formRef.current = form;
+  const isEditing = Boolean(articleId);
 
   const categoryOptions = useMemo(() => {
     const base = [...CATEGORIES];
@@ -195,6 +238,110 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
     return data.publicUrl;
   };
 
+  const buildPayload = useCallback(
+    (current: FormState, imageUrl: string, status: ArticleStatus) => {
+      const publishedAt =
+        status === 'published'
+          ? publishedAtRef.current ?? new Date().toISOString()
+          : null;
+
+      return {
+        title: current.title.trim() || 'Draft fără titlu',
+        slug: current.slug.trim() || slugify(current.title) || `draft-${Date.now()}`,
+        excerpt: current.excerpt.trim(),
+        content: current.content.trim(),
+        category: current.category,
+        status,
+        image_url: imageUrl || null,
+        published_at: publishedAt,
+        meta_title: current.meta_title.trim() || null,
+        meta_description: current.meta_description.trim() || null,
+      };
+    },
+    []
+  );
+
+  const performAutoSave = useCallback(async () => {
+    if (isAutoSavingRef.current || isSubmitting || isUploading) return;
+
+    const current = formRef.current;
+    const snapshot = serializeFormSnapshot(current);
+
+    if (snapshot === lastSavedSnapshotRef.current) return;
+    if (!canAutoSave(current)) return;
+
+    isAutoSavingRef.current = true;
+    setSaveStatus('saving');
+
+    try {
+      const status = autoSaveStatus(articleId, persistedStatusRef.current);
+      const payload = buildPayload(current, current.image_url, status);
+      const supabase = createClient();
+
+      if (articleId) {
+        const { error: updateError } = await supabase
+          .from('stiri')
+          .update(payload)
+          .eq('id', articleId);
+
+        if (updateError) throw new Error(updateError.message);
+        lastSavedSnapshotRef.current = snapshot;
+      } else {
+        const { data, error: insertError } = await supabase
+          .from('stiri')
+          .insert(payload)
+          .select('id, slug, status, published_at')
+          .single();
+
+        if (insertError) throw new Error(insertError.message);
+        if (!data) throw new Error('Nu s-a returnat ID-ul articolului.');
+
+        setArticleId(data.id as string);
+        persistedStatusRef.current = (data.status as ArticleStatus) ?? 'draft';
+        publishedAtRef.current = (data.published_at as string | null) ?? null;
+
+        const syncedForm: FormState = {
+          ...current,
+          slug: data.slug as string,
+          status: persistedStatusRef.current,
+        };
+
+        setForm(syncedForm);
+        lastSavedSnapshotRef.current = serializeFormSnapshot(syncedForm);
+
+        router.replace(`/admin/edit/${data.id}`, { scroll: false });
+      }
+      setLastSavedTime(new Date());
+      setSaveStatus('saved');
+    } catch {
+      setSaveStatus('error');
+    } finally {
+      isAutoSavingRef.current = false;
+    }
+  }, [articleId, buildPayload, isSubmitting, isUploading, router]);
+
+  useEffect(() => {
+    const snapshot = serializeFormSnapshot(form);
+    if (snapshot === lastSavedSnapshotRef.current) return;
+
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      void performAutoSave();
+    }, AUTO_SAVE_DEBOUNCE_MS);
+
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    };
+  }, [form, performAutoSave]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      void performAutoSave();
+    }, AUTO_SAVE_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [performAutoSave]);
+
   const validate = (): string | null => {
     if (!form.title.trim()) return 'Titlul este obligatoriu.';
     if (!form.slug.trim()) return 'Slug-ul este obligatoriu.';
@@ -231,35 +378,28 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         setIsUploading(false);
       }
 
-      const publishedAt =
-        form.status === 'published'
-          ? initialData?.published_at ?? new Date().toISOString()
-          : null;
+      if (form.status === 'published' && !publishedAtRef.current) {
+        publishedAtRef.current = new Date().toISOString();
+      }
+      if (form.status === 'draft') {
+        publishedAtRef.current = null;
+      }
 
-      const payload = {
-        title: form.title.trim(),
-        slug: form.slug.trim(),
-        excerpt: form.excerpt.trim(),
-        content: form.content.trim(),
-        category: form.category,
-        status: form.status,
-        image_url: imageUrl,
-        published_at: publishedAt,
-        meta_title: form.meta_title.trim() || null,
-        meta_description: form.meta_description.trim() || null,
-      };
-
+      const payload = buildPayload(form, imageUrl, form.status);
       const supabase = createClient();
 
-      if (initialData) {
+      if (articleId) {
         const { error: updateError } = await supabase
           .from('stiri')
           .update(payload)
-          .eq('id', initialData.id);
+          .eq('id', articleId);
 
         if (updateError) {
           throw new Error(updateError.message);
         }
+
+        persistedStatusRef.current = form.status;
+        lastSavedSnapshotRef.current = serializeFormSnapshot(form);
 
         setSuccess(
           form.status === 'published'
@@ -268,22 +408,30 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         );
         router.refresh();
       } else {
-        const { error: insertError } = await supabase.from('stiri').insert(payload);
+        const { data, error: insertError } = await supabase
+          .from('stiri')
+          .insert(payload)
+          .select('id, slug, status, published_at')
+          .single();
 
         if (insertError) {
           throw new Error(insertError.message);
         }
+
+        if (data) {
+          setArticleId(data.id as string);
+          persistedStatusRef.current = form.status;
+          publishedAtRef.current = (data.published_at as string | null) ?? publishedAtRef.current;
+          router.replace(`/admin/edit/${data.id}`, { scroll: false });
+        }
+
+        lastSavedSnapshotRef.current = serializeFormSnapshot(form);
 
         setSuccess(
           form.status === 'published'
             ? 'Articol publicat cu succes!'
             : 'Draft salvat cu succes!'
         );
-        setForm(emptyForm);
-        setSlugTouched(false);
-        setCoverFile(null);
-        setCoverPreview(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Eroare la salvare.');
@@ -557,18 +705,56 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         )}
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting || isUploading}
-        className="inline-flex items-center justify-center gap-2 w-full md:w-auto bg-white text-black font-bold px-8 py-4 rounded-xl hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
-        {(isSubmitting || isUploading) && <Loader2 size={18} className="animate-spin" />}
-        {isUploading
-          ? 'Se încarcă imaginea...'
-          : isSubmitting
-            ? 'Se salvează...'
-            : submitLabel}
-      </button>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+        <p
+          className="flex items-center gap-2 text-xs text-slate-500 font-[var(--font-inter)] min-h-[1.25rem]"
+          aria-live="polite"
+        >
+          {saveStatus === 'saving' && (
+            <>
+              <Cloud size={14} className="text-blue-400 animate-pulse" />
+              <span>Se salvează automat...</span>
+            </>
+          )}
+          {saveStatus === 'saved' && lastSavedTime && (
+            <>
+              <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
+              <span>
+                ✓ Salvat automat la{' '}
+                {lastSavedTime.toLocaleTimeString('ro-RO', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </span>
+            </>
+          )}
+          {saveStatus === 'error' && (
+            <>
+              <CloudOff size={14} className="text-red-400 shrink-0" />
+              <span className="text-red-400">Eroare la salvarea automată</span>
+            </>
+          )}
+          {saveStatus === 'idle' && articleId && (
+            <>
+              <Cloud size={14} className="text-slate-600 shrink-0" />
+              <span>Modificările se salvează automat</span>
+            </>
+          )}
+        </p>
+
+        <button
+          type="submit"
+          disabled={isSubmitting || isUploading || saveStatus === 'saving'}
+          className="inline-flex items-center justify-center gap-2 w-full sm:w-auto bg-white text-black font-bold px-8 py-4 rounded-xl hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          {(isSubmitting || isUploading) && <Loader2 size={18} className="animate-spin" />}
+          {isUploading
+            ? 'Se încarcă imaginea...'
+            : isSubmitting
+              ? 'Se salvează...'
+              : submitLabel}
+        </button>
+      </div>
     </form>
   );
 }
