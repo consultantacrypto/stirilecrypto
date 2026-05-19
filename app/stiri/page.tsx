@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, ArrowRight, TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, Terminal } from 'lucide-react';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export const metadata = {
   title: 'Market Intelligence | Știri Crypto Explicate',

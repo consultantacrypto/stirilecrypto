@@ -1,4 +1,4 @@
-import { unstable_noStore as noStore } from 'next/cache';
+import { cache } from 'react';
 import { articles } from '@/lib/articles';
 import { getSupabase } from '@/lib/supabase';
 import type { Stire } from '@/lib/types/stiri';
@@ -61,7 +61,6 @@ function getStaticFeedArticles(limit: number): NewsFeedItem[] {
  * When Supabase has rows, appends non-duplicate static articles up to `limit`.
  */
 export async function getHomeFeedArticles(limit = 6): Promise<NewsFeedItem[]> {
-  noStore();
   const fromDb = await getPublishedArticles(limit);
 
   if (!fromDb || fromDb.length === 0) {
@@ -81,8 +80,6 @@ export async function getHomeFeedArticles(limit = 6): Promise<NewsFeedItem[]> {
 }
 
 export async function getPublishedArticles(limit = 6): Promise<Stire[]> {
-  noStore();
-
   const supabase = getSupabase();
   if (!supabase) return [];
 
@@ -103,14 +100,12 @@ export async function getPublishedArticles(limit = 6): Promise<Stire[]> {
 
 /** All published rows from Supabase (no limit) — for /stiri listing */
 export async function getAllPublishedArticles(): Promise<Stire[]> {
-  noStore();
-
   const supabase = getSupabase();
   if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('stiri')
-    .select('*')
+    .select('id, slug, title, excerpt, category, image_url, published_at, status, views')
     .eq('status', PUBLISHED_STATUS)
     .order('published_at', { ascending: false, nullsFirst: false });
 
@@ -165,8 +160,6 @@ function staticArticleToListingItem(article: StaticArticle): NewsListingItem {
  * Duplicate slugs: Supabase wins; static entry is skipped.
  */
 export async function getMergedNewsListingArticles(): Promise<NewsListingItem[]> {
-  noStore();
-
   const fromDb = await getAllPublishedArticles();
   const dbSlugs = new Set(fromDb.map((s) => s.slug));
   const dbItems = fromDb.map(stireToListingItem);
@@ -179,8 +172,6 @@ export async function getMergedNewsListingArticles(): Promise<NewsListingItem[]>
 }
 
 export async function getArticleBySlug(slug: string): Promise<Stire | null> {
-  noStore();
-
   const supabase = getSupabase();
   if (!supabase) return null;
 
@@ -227,8 +218,6 @@ export interface TrendingArticle {
 }
 
 export async function getTrendingArticles(limit = 4): Promise<TrendingArticle[]> {
-  noStore();
-
   const supabase = getSupabase();
   if (!supabase) return [];
 
@@ -302,19 +291,17 @@ export function getStaticArticleBySlug(slug: string): ArticlePageData | null {
   return staticArticleToPageData(article);
 }
 
-/** Supabase first, then legacy `lib/articles` — never 404 if static entry exists */
-export async function getArticleForPage(slug: string): Promise<ArticlePageData | null> {
-  noStore();
-
+async function fetchArticleForPage(slug: string): Promise<ArticlePageData | null> {
   const fromDb = await getArticleBySlug(slug);
   if (fromDb) return stireToPageData(fromDb);
 
   return getStaticArticleBySlug(slug);
 }
 
-export async function getAllArticleSlugs(): Promise<{ slug: string }[]> {
-  noStore();
+/** Deduped per request — safe for generateMetadata + page component */
+export const getArticleForPage = cache(fetchArticleForPage);
 
+export async function getAllArticleSlugs(): Promise<{ slug: string }[]> {
   const dbSlugs = await getPublishedSlugs();
   const seen = new Set(dbSlugs.map((s) => s.slug));
 
@@ -329,8 +316,6 @@ export async function getAllArticleSlugs(): Promise<{ slug: string }[]> {
 }
 
 export async function getPublishedSlugs(): Promise<{ slug: string }[]> {
-  noStore();
-
   const supabase = getSupabase();
   if (!supabase) return [];
 
@@ -347,34 +332,64 @@ export async function getPublishedSlugs(): Promise<{ slug: string }[]> {
   return (data ?? []) as { slug: string }[];
 }
 
-export async function getRelatedArticles(currentSlug: string, limit = 3): Promise<Stire[]> {
-  const supabase = getSupabase();
-  if (!supabase) return [];
+type RelatedRow = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  image_url: string | null;
+  published_at: string | null;
+};
 
-  const { data, error } = await supabase
-    .from('stiri')
-    .select('*')
-    .eq('status', PUBLISHED_STATUS)
-    .neq('slug', currentSlug)
-    .order('published_at', { ascending: false })
-    .limit(limit);
-
-  if (error) {
-    console.error('[getRelatedArticles]', error.message);
-    return [];
-  }
-
-  return (data ?? []) as Stire[];
+function relatedRowToListingItem(row: RelatedRow, idFallback: string): NewsListingItem {
+  return {
+    id: idFallback,
+    slug: row.slug,
+    title: row.title,
+    summary: row.excerpt,
+    category: row.category,
+    image: resolveImageUrl(row),
+    date: formatArticleDate(row.published_at),
+    impact: 'neutral',
+  };
 }
 
-/** Related feed: merged Supabase + static, excludes current article, max `limit` */
+/** Related cards: narrow Supabase query (no full-table scan, no content HTML). */
 export async function getMergedRelatedArticles(
   currentSlug: string,
   limit = 3
 ): Promise<NewsListingItem[]> {
-  noStore();
-  const merged = await getMergedNewsListingArticles();
-  return merged.filter((item) => item.slug !== currentSlug).slice(0, limit);
+  const items: NewsListingItem[] = [];
+  const supabase = getSupabase();
+
+  if (supabase) {
+    const { data, error } = await supabase
+      .from('stiri')
+      .select('slug, title, excerpt, category, image_url, published_at')
+      .eq('status', PUBLISHED_STATUS)
+      .neq('slug', currentSlug)
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .limit(limit);
+
+    if (!error && data) {
+      for (const row of data as RelatedRow[]) {
+        items.push(relatedRowToListingItem(row, row.slug));
+      }
+    } else if (error) {
+      console.error('[getMergedRelatedArticles]', error.message);
+    }
+  }
+
+  if (items.length < limit) {
+    const seen = new Set(items.map((i) => i.slug));
+    const staticFill = articles
+      .filter((a) => a.slug !== currentSlug && !seen.has(a.slug))
+      .slice(0, limit - items.length)
+      .map(staticArticleToListingItem);
+    items.push(...staticFill);
+  }
+
+  return items.slice(0, limit);
 }
 
 export function formatArticleDate(iso: string | null): string {

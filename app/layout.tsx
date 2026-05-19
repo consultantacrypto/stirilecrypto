@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google"; 
 import "./globals.css";
-import { Providers } from "./providers";
 import Script from "next/script";
 import StructuredData from "@/components/StructuredData";
 
@@ -109,7 +108,7 @@ export default function RootLayout({
           `}
         </Script>
 
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   );

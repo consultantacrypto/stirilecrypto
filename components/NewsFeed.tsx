@@ -3,8 +3,6 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { getHomeFeedArticles } from '@/lib/articles-db';
 
-export const revalidate = 0;
-
 const FEED_PAGE_SIZE = 6;
 
 export default async function NewsFeed() {
@@ -19,7 +17,7 @@ export default async function NewsFeed() {
           </p>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-12 pt-2">
-            {latestNews.map((item) => (
+            {latestNews.map((item, index) => (
               <article
                 key={item.id}
                 className="flex flex-col gap-5 border border-white/5 rounded-3xl bg-[#1c1c1e] p-4"
@@ -34,6 +32,8 @@ export default async function NewsFeed() {
                         src={item.image_url}
                         alt={item.title}
                         fill
+                        priority={index < 2}
+                        fetchPriority={index < 2 ? 'high' : undefined}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                       />

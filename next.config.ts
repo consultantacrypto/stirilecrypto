@@ -9,13 +9,7 @@ const nextConfig: NextConfig = {
 
   // 1. Optimizare Pachete (Tree-Shaking)
   experimental: {
-    optimizePackageImports: [
-      'lucide-react', 
-      'framer-motion', 
-      '@rainbow-me/rainbowkit', 
-      'wagmi', 
-      'viem'
-    ],
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
 
   // 2. Optimizare Imagini — AVIF/WebP on-the-fly, cache optimized derivatives
