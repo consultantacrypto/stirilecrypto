@@ -7,7 +7,7 @@ import NewsFeed from '@/components/NewsFeed';
 import TrendingArticles from '@/components/TrendingArticles';
 import { TickerTape } from '@/components/lazy/home-widgets';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default function Home() {
   return (

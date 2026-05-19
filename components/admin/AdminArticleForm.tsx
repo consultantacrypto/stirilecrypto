@@ -1,11 +1,21 @@
 'use client';
 
 import { useCallback, useMemo, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Upload, CheckCircle2, AlertCircle, Loader2, ImageIcon } from 'lucide-react';
-import RichTextEditor from '@/components/admin/RichTextEditor';
 import GoogleSeoPreview from '@/components/admin/GoogleSeoPreview';
-import MediaLibraryModal from '@/components/admin/MediaLibraryModal';
+
+const RichTextEditor = dynamic(() => import('@/components/admin/RichTextEditor'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 animate-pulse bg-gray-800 rounded-xl border border-white/10" />
+  ),
+});
+
+const MediaLibraryModal = dynamic(() => import('@/components/admin/MediaLibraryModal'), {
+  ssr: false,
+});
 import { createClient } from '@/lib/supabase/client';
 import { slugify, sanitizeFileName } from '@/lib/slugify';
 import type { ArticleStatus, Stire } from '@/lib/types/stiri';

@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CategoryFilter from '@/components/CategoryFilter';
 import FearGreed from '@/components/FearGreed';
-import TickerTape from '@/components/TickerTape'; // ✅ 1. IMPORTUL NOU
+import { TickerTape } from '@/components/lazy/home-widgets';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, ArrowRight, TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, Terminal } from 'lucide-react';
