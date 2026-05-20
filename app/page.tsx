@@ -5,13 +5,16 @@ import HeroNewsPortal from '@/components/hero-concepts/HeroNewsPortal';
 import ConsultingBanner from '@/components/ConsultingBanner';
 import NewsFeed from '@/components/NewsFeed';
 import TrendingArticles from '@/components/TrendingArticles';
+import HomeJsonLd from '@/components/HomeJsonLd';
 import { TickerTape } from '@/components/lazy/home-widgets';
 
 export const revalidate = 60;
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col bg-black text-white font-sans selection:bg-blue-500/30 overflow-x-hidden">
+    <>
+      <HomeJsonLd />
+      <main className="min-h-screen flex flex-col bg-black text-white font-sans selection:bg-blue-500/30 overflow-x-hidden">
       <ScrollProgress />
       <Navbar />
       <TickerTape />
@@ -30,5 +33,6 @@ export default function Home() {
       </div>
       <Footer />
     </main>
+    </>
   );
 }

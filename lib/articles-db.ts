@@ -202,6 +202,10 @@ export interface ArticlePageData {
   category: string;
   image_url: string | null;
   dateLabel: string;
+  /** ISO 8601 — for JSON-LD & OpenGraph */
+  published_at: string | null;
+  /** ISO 8601 — falls back to published_at when absent */
+  updated_at: string | null;
   readTime: string;
   mihaiTake: string | null;
   impact: ArticleImpact;
@@ -248,6 +252,7 @@ function parseStaticImpact(impact: string | undefined): ArticleImpact {
 }
 
 function staticArticleToPageData(article: StaticArticle): ArticlePageData {
+  const publishedIso = parseDisplayDateToIso(article.date);
   return {
     id: article.id,
     slug: article.slug,
@@ -257,6 +262,8 @@ function staticArticleToPageData(article: StaticArticle): ArticlePageData {
     category: article.category,
     image_url: resolveImageUrl({ image: article.image }),
     dateLabel: article.date,
+    published_at: publishedIso,
+    updated_at: publishedIso,
     readTime: article.readTime ?? '5 min',
     mihaiTake: 'mihaiTake' in article && article.mihaiTake ? article.mihaiTake : null,
     impact: parseStaticImpact(article.impact),
@@ -266,7 +273,15 @@ function staticArticleToPageData(article: StaticArticle): ArticlePageData {
   };
 }
 
+function parseDisplayDateToIso(display: string): string | null {
+  const parsed = new Date(display);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed.toISOString();
+}
+
 function stireToPageData(stire: Stire): ArticlePageData {
+  const publishedIso = stire.published_at ?? null;
+  const updatedIso = stire.created_at ?? publishedIso;
   return {
     id: stire.id,
     slug: stire.slug,
@@ -276,6 +291,8 @@ function stireToPageData(stire: Stire): ArticlePageData {
     category: stire.category,
     image_url: resolveImageUrl(stire),
     dateLabel: formatArticleDate(stire.published_at),
+    published_at: publishedIso,
+    updated_at: updatedIso,
     readTime: '5 min',
     mihaiTake: null,
     impact: 'neutral',
