@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
+import { Mic2, Plus } from 'lucide-react';
 import AdminShell from '@/components/admin/AdminShell';
 import AdminArticlesTable from '@/components/admin/AdminArticlesTable';
 import { createClient } from '@/lib/supabase/server';
@@ -33,13 +33,22 @@ export default async function AdminDashboardPage() {
         <p className="text-slate-400 text-sm font-[var(--font-inter)]">
           {articles.length} articol{articles.length === 1 ? '' : 'e'} în baza de date (draft + publicat).
         </p>
-        <Link
-          href="/admin/create"
-          className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-3 rounded-xl transition-colors shadow-lg shadow-blue-900/20 text-sm"
-        >
-          <Plus size={18} />
-          Create New Article
-        </Link>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          <Link
+            href="/admin/create"
+            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-3 rounded-xl transition-colors shadow-lg shadow-blue-900/20 text-sm"
+          >
+            <Plus size={18} />
+            Create New Article
+          </Link>
+          <Link
+            href="/admin/interviuri"
+            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-3 rounded-xl transition-colors shadow-lg shadow-blue-900/20 text-sm"
+          >
+            <Mic2 size={18} />
+            Interviu nou
+          </Link>
+        </div>
       </div>
 
       <AdminArticlesTable articles={articles} />
