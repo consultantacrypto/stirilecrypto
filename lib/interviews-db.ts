@@ -23,7 +23,7 @@ export const getPublishedInterviews = cache(
 
     let query = supabase
       .from('interviews')
-      .select('slug, title, excerpt, cover_image, badge')
+      .select('slug, title, excerpt, cover_image, badge, created_at')
       .eq('status', PUBLISHED_STATUS)
       .order('created_at', { ascending: false });
 
@@ -45,6 +45,7 @@ export const getPublishedInterviews = cache(
         excerpt: row.excerpt as string,
         cover_image: (row.cover_image as string | null) ?? null,
         badge: row.badge as string,
+        created_at: row.created_at as string | undefined,
       }),
     );
   },

@@ -25,6 +25,7 @@ const MediaLibraryModal = dynamic(() => import('@/components/admin/MediaLibraryM
   ssr: false,
 });
 import { createClient } from '@/lib/supabase/client';
+import { getStoragePublicUrl, prepareImageUrlForStorage } from '@/lib/image-url';
 import { slugify, sanitizeFileName } from '@/lib/slugify';
 import type { ArticleStatus, Stire } from '@/lib/types/stiri';
 
@@ -128,7 +129,11 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
   const [lastSavedTime, setLastSavedTime] = useState<Date | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const coverFileRef = useRef<File | null>(null);
   const formRef = useRef(form);
+  const persistedImageUrlRef = useRef<string | null>(
+    prepareImageUrlForStorage(initialData?.image_url ?? ''),
+  );
   const persistedStatusRef = useRef<ArticleStatus>(initialData?.status ?? 'draft');
   const publishedAtRef = useRef<string | null>(initialData?.published_at ?? null);
   const lastSavedSnapshotRef = useRef<string>(serializeFormSnapshot(initialForm));
@@ -153,8 +158,10 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
   };
 
   const selectCoverFromLibrary = (url: string) => {
-    updateField('image_url', url);
-    setCoverPreview(url);
+    const stored = prepareImageUrlForStorage(url) ?? url.trim();
+    updateField('image_url', stored);
+    setCoverPreview(stored);
+    coverFileRef.current = null;
     setCoverFile(null);
   };
 
@@ -217,6 +224,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
       setError('Fișierul trebuie să fie o imagine (JPG, PNG, WebP).');
       return;
     }
+    coverFileRef.current = file;
     setCoverFile(file);
     setCoverPreview(URL.createObjectURL(file));
     setError(null);
@@ -234,12 +242,18 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
       throw new Error(`Upload eșuat: ${uploadError.message}`);
     }
 
-    const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(uniqueName);
-    return data.publicUrl;
+    return getStoragePublicUrl(supabase, STORAGE_BUCKET, uniqueName);
   };
 
+  const resolvePayloadImageUrl = useCallback((current: FormState): string | null => {
+    const fromForm = prepareImageUrlForStorage(current.image_url);
+    if (fromForm) return fromForm;
+    if (coverFileRef.current) return persistedImageUrlRef.current;
+    return null;
+  }, []);
+
   const buildPayload = useCallback(
-    (current: FormState, imageUrl: string, status: ArticleStatus) => {
+    (current: FormState, imageUrl: string | null, status: ArticleStatus) => {
       const publishedAt =
         status === 'published'
           ? publishedAtRef.current ?? new Date().toISOString()
@@ -252,7 +266,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         content: current.content.trim(),
         category: current.category,
         status,
-        image_url: imageUrl || null,
+        image_url: imageUrl,
         published_at: publishedAt,
         meta_title: current.meta_title.trim() || null,
         meta_description: current.meta_description.trim() || null,
@@ -275,7 +289,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
 
     try {
       const status = autoSaveStatus(articleId, persistedStatusRef.current);
-      const payload = buildPayload(current, current.image_url, status);
+      const payload = buildPayload(current, resolvePayloadImageUrl(current), status);
       const supabase = createClient();
 
       if (articleId) {
@@ -370,13 +384,22 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
     setIsSubmitting(true);
 
     try {
-      let imageUrl = form.image_url;
+      let imageUrl: string | null = prepareImageUrlForStorage(form.image_url);
 
       if (coverFile) {
         setIsUploading(true);
         imageUrl = await uploadCover(coverFile);
         setIsUploading(false);
+        updateField('image_url', imageUrl);
+        setCoverPreview(imageUrl);
+        coverFileRef.current = null;
+        setCoverFile(null);
       }
+
+      if (!imageUrl) {
+        throw new Error('Imaginea de copertă lipsește sau URL-ul este invalid.');
+      }
+      persistedImageUrlRef.current = imageUrl;
 
       if (form.status === 'published' && !publishedAtRef.current) {
         publishedAtRef.current = new Date().toISOString();
@@ -385,7 +408,8 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         publishedAtRef.current = null;
       }
 
-      const payload = buildPayload(form, imageUrl, form.status);
+      const savedForm: FormState = { ...form, image_url: imageUrl };
+      const payload = buildPayload(savedForm, imageUrl, form.status);
       const supabase = createClient();
 
       if (articleId) {
@@ -398,8 +422,9 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
           throw new Error(updateError.message);
         }
 
+        setForm(savedForm);
         persistedStatusRef.current = form.status;
-        lastSavedSnapshotRef.current = serializeFormSnapshot(form);
+        lastSavedSnapshotRef.current = serializeFormSnapshot(savedForm);
 
         setSuccess(
           form.status === 'published'
@@ -425,7 +450,8 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
           router.replace(`/admin/edit/${data.id}`, { scroll: false });
         }
 
-        lastSavedSnapshotRef.current = serializeFormSnapshot(form);
+        setForm(savedForm);
+        lastSavedSnapshotRef.current = serializeFormSnapshot(savedForm);
 
         setSuccess(
           form.status === 'published'

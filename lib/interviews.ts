@@ -1,10 +1,14 @@
+import { normalizeImageUrl } from '@/lib/image-url';
+
 /** Card shape consumed by InterviewCard / InterviewGrid */
 export interface InterviewCardItem {
   slug: string;
   title: string;
   excerpt: string;
-  cover_image: string | null;
+  cover_image: string;
   badge: string;
+  /** ISO timestamp — used by RSS/sitemap, optional on cards */
+  created_at?: string;
 }
 
 export const BADGE_STYLES: Record<string, string> = {
@@ -27,13 +31,15 @@ export function interviewRowToCardItem(row: {
   excerpt: string;
   cover_image: string | null;
   badge: string;
+  created_at?: string;
 }): InterviewCardItem {
   return {
     slug: row.slug,
     title: row.title,
     excerpt: row.excerpt,
-    cover_image: row.cover_image,
+    cover_image: normalizeImageUrl(row.cover_image),
     badge: row.badge.trim().toUpperCase() || 'EXCLUSIV',
+    created_at: row.created_at,
   };
 }
 

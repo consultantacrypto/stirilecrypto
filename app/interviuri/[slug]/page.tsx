@@ -12,6 +12,7 @@ import {
   getInterviewBySlug,
   getPublishedInterviewSlugs,
 } from '@/lib/interviews-db';
+import { normalizeImageUrl } from '@/lib/image-url';
 import {
   buildInterviewArticleJsonLd,
   SITE_URL,
@@ -85,7 +86,7 @@ export default async function InterviewPage({
     notFound();
   }
 
-  const coverSrc = interview.cover_image?.trim();
+  const coverSrc = normalizeImageUrl(interview.cover_image);
   const interviewJsonLd = buildInterviewArticleJsonLd({
     title: interview.title,
     excerpt: interview.excerpt,
@@ -147,22 +148,20 @@ export default async function InterviewPage({
               </p>
             </header>
 
-            {coverSrc ? (
-              <div className="relative w-full aspect-[16/10] mb-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none"
-                  aria-hidden
-                />
-                <Image
-                  src={coverSrc}
-                  alt={interview.title}
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, 672px"
-                  className="object-cover"
-                />
-              </div>
-            ) : null}
+            <div className="relative w-full aspect-[16/10] mb-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none"
+                aria-hidden
+              />
+              <Image
+                src={coverSrc}
+                alt={interview.title}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 672px"
+                className="object-cover"
+              />
+            </div>
 
             <ArticleContent content={interview.content} />
 

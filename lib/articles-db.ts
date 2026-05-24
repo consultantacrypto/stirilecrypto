@@ -1,5 +1,6 @@
 import { cache } from 'react';
 import { articles } from '@/lib/articles';
+import { resolveImageUrl } from '@/lib/image-url';
 import { getSupabase } from '@/lib/supabase';
 import type { Stire } from '@/lib/types/stiri';
 
@@ -17,13 +18,8 @@ export interface NewsFeedItem {
   title: string;
   excerpt: string;
   category: string;
-  image_url: string | null;
+  image_url: string;
   dateLabel: string;
-}
-
-function resolveImageUrl(source: { image_url?: string | null; image?: string }): string | null {
-  const url = source.image_url ?? source.image;
-  return url && url.trim() !== '' ? url : null;
 }
 
 function staticArticleToFeedItem(article: StaticArticle): NewsFeedItem {
@@ -124,7 +120,7 @@ export interface NewsListingItem {
   title: string;
   summary: string;
   category: string;
-  image: string | null;
+  image: string;
   date: string;
   impact: ArticleImpact;
 }
@@ -200,7 +196,7 @@ export interface ArticlePageData {
   excerpt: string;
   content: string;
   category: string;
-  image_url: string | null;
+  image_url: string;
   dateLabel: string;
   /** ISO 8601 — for JSON-LD & OpenGraph */
   published_at: string | null;

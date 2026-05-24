@@ -22,21 +22,13 @@ export default async function RelatedArticles({ currentSlug }: { currentSlug: st
             className="group flex flex-col bg-[#0a0f1e] border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/40 transition-all hover:shadow-[0_0_24px_rgba(59,130,246,0.12)] h-full"
           >
             <div className="relative w-full aspect-video shrink-0 overflow-hidden bg-slate-900">
-              {item.image ? (
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-950/50 to-[#0a0f1e] flex items-center justify-center">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 font-[var(--font-space)]">
-                    Știrile Crypto
-                  </span>
-                </div>
-              )}
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
 
             <div className="p-5 flex flex-col flex-1">

@@ -1,4 +1,6 @@
 import { getAllPublishedArticles } from '@/lib/articles-db';
+import { getPublishedInterviews } from '@/lib/interviews-db';
+import type { InterviewCardItem } from '@/lib/interviews';
 import type { Stire } from '@/lib/types/stiri';
 
 const BASE_URL = 'https://www.stirilecrypto.ro';
@@ -24,16 +26,15 @@ function escapeXml(unsafe: string): string {
   });
 }
 
-function toRssPubDate(article: Stire): string {
-  const iso = article.published_at ?? article.created_at;
+function toRssPubDateFromIso(iso: string | null | undefined): string {
   const date = iso ? new Date(iso) : new Date();
   return date.toUTCString();
 }
 
-function buildRssItem(article: Stire): string {
+function buildArticleRssItem(article: Stire): string {
   const link = `${BASE_URL}/stiri/${article.slug}`;
   const safeLink = escapeXml(link);
-  const pubDate = toRssPubDate(article);
+  const pubDate = toRssPubDateFromIso(article.published_at ?? article.created_at);
 
   const enclosure =
     article.image_url && article.image_url.trim() !== ''
@@ -46,18 +47,65 @@ function buildRssItem(article: Stire): string {
       <link>${safeLink}</link>
       <description><![CDATA[${article.excerpt}]]></description>
       <pubDate>${pubDate}</pubDate>
-      <guid isPermaLink="true">${safeLink}</guid>${enclosure}
+      <guid isPermaLink="true">${safeLink}</guid>
+      <category><![CDATA[Știri]]></category>${enclosure}
     </item>`;
 }
 
+function buildInterviewRssItem(interview: InterviewCardItem): string {
+  const link = `${BASE_URL}/interviuri/${interview.slug}`;
+  const safeLink = escapeXml(link);
+  const pubDate = toRssPubDateFromIso(interview.created_at);
+  const description = `[Interviu] ${interview.excerpt}`;
+
+  const enclosure =
+    interview.cover_image && interview.cover_image.trim() !== ''
+      ? `\n      <enclosure url="${escapeXml(interview.cover_image)}" length="0" type="image/jpeg"/>`
+      : '';
+
+  return `
+    <item>
+      <title><![CDATA[${interview.title}]]></title>
+      <link>${safeLink}</link>
+      <description><![CDATA[${description}]]></description>
+      <pubDate>${pubDate}</pubDate>
+      <guid isPermaLink="true">${safeLink}</guid>
+      <category><![CDATA[Interviuri]]></category>${enclosure}
+    </item>`;
+}
+
+type FeedEntry =
+  | { kind: 'article'; pubDate: Date; xml: string }
+  | { kind: 'interview'; pubDate: Date; xml: string };
+
 export async function GET() {
   let published: Stire[] = [];
+  let interviews: InterviewCardItem[] = [];
 
   try {
     published = await getAllPublishedArticles();
   } catch (err) {
     console.error('[feed.xml] Failed to fetch published articles:', err);
   }
+
+  try {
+    interviews = await getPublishedInterviews();
+  } catch (err) {
+    console.error('[feed.xml] Failed to fetch published interviews:', err);
+  }
+
+  const entries: FeedEntry[] = [
+    ...published.map((article) => ({
+      kind: 'article' as const,
+      pubDate: new Date(article.published_at ?? article.created_at ?? Date.now()),
+      xml: buildArticleRssItem(article),
+    })),
+    ...interviews.map((interview) => ({
+      kind: 'interview' as const,
+      pubDate: new Date(interview.created_at ?? Date.now()),
+      xml: buildInterviewRssItem(interview),
+    })),
+  ].sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 
   const lastBuildDate = new Date().toUTCString();
 
@@ -66,13 +114,13 @@ export async function GET() {
   <channel>
     <title>Știrile Crypto</title>
     <link>${BASE_URL}</link>
-    <description>Știri crypto, analize on-chain și context de piață de la Știrile Crypto.</description>
+    <description>Știri crypto, analize on-chain, interviuri editoriale și context de piață de la Știrile Crypto.</description>
     <language>ro</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
     <atom:link href="${BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
 `;
 
-  const rssItems = published.map(buildRssItem).join('');
+  const rssItems = entries.map((entry) => entry.xml).join('');
 
   const rssFooter = `
   </channel>

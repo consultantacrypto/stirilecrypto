@@ -106,20 +106,14 @@ export default async function NewsPage({
                         {/* Imagine */}
                         <div className="w-full aspect-video shrink-0 relative overflow-hidden bg-gray-900">
                             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] to-transparent opacity-60 z-10"></div>
-                            {item.image ? (
-                            <Image 
-                                src={item.image} 
+                            <Image
+                                src={item.image}
                                 alt={item.title}
                                 fill
                                 className="object-cover group-hover:scale-110 transition-transform duration-1000"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" 
-                                priority={idx < 2} 
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                priority={idx < 2}
                             />
-                            ) : (
-                            <div className="absolute inset-0 bg-gradient-to-br from-blue-950/40 to-[#0a0f1e] flex items-center justify-center">
-                                <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Știrile Crypto</span>
-                            </div>
-                            )}
                             {/* Badge Impact */}
                             <div className="absolute top-4 left-4 z-20 backdrop-blur-md bg-black/50 rounded-lg p-1">
                                 {item.impact === 'bullish' && <span className="text-[10px] font-bold bg-green-500 text-black px-2 py-1 rounded flex items-center gap-1 shadow-lg"><TrendingUp size={12}/> BULLISH</span>}

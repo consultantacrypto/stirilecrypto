@@ -11,6 +11,7 @@ import {
   ImageIcon,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { getStoragePublicUrl, prepareImageUrlForStorage } from '@/lib/image-url';
 import { slugify, sanitizeFileName } from '@/lib/slugify';
 import { revalidateInterviewsAction } from '@/app/admin/interviuri/actions';
 import type { Interview, InterviewStatus } from '@/lib/types/interviews';
@@ -88,6 +89,10 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const coverFileRef = useRef<File | null>(null);
+  const persistedCoverUrlRef = useRef<string | null>(
+    prepareImageUrlForStorage(initialData?.cover_image ?? ''),
+  );
 
   const updateField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -108,6 +113,7 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
       setError('Fișierul trebuie să fie o imagine (JPG, PNG, WebP).');
       return;
     }
+    coverFileRef.current = file;
     setCoverFile(file);
     setCoverPreview(URL.createObjectURL(file));
     setError(null);
@@ -115,8 +121,10 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
   }, []);
 
   const selectCoverFromLibrary = (url: string) => {
-    updateField('cover_image', url);
-    setCoverPreview(url);
+    const stored = prepareImageUrlForStorage(url) ?? url.trim();
+    updateField('cover_image', stored);
+    setCoverPreview(stored);
+    coverFileRef.current = null;
     setCoverFile(null);
     setCoverLibraryOpen(false);
   };
@@ -132,8 +140,7 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
       throw new Error(`Upload eșuat: ${uploadError.message}`);
     }
 
-    const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(uniqueName);
-    return data.publicUrl;
+    return getStoragePublicUrl(supabase, STORAGE_BUCKET, uniqueName);
   };
 
   const validate = (): string | null => {
@@ -164,13 +171,22 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
     setIsSubmitting(true);
 
     try {
-      let coverImage = form.cover_image;
+      let coverImage: string | null = prepareImageUrlForStorage(form.cover_image);
 
       if (coverFile) {
         setIsUploading(true);
         coverImage = await uploadCover(coverFile);
         setIsUploading(false);
+        updateField('cover_image', coverImage);
+        setCoverPreview(coverImage);
+        coverFileRef.current = null;
+        setCoverFile(null);
       }
+
+      if (!coverImage) {
+        throw new Error('Imaginea de copertă lipsește sau URL-ul este invalid.');
+      }
+      persistedCoverUrlRef.current = coverImage;
 
       const payload = {
         title: form.title.trim(),
@@ -178,7 +194,7 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
         guest_name: form.guest_name.trim(),
         excerpt: form.excerpt.trim(),
         content: form.content.trim(),
-        cover_image: coverImage || null,
+        cover_image: coverImage,
         badge: form.badge.trim().toUpperCase() || 'EXCLUSIV',
         status: form.status,
       };

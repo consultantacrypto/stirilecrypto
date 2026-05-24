@@ -7,7 +7,7 @@ interface InterviewCardProps {
 }
 
 export default function InterviewCard({ item }: InterviewCardProps) {
-  const coverSrc = item.cover_image?.trim() || '/placeholder.jpg';
+  const coverSrc = item.cover_image;
 
   return (
     <Link

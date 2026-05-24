@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Clock, ArrowRight } from 'lucide-react';
 import { articles } from '@/lib/articles';
+import { normalizeImageUrl } from '@/lib/image-url';
 
 const SIDE_TIME_LABELS = ['Acum 15 min', 'Acum 2 ore', 'Acum 5 ore', 'Acum 8 ore'] as const;
 
@@ -72,7 +73,7 @@ export default function FeaturedNewsGrid() {
                 >
                   <div className="relative w-full aspect-[16/10] overflow-hidden rounded-3xl bg-[#1c1c1e]">
                     <Image
-                      src={hero.image}
+                      src={normalizeImageUrl(hero.image)}
                       alt={hero.title}
                       fill
                       priority={index === 0}
@@ -123,7 +124,7 @@ export default function FeaturedNewsGrid() {
                 >
                   <div className="relative w-full aspect-[4/3] overflow-hidden rounded-2xl bg-black">
                     <Image
-                      src={item.image}
+                      src={normalizeImageUrl(item.image)}
                       alt={item.title}
                       fill
                       priority={false}

@@ -11,6 +11,7 @@ import {
   getAllArticleSlugs,
   type ArticlePageData,
 } from '@/lib/articles-db';
+import { normalizeImageUrl } from '@/lib/image-url';
 import { buildNewsArticleJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
 import { Calendar, Clock, ArrowLeft, User, Eye } from 'lucide-react';
 import Link from 'next/link';
@@ -104,6 +105,7 @@ function ArticlePageContent({
   slug: string;
 }) {
   const { main, conclusion } = splitArticleContent(article.content);
+  const coverSrc = normalizeImageUrl(article.image_url);
   const newsArticleJsonLd = buildNewsArticleJsonLd(article, slug);
 
   return (
@@ -156,19 +158,17 @@ function ArticlePageContent({
             </p>
           </header>
 
-          {article.image_url && (
-            <div className="relative w-full aspect-video mb-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group">
-              <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent z-10 opacity-60" />
-              <Image
-                src={article.image_url}
-                alt={article.title}
-                fill
-                priority
-                sizes="(max-width: 896px) 100vw, 896px"
-                className="object-cover transform group-hover:scale-105 transition-transform duration-1000"
-              />
-            </div>
-          )}
+          <div className="relative w-full aspect-video mb-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group">
+            <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent z-10 opacity-60" />
+            <Image
+              src={coverSrc}
+              alt={article.title}
+              fill
+              priority
+              sizes="(max-width: 896px) 100vw, 896px"
+              className="object-cover transform group-hover:scale-105 transition-transform duration-1000"
+            />
+          </div>
 
           {main ? <ArticleContent content={main} /> : null}
 
