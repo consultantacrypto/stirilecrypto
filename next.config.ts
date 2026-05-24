@@ -12,10 +12,9 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
 
-  // 2. Optimizare Imagini — AVIF/WebP on-the-fly, cache optimized derivatives
+  // 2. Imagini — unoptimized: true (no /_next/image proxy; avoids Vercel Image Optimization quota)
   images: {
-    formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
