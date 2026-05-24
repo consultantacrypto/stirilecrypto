@@ -26,8 +26,8 @@ const MediaLibraryModal = dynamic(() => import('@/components/admin/MediaLibraryM
 });
 import { createClient } from '@/lib/supabase/client';
 import { prepareImageUrlForStorage } from '@/lib/image-url';
+import { uploadCoverImageClient } from '@/lib/storage/client-upload';
 import { slugify } from '@/lib/slugify';
-import { uploadImageFile } from '@/lib/upload-client';
 import type { ArticleStatus, Stire } from '@/lib/types/stiri';
 
 const CATEGORIES = [
@@ -253,7 +253,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
       setSuccess(null);
 
       try {
-        const url = await uploadImageFile(file);
+        const url = await uploadCoverImageClient(file);
         applyCoverImageUrl(url);
         void performAutoSaveRef.current();
       } catch (err) {
@@ -414,7 +414,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
 
       if (!imageUrl && coverFileRef.current) {
         setIsUploading(true);
-        imageUrl = await uploadImageFile(coverFileRef.current);
+        imageUrl = await uploadCoverImageClient(coverFileRef.current);
         setIsUploading(false);
         applyCoverImageUrl(imageUrl);
       }

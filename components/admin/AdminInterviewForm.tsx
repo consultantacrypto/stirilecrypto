@@ -12,8 +12,8 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { prepareImageUrlForStorage } from '@/lib/image-url';
+import { uploadCoverImageClient } from '@/lib/storage/client-upload';
 import { slugify } from '@/lib/slugify';
-import { uploadImageFile } from '@/lib/upload-client';
 import { revalidateInterviewsAction } from '@/app/admin/interviuri/actions';
 import type { Interview, InterviewStatus } from '@/lib/types/interviews';
 import { INTERVIEW_BADGE_OPTIONS } from '@/lib/types/interviews';
@@ -150,7 +150,7 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
       setSuccess(null);
 
       try {
-        const url = await uploadImageFile(file);
+        const url = await uploadCoverImageClient(file);
         applyCoverImageUrl(url);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Upload eșuat.');
@@ -200,7 +200,7 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
 
       if (!coverImage && coverFileRef.current) {
         setIsUploading(true);
-        coverImage = await uploadImageFile(coverFileRef.current);
+        coverImage = await uploadCoverImageClient(coverFileRef.current);
         setIsUploading(false);
         applyCoverImageUrl(coverImage);
       }
