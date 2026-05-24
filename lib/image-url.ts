@@ -2,7 +2,9 @@ import { getSupabaseEnv } from '@/lib/supabase/env';
 
 export const PLACEHOLDER_IMAGE = '/placeholder.jpg';
 
-const STORAGE_BUCKET = 'imagini-stiri';
+import { IMAGINI_STIRI_BUCKET } from '@/lib/storage/constants';
+
+const STORAGE_BUCKET = IMAGINI_STIRI_BUCKET;
 
 type StorageClient = {
   storage: {

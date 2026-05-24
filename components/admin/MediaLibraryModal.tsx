@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Upload, Loader2, ImageIcon, RefreshCw } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { IMAGINI_STIRI_BUCKET, uploadCoverImageClient } from '@/lib/storage/client-upload';
+import { IMAGINI_STIRI_BUCKET } from '@/lib/storage/constants';
+import { uploadCoverImageSigned } from '@/lib/storage/signed-upload-client';
 
 const BUCKET = IMAGINI_STIRI_BUCKET;
 
@@ -89,7 +90,7 @@ export default function MediaLibraryModal({ onSelect, onClose }: MediaLibraryMod
     setError(null);
 
     try {
-      await uploadCoverImageClient(file);
+      await uploadCoverImageSigned(file);
       await fetchFiles();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload eșuat.');
