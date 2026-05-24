@@ -5,7 +5,7 @@ import CategoryFilter from '@/components/CategoryFilter';
 import FearGreed from '@/components/FearGreed';
 import { TickerTape } from '@/components/lazy/home-widgets';
 import Link from 'next/link';
-import Image from 'next/image';
+import ArticleCoverImage from '@/components/ArticleCoverImage';
 import { Calendar, ArrowRight, TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, Terminal } from 'lucide-react';
 
 export const revalidate = 60;
@@ -104,23 +104,24 @@ export default async function NewsPage({
                 {currentArticles.map((item, idx) => (
                     <Link href={`/stiri/${item.slug}`} key={item.slug} className="group bg-[#0a0f1e] border border-white/10 rounded-3xl overflow-hidden flex flex-col hover:border-blue-500/50 transition-all hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] h-full">
                         {/* Imagine */}
-                        <div className="w-full aspect-video shrink-0 relative overflow-hidden bg-gray-900">
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] to-transparent opacity-60 z-10"></div>
-                            <Image
-                                src={item.image}
-                                alt={item.title}
-                                fill
-                                className="object-cover group-hover:scale-110 transition-transform duration-1000"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                priority={idx < 2}
-                            />
-                            {/* Badge Impact */}
+                        <ArticleCoverImage
+                            src={item.image}
+                            alt={item.title}
+                            priority={idx < 2}
+                            aspectRatio="video"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            imageClassName="group-hover:scale-110 transition-transform duration-1000"
+                            overlay={
+                              <>
+                            <div className="absolute inset-0 z-[2] bg-gradient-to-t from-[#0a0f1e]/70 to-transparent pointer-events-none" aria-hidden />
                             <div className="absolute top-4 left-4 z-20 backdrop-blur-md bg-black/50 rounded-lg p-1">
                                 {item.impact === 'bullish' && <span className="text-[10px] font-bold bg-green-500 text-black px-2 py-1 rounded flex items-center gap-1 shadow-lg"><TrendingUp size={12}/> BULLISH</span>}
                                 {item.impact === 'bearish' && <span className="text-[10px] font-bold bg-red-500 text-white px-2 py-1 rounded flex items-center gap-1 shadow-lg"><TrendingDown size={12}/> BEARISH</span>}
                                 {item.impact === 'neutral' && <span className="text-[10px] font-bold bg-gray-500 text-white px-2 py-1 rounded flex items-center gap-1 shadow-lg"><Minus size={12}/> NEUTRAL</span>}
                             </div>
-                        </div>
+                              </>
+                            }
+                        />
                         
                         {/* Text */}
                         <div className="flex-1 p-6 flex flex-col">

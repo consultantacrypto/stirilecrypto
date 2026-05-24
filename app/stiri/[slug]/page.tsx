@@ -3,7 +3,6 @@ import ShareButtons from '@/components/ShareButtons';
 import ArticleContent from '@/components/ArticleContent';
 import AffiliatePartnerBox from '@/components/AffiliatePartnerBox';
 import EmailCaptureBox from '@/components/EmailCaptureBox';
-import ViewTracker from '@/components/ViewTracker';
 import RelatedArticles from '@/components/RelatedArticles';
 import { splitArticleContent } from '@/lib/split-article-content';
 import {
@@ -15,10 +14,12 @@ import { normalizeImageUrl } from '@/lib/image-url';
 import { buildNewsArticleJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
 import { Calendar, Clock, ArrowLeft, User, Eye } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import ArticleCoverImage from '@/components/ArticleCoverImage';
+import ViewTracker from '@/components/ViewTracker';
 import { Metadata } from 'next';
 
+/** ISR: regenerate at most once per minute (TTFB / Supabase load). */
 export const revalidate = 60;
 
 export async function generateStaticParams() {
@@ -152,23 +153,27 @@ function ArticlePageContent({
             <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight mb-6 text-white font-[var(--font-space)]">
               {article.title}
             </h1>
-
-            <p className="text-xl text-gray-300 leading-relaxed border-l-4 border-blue-500/50 pl-6 italic font-[var(--font-inter)]">
-              {article.excerpt}
-            </p>
           </header>
 
-          <div className="relative w-full aspect-video mb-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent z-10 opacity-60" />
-            <Image
-              src={coverSrc}
-              alt={article.title}
-              fill
-              priority
-              sizes="(max-width: 896px) 100vw, 896px"
-              className="object-cover transform group-hover:scale-105 transition-transform duration-1000"
-            />
-          </div>
+          <ArticleCoverImage
+            src={coverSrc}
+            alt={article.title}
+            priority
+            sizes="(max-width: 896px) 100vw, 896px"
+            aspectRatio="video"
+            className="mb-8 rounded-2xl border border-white/10 shadow-2xl"
+            imageClassName="group-hover:scale-[1.02] transition-transform duration-700"
+            overlay={
+              <div
+                className="absolute inset-0 z-[2] bg-gradient-to-t from-[#020617]/80 via-transparent to-transparent pointer-events-none"
+                aria-hidden
+              />
+            }
+          />
+
+          <p className="text-xl text-gray-300 leading-relaxed border-l-4 border-blue-500/50 pl-6 italic font-[var(--font-inter)] mb-12">
+            {article.excerpt}
+          </p>
 
           {main ? <ArticleContent content={main} /> : null}
 

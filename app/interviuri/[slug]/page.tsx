@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
+import ArticleCoverImage from '@/components/ArticleCoverImage';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Calendar, User } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -143,25 +143,26 @@ export default async function InterviewPage({
                 </span>
               </p>
 
-              <p className="mt-6 text-lg text-gray-400 leading-relaxed border-l-2 border-violet-500/40 pl-5 font-[var(--font-inter)]">
-                {interview.excerpt}
-              </p>
             </header>
 
-            <div className="relative w-full aspect-[16/10] mb-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none"
-                aria-hidden
-              />
-              <Image
-                src={coverSrc}
-                alt={interview.title}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 672px"
-                className="object-cover"
-              />
-            </div>
+            <ArticleCoverImage
+              src={coverSrc}
+              alt={interview.title}
+              priority
+              aspectRatio="16/10"
+              sizes="(max-width: 768px) 100vw, 672px"
+              className="mb-8 rounded-2xl border border-white/10 shadow-2xl"
+              overlay={
+                <div
+                  className="absolute inset-0 z-[2] bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"
+                  aria-hidden
+                />
+              }
+            />
+
+            <p className="text-lg text-gray-400 leading-relaxed border-l-2 border-violet-500/40 pl-5 font-[var(--font-inter)] mb-12">
+              {interview.excerpt}
+            </p>
 
             <ArticleContent content={interview.content} />
 

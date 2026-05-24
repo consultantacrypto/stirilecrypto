@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import ArticleCoverImage from '@/components/ArticleCoverImage';
 import { Clock, ArrowRight } from 'lucide-react';
 import { articles } from '@/lib/articles';
 import { normalizeImageUrl } from '@/lib/image-url';
@@ -71,18 +71,15 @@ export default function FeaturedNewsGrid() {
                   href={`/stiri/${hero.slug}`}
                   className="group flex flex-col gap-6 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-3xl"
                 >
-                  <div className="relative w-full aspect-[16/10] overflow-hidden rounded-3xl bg-[#1c1c1e]">
-                    <Image
-                      src={normalizeImageUrl(hero.image)}
-                      alt={hero.title}
-                      fill
-                      priority={index === 0}
-                      loading="eager"
-                      fetchPriority="high"
-                      sizes="(max-width: 1024px) 100vw, 66vw"
-                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-                    />
-                  </div>
+                  <ArticleCoverImage
+                    src={normalizeImageUrl(hero.image)}
+                    alt={hero.title}
+                    priority
+                    aspectRatio="16/10"
+                    sizes="(max-width: 1024px) 100vw, 66vw"
+                    className="rounded-3xl"
+                    imageClassName="transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                  />
 
                   <div className="flex flex-col gap-4 px-1 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
@@ -122,17 +119,14 @@ export default function FeaturedNewsGrid() {
                   href={`/stiri/${item.slug}`}
                   className="group flex flex-col gap-4 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-2xl"
                 >
-                  <div className="relative w-full aspect-[4/3] overflow-hidden rounded-2xl bg-black">
-                    <Image
-                      src={normalizeImageUrl(item.image)}
-                      alt={item.title}
-                      fill
-                      priority={false}
-                      loading="lazy"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                    />
-                  </div>
+                  <ArticleCoverImage
+                    src={normalizeImageUrl(item.image)}
+                    alt={item.title}
+                    aspectRatio="4/3"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="rounded-2xl"
+                    imageClassName="transition-transform duration-500 group-hover:scale-[1.02]"
+                  />
                   <div className="flex flex-col gap-2 px-1 flex-1">
                     <div className="flex items-center gap-2">
                       {index === 0 && (

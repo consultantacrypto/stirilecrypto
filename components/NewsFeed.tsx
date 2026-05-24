@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import ArticleCoverImage from '@/components/ArticleCoverImage';
 import { getHomeFeedArticles } from '@/lib/articles-db';
 
 const FEED_PAGE_SIZE = 6;
@@ -26,17 +26,15 @@ export default async function NewsFeed() {
                   href={`/stiri/${item.slug}`}
                   className="group flex flex-col gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-2xl"
                 >
-                  <div className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl bg-black">
-                    <Image
-                      src={item.image_url}
-                      alt={item.title}
-                      fill
-                      priority={index < 2}
-                      fetchPriority={index < 2 ? 'high' : undefined}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                    />
-                  </div>
+                  <ArticleCoverImage
+                    src={item.image_url}
+                    alt={item.title}
+                    priority={index < 2}
+                    aspectRatio="16/10"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="rounded-2xl"
+                    imageClassName="transition-transform duration-500 group-hover:scale-[1.02]"
+                  />
 
                   <div className="flex flex-col gap-3 px-1 pb-2">
                     <span className="rounded-full px-3 py-1 text-[10px] font-semibold bg-blue-500/20 text-blue-400 backdrop-blur-md w-fit">
