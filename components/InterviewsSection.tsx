@@ -1,13 +1,16 @@
 import Link from 'next/link';
 import { Mic2 } from 'lucide-react';
 import InterviewGrid from '@/components/InterviewGrid';
-import {
-  HOME_INTERVIEWS_PREVIEW_COUNT,
-  MOCK_INTERVIEWS,
-} from '@/lib/interviews';
+import { getPublishedInterviews } from '@/lib/interviews-db';
 
-export default function InterviewsSection() {
-  const preview = MOCK_INTERVIEWS.slice(0, HOME_INTERVIEWS_PREVIEW_COUNT);
+const HOME_PREVIEW_LIMIT = 3;
+
+export default async function InterviewsSection() {
+  const interviews = await getPublishedInterviews(HOME_PREVIEW_LIMIT);
+
+  if (interviews.length === 0) {
+    return null;
+  }
 
   return (
     <section aria-label="Interviuri și analize premium">
@@ -26,7 +29,7 @@ export default function InterviewsSection() {
         </Link>
       </div>
 
-      <InterviewGrid interviews={preview} />
+      <InterviewGrid interviews={interviews} />
     </section>
   );
 }
