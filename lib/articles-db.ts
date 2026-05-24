@@ -28,13 +28,13 @@ function resolveImageUrl(source: { image_url?: string | null; image?: string }):
 
 function staticArticleToFeedItem(article: StaticArticle): NewsFeedItem {
   return {
-    id: article.id,
-    slug: article.slug,
-    title: article.title,
-    excerpt: article.summary,
-    category: article.category,
-    image_url: resolveImageUrl({ image: article.image }),
-    dateLabel: article.date,
+    id: article.id ?? article.slug ?? 'static-article',
+    slug: article.slug ?? '',
+    title: article.title ?? '',
+    excerpt: article.summary ?? '',
+    category: article.category ?? '',
+    image_url: resolveImageUrl({ image: article.image ?? '' }),
+    dateLabel: article.date ?? '',
   };
 }
 
@@ -144,13 +144,13 @@ function stireToListingItem(stire: Stire): NewsListingItem {
 
 function staticArticleToListingItem(article: StaticArticle): NewsListingItem {
   return {
-    id: article.id,
-    slug: article.slug,
-    title: article.title,
-    summary: article.summary,
-    category: article.category,
-    image: resolveImageUrl({ image: article.image }),
-    date: article.date,
+    id: article.id ?? article.slug ?? 'static-article',
+    slug: article.slug ?? '',
+    title: article.title ?? '',
+    summary: article.summary ?? '',
+    category: article.category ?? '',
+    image: resolveImageUrl({ image: article.image ?? '' }),
+    date: article.date ?? '',
     impact: parseStaticImpact(article.impact),
   };
 }
@@ -222,16 +222,16 @@ function parseStaticImpact(impact: string | undefined): ArticleImpact {
 }
 
 function staticArticleToPageData(article: StaticArticle): ArticlePageData {
-  const publishedIso = parseDisplayDateToIso(article.date);
+  const publishedIso = parseDisplayDateToIso(article.date ?? '');
   return {
-    id: article.id,
-    slug: article.slug,
-    title: article.title,
-    excerpt: article.summary,
-    content: article.content,
-    category: article.category,
-    image_url: resolveImageUrl({ image: article.image }),
-    dateLabel: article.date,
+    id: article.id ?? article.slug ?? 'static-article',
+    slug: article.slug ?? '',
+    title: article.title ?? '',
+    excerpt: article.summary ?? '',
+    content: article.content ?? '',
+    category: article.category ?? '',
+    image_url: resolveImageUrl({ image: article.image ?? '' }),
+    dateLabel: article.date ?? '',
     published_at: publishedIso,
     updated_at: publishedIso,
     readTime: article.readTime ?? '5 min',
