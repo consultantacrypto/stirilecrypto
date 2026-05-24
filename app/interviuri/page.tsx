@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import InterviewGrid from '@/components/InterviewGrid';
-import { MOCK_INTERVIEWS } from '@/lib/interviews';
+import InterviewCard from '@/components/InterviewCard';
+import { getPublishedInterviews } from '@/lib/interviews-db';
 
 export const metadata: Metadata = {
   title: 'Interviuri & Analize Premium | StirileCrypto',
@@ -10,7 +10,11 @@ export const metadata: Metadata = {
     'Interviuri exclusive, analize de piață și discuții fără filtru cu fondatori și KOLs din industria crypto și tech.',
 };
 
-export default function InterviuriPage() {
+export const revalidate = 60;
+
+export default async function InterviuriPage() {
+  const interviews = await getPublishedInterviews();
+
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500/30 flex flex-col">
       <Navbar />
@@ -26,10 +30,19 @@ export default function InterviuriPage() {
           </p>
         </header>
 
-        <InterviewGrid
-          interviews={MOCK_INTERVIEWS}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-16"
-        />
+        {interviews.length === 0 ? (
+          <p className="pb-16 text-center text-slate-500 text-sm font-[var(--font-inter)]">
+            Nu există interviuri publicate momentan. Revino în curând.
+          </p>
+        ) : (
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 list-none p-0 m-0 pb-16">
+            {interviews.map((interview) => (
+              <li key={interview.slug} className="min-w-0">
+                <InterviewCard item={interview} />
+              </li>
+            ))}
+          </ul>
+        )}
       </main>
 
       <Footer />
