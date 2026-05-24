@@ -25,11 +25,10 @@ const MediaLibraryModal = dynamic(() => import('@/components/admin/MediaLibraryM
   ssr: false,
 });
 import { createClient } from '@/lib/supabase/client';
-import { getStoragePublicUrl, prepareImageUrlForStorage } from '@/lib/image-url';
-import { slugify, sanitizeFileName } from '@/lib/slugify';
+import { prepareImageUrlForStorage } from '@/lib/image-url';
+import { slugify } from '@/lib/slugify';
+import { uploadImageFile } from '@/lib/upload-client';
 import type { ArticleStatus, Stire } from '@/lib/types/stiri';
-
-const STORAGE_BUCKET = 'imagini-stiri';
 
 const CATEGORIES = [
   'ANALIZĂ TEHNICĂ & MACRO',
@@ -139,6 +138,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
   const lastSavedSnapshotRef = useRef<string>(serializeFormSnapshot(initialForm));
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isAutoSavingRef = useRef(false);
+  const performAutoSaveRef = useRef<() => Promise<void>>(async () => {});
 
   formRef.current = form;
   const isEditing = Boolean(articleId);
@@ -151,18 +151,40 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
     return base;
   }, [form.category]);
 
-  const updateField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const patchForm = useCallback((patch: Partial<FormState>) => {
+    setForm((prev) => {
+      const next = { ...prev, ...patch };
+      formRef.current = next;
+      return next;
+    });
     setError(null);
     setSuccess(null);
+  }, []);
+
+  const updateField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
+    patchForm({ [key]: value } as Partial<FormState>);
   };
 
-  const selectCoverFromLibrary = (url: string) => {
+  /** Writes Supabase public URL into form state + ref so auto-save/submit see it immediately. */
+  const applyCoverImageUrl = useCallback((url: string) => {
     const stored = prepareImageUrlForStorage(url) ?? url.trim();
-    updateField('image_url', stored);
-    setCoverPreview(stored);
+    persistedImageUrlRef.current = stored;
+
+    setCoverPreview((prev) => {
+      if (prev?.startsWith('blob:')) {
+        URL.revokeObjectURL(prev);
+      }
+      return stored;
+    });
+
     coverFileRef.current = null;
     setCoverFile(null);
+    patchForm({ image_url: stored });
+  }, [patchForm]);
+
+  const selectCoverFromLibrary = (url: string) => {
+    applyCoverImageUrl(url);
+    void performAutoSaveRef.current();
   };
 
   const generateSeoWithOpenClaw = async () => {
@@ -218,32 +240,30 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
     }
   };
 
-  const handleFile = useCallback((file: File | null) => {
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      setError('Fișierul trebuie să fie o imagine (JPG, PNG, WebP).');
-      return;
-    }
-    coverFileRef.current = file;
-    setCoverFile(file);
-    setCoverPreview(URL.createObjectURL(file));
-    setError(null);
-    setSuccess(null);
-  }, []);
+  const handleFile = useCallback(
+    async (file: File | null) => {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        setError('Fișierul trebuie să fie o imagine (JPG, PNG, WebP).');
+        return;
+      }
 
-  const uploadCover = async (file: File): Promise<string> => {
-    const supabase = createClient();
-    const uniqueName = `${Date.now()}-${sanitizeFileName(file.name)}`;
-    const { error: uploadError } = await supabase.storage
-      .from(STORAGE_BUCKET)
-      .upload(uniqueName, file, { cacheControl: '3600', upsert: false });
+      setIsUploading(true);
+      setError(null);
+      setSuccess(null);
 
-    if (uploadError) {
-      throw new Error(`Upload eșuat: ${uploadError.message}`);
-    }
-
-    return getStoragePublicUrl(supabase, STORAGE_BUCKET, uniqueName);
-  };
+      try {
+        const url = await uploadImageFile(file);
+        applyCoverImageUrl(url);
+        void performAutoSaveRef.current();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Upload eșuat.');
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    [applyCoverImageUrl],
+  );
 
   const resolvePayloadImageUrl = useCallback((current: FormState): string | null => {
     const fromForm = prepareImageUrlForStorage(current.image_url);
@@ -299,7 +319,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
           .eq('id', articleId);
 
         if (updateError) throw new Error(updateError.message);
-        lastSavedSnapshotRef.current = snapshot;
+        lastSavedSnapshotRef.current = serializeFormSnapshot(formRef.current);
       } else {
         const { data, error: insertError } = await supabase
           .from('stiri')
@@ -332,7 +352,11 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
     } finally {
       isAutoSavingRef.current = false;
     }
-  }, [articleId, buildPayload, isSubmitting, isUploading, router]);
+  }, [articleId, buildPayload, isSubmitting, isUploading, resolvePayloadImageUrl, router]);
+
+  useEffect(() => {
+    performAutoSaveRef.current = performAutoSave;
+  }, [performAutoSave]);
 
   useEffect(() => {
     const snapshot = serializeFormSnapshot(form);
@@ -366,7 +390,9 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
     const contentText = form.content.replace(/<[^>]*>/g, '').trim();
     if (!contentText) return 'Conținutul este obligatoriu.';
     if (!form.category) return 'Selectează o categorie.';
-    if (!form.image_url && !coverFile) return 'Încarcă o imagine de copertă.';
+    if (!form.image_url.trim() && !persistedImageUrlRef.current) {
+      return 'Încarcă o imagine de copertă.';
+    }
     return null;
   };
 
@@ -384,22 +410,22 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
     setIsSubmitting(true);
 
     try {
-      let imageUrl: string | null = prepareImageUrlForStorage(form.image_url);
+      let imageUrl: string | null = prepareImageUrlForStorage(formRef.current.image_url);
 
-      if (coverFile) {
+      if (!imageUrl && coverFileRef.current) {
         setIsUploading(true);
-        imageUrl = await uploadCover(coverFile);
+        imageUrl = await uploadImageFile(coverFileRef.current);
         setIsUploading(false);
-        updateField('image_url', imageUrl);
-        setCoverPreview(imageUrl);
-        coverFileRef.current = null;
-        setCoverFile(null);
+        applyCoverImageUrl(imageUrl);
+      }
+
+      if (!imageUrl) {
+        imageUrl = persistedImageUrlRef.current;
       }
 
       if (!imageUrl) {
         throw new Error('Imaginea de copertă lipsește sau URL-ul este invalid.');
       }
-      persistedImageUrlRef.current = imageUrl;
 
       if (form.status === 'published' && !publishedAtRef.current) {
         publishedAtRef.current = new Date().toISOString();
@@ -408,8 +434,8 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         publishedAtRef.current = null;
       }
 
-      const savedForm: FormState = { ...form, image_url: imageUrl };
-      const payload = buildPayload(savedForm, imageUrl, form.status);
+      const savedForm: FormState = { ...formRef.current, image_url: imageUrl };
+      const payload = buildPayload(savedForm, imageUrl, savedForm.status);
       const supabase = createClient();
 
       if (articleId) {
@@ -422,12 +448,12 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
           throw new Error(updateError.message);
         }
 
-        setForm(savedForm);
-        persistedStatusRef.current = form.status;
+        patchForm(savedForm);
+        persistedStatusRef.current = savedForm.status;
         lastSavedSnapshotRef.current = serializeFormSnapshot(savedForm);
 
         setSuccess(
-          form.status === 'published'
+          savedForm.status === 'published'
             ? 'Articol actualizat și publicat!'
             : 'Draft actualizat cu succes!'
         );
@@ -445,16 +471,16 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
 
         if (data) {
           setArticleId(data.id as string);
-          persistedStatusRef.current = form.status;
+          persistedStatusRef.current = savedForm.status;
           publishedAtRef.current = (data.published_at as string | null) ?? publishedAtRef.current;
           router.replace(`/admin/edit/${data.id}`, { scroll: false });
         }
 
-        setForm(savedForm);
+        patchForm(savedForm);
         lastSavedSnapshotRef.current = serializeFormSnapshot(savedForm);
 
         setSuccess(
-          form.status === 'published'
+          savedForm.status === 'published'
             ? 'Articol publicat cu succes!'
             : 'Draft salvat cu succes!'
         );
@@ -678,10 +704,15 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
               <div className="relative w-full sm:w-48 aspect-video rounded-xl overflow-hidden border border-white/10 bg-black shrink-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={coverPreview || form.image_url}
+                  src={form.image_url || coverPreview || ''}
                   alt="Previzualizare copertă"
                   className="h-full w-full object-cover"
                 />
+                {isUploading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+                    <Loader2 size={24} className="animate-spin text-blue-400" />
+                  </div>
+                )}
               </div>
               <div className="flex flex-col gap-2">
                 <button

@@ -11,8 +11,9 @@ import {
   ImageIcon,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { getStoragePublicUrl, prepareImageUrlForStorage } from '@/lib/image-url';
-import { slugify, sanitizeFileName } from '@/lib/slugify';
+import { prepareImageUrlForStorage } from '@/lib/image-url';
+import { slugify } from '@/lib/slugify';
+import { uploadImageFile } from '@/lib/upload-client';
 import { revalidateInterviewsAction } from '@/app/admin/interviuri/actions';
 import type { Interview, InterviewStatus } from '@/lib/types/interviews';
 import { INTERVIEW_BADGE_OPTIONS } from '@/lib/types/interviews';
@@ -27,8 +28,6 @@ const RichTextEditor = dynamic(() => import('@/components/admin/RichTextEditor')
 const MediaLibraryModal = dynamic(() => import('@/components/admin/MediaLibraryModal'), {
   ssr: false,
 });
-
-const STORAGE_BUCKET = 'imagini-stiri';
 
 type FormState = {
   title: string;
@@ -90,15 +89,46 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const coverFileRef = useRef<File | null>(null);
+  const formRef = useRef(form);
   const persistedCoverUrlRef = useRef<string | null>(
     prepareImageUrlForStorage(initialData?.cover_image ?? ''),
   );
 
-  const updateField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+  formRef.current = form;
+
+  const patchForm = useCallback((patch: Partial<FormState>) => {
+    setForm((prev) => {
+      const next = { ...prev, ...patch };
+      formRef.current = next;
+      return next;
+    });
     setError(null);
     setSuccess(null);
+  }, []);
+
+  const updateField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
+    patchForm({ [key]: value } as Partial<FormState>);
   };
+
+  /** Writes Supabase public URL into form state + ref before submit. */
+  const applyCoverImageUrl = useCallback(
+    (url: string) => {
+      const stored = prepareImageUrlForStorage(url) ?? url.trim();
+      persistedCoverUrlRef.current = stored;
+
+      setCoverPreview((prev) => {
+        if (prev?.startsWith('blob:')) {
+          URL.revokeObjectURL(prev);
+        }
+        return stored;
+      });
+
+      coverFileRef.current = null;
+      setCoverFile(null);
+      patchForm({ cover_image: stored });
+    },
+    [patchForm],
+  );
 
   const handleTitleChange = (title: string) => {
     updateField('title', title);
@@ -107,40 +137,33 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
     }
   };
 
-  const handleFile = useCallback((file: File | null) => {
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      setError('Fișierul trebuie să fie o imagine (JPG, PNG, WebP).');
-      return;
-    }
-    coverFileRef.current = file;
-    setCoverFile(file);
-    setCoverPreview(URL.createObjectURL(file));
-    setError(null);
-    setSuccess(null);
-  }, []);
+  const handleFile = useCallback(
+    async (file: File | null) => {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        setError('Fișierul trebuie să fie o imagine (JPG, PNG, WebP).');
+        return;
+      }
+
+      setIsUploading(true);
+      setError(null);
+      setSuccess(null);
+
+      try {
+        const url = await uploadImageFile(file);
+        applyCoverImageUrl(url);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Upload eșuat.');
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    [applyCoverImageUrl],
+  );
 
   const selectCoverFromLibrary = (url: string) => {
-    const stored = prepareImageUrlForStorage(url) ?? url.trim();
-    updateField('cover_image', stored);
-    setCoverPreview(stored);
-    coverFileRef.current = null;
-    setCoverFile(null);
+    applyCoverImageUrl(url);
     setCoverLibraryOpen(false);
-  };
-
-  const uploadCover = async (file: File): Promise<string> => {
-    const supabase = createClient();
-    const uniqueName = `${Date.now()}-${sanitizeFileName(file.name)}`;
-    const { error: uploadError } = await supabase.storage
-      .from(STORAGE_BUCKET)
-      .upload(uniqueName, file, { cacheControl: '3600', upsert: false });
-
-    if (uploadError) {
-      throw new Error(`Upload eșuat: ${uploadError.message}`);
-    }
-
-    return getStoragePublicUrl(supabase, STORAGE_BUCKET, uniqueName);
   };
 
   const validate = (): string | null => {
@@ -153,7 +176,9 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
     if (!form.excerpt.trim()) return 'Excerpt-ul este obligatoriu.';
     const contentText = form.content.replace(/<[^>]*>/g, '').trim();
     if (!contentText) return 'Conținutul interviului este obligatoriu.';
-    if (!form.cover_image && !coverFile) return 'Încarcă o imagine de copertă.';
+    if (!form.cover_image.trim() && !persistedCoverUrlRef.current) {
+      return 'Încarcă o imagine de copertă.';
+    }
     return null;
   };
 
@@ -171,33 +196,36 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
     setIsSubmitting(true);
 
     try {
-      let coverImage: string | null = prepareImageUrlForStorage(form.cover_image);
+      let coverImage: string | null = prepareImageUrlForStorage(formRef.current.cover_image);
 
-      if (coverFile) {
+      if (!coverImage && coverFileRef.current) {
         setIsUploading(true);
-        coverImage = await uploadCover(coverFile);
+        coverImage = await uploadImageFile(coverFileRef.current);
         setIsUploading(false);
-        updateField('cover_image', coverImage);
-        setCoverPreview(coverImage);
-        coverFileRef.current = null;
-        setCoverFile(null);
+        applyCoverImageUrl(coverImage);
+      }
+
+      if (!coverImage) {
+        coverImage = persistedCoverUrlRef.current;
       }
 
       if (!coverImage) {
         throw new Error('Imaginea de copertă lipsește sau URL-ul este invalid.');
       }
-      persistedCoverUrlRef.current = coverImage;
 
+      const current = formRef.current;
       const payload = {
-        title: form.title.trim(),
-        slug: form.slug.trim(),
-        guest_name: form.guest_name.trim(),
-        excerpt: form.excerpt.trim(),
-        content: form.content.trim(),
+        title: current.title.trim(),
+        slug: current.slug.trim(),
+        guest_name: current.guest_name.trim(),
+        excerpt: current.excerpt.trim(),
+        content: current.content.trim(),
         cover_image: coverImage,
-        badge: form.badge.trim().toUpperCase() || 'EXCLUSIV',
-        status: form.status,
+        badge: current.badge.trim().toUpperCase() || 'EXCLUSIV',
+        status: current.status,
       };
+
+      const savedForm: FormState = { ...current, cover_image: coverImage };
 
       const supabase = createClient();
 
@@ -209,8 +237,10 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
 
         if (updateError) throw new Error(updateError.message);
 
+        patchForm(savedForm);
+
         setSuccess(
-          form.status === 'published'
+          savedForm.status === 'published'
             ? 'Interviu actualizat și publicat!'
             : 'Draft actualizat cu succes!',
         );
@@ -224,8 +254,10 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
         if (insertError) throw new Error(insertError.message);
         if (!data) throw new Error('Nu s-a returnat ID-ul interviului.');
 
+        patchForm(savedForm);
+
         setSuccess(
-          form.status === 'published'
+          savedForm.status === 'published'
             ? 'Interviu publicat cu succes!'
             : 'Draft salvat cu succes!',
         );
@@ -386,10 +418,15 @@ export default function AdminInterviewForm({ mode, initialData }: AdminInterview
               <div className="relative w-full sm:w-48 aspect-video rounded-xl overflow-hidden border border-white/10 bg-black shrink-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={coverPreview || form.cover_image}
+                  src={form.cover_image || coverPreview || ''}
                   alt="Previzualizare copertă"
                   className="h-full w-full object-cover"
                 />
+                {isUploading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+                    <Loader2 size={24} className="animate-spin text-violet-400" />
+                  </div>
+                )}
               </div>
               <div className="flex flex-col gap-2">
                 <button

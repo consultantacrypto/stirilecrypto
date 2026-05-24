@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Upload, Loader2, ImageIcon, RefreshCw } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { sanitizeFileName } from '@/lib/slugify';
+import { uploadImageFile } from '@/lib/upload-client';
 
 const BUCKET = 'imagini-stiri';
 
@@ -89,16 +89,7 @@ export default function MediaLibraryModal({ onSelect, onClose }: MediaLibraryMod
     setError(null);
 
     try {
-      const supabase = createClient();
-      const fileName = `${Date.now()}-${sanitizeFileName(file.name)}`;
-      const { error: uploadError } = await supabase.storage
-        .from(BUCKET)
-        .upload(fileName, file, { cacheControl: '3600', upsert: false });
-
-      if (uploadError) {
-        throw new Error(uploadError.message);
-      }
-
+      await uploadImageFile(file);
       await fetchFiles();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload eșuat.');
