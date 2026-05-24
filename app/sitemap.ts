@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getAllPublishedArticles } from '@/lib/articles-db';
+import { getPublishedInterviews } from '@/lib/interviews-db';
 
 const BASE_URL = 'https://www.stirilecrypto.ro';
 
@@ -31,6 +32,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 0.9,
     },
+    {
+      url: `${BASE_URL}/interviuri`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
   ];
 
   let articleRoutes: MetadataRoute.Sitemap = [];
@@ -47,5 +54,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('[sitemap] Failed to fetch published articles:', err);
   }
 
-  return [...staticRoutes, ...articleRoutes];
+  let interviewRoutes: MetadataRoute.Sitemap = [];
+
+  try {
+    const interviews = await getPublishedInterviews();
+    interviewRoutes = interviews.map((interview) => ({
+      url: `${BASE_URL}/interviuri/${interview.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.75,
+    }));
+  } catch (err) {
+    console.error('[sitemap] Failed to fetch published interviews:', err);
+  }
+
+  return [...staticRoutes, ...articleRoutes, ...interviewRoutes];
 }

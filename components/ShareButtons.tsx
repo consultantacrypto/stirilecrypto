@@ -7,13 +7,15 @@ import { useState } from 'react';
 interface ShareButtonsProps {
   title: string;
   slug: string;
+  /** Full path without domain, e.g. `/interviuri/my-slug`. Defaults to `/stiri/{slug}`. */
+  sharePath?: string;
 }
 
-export default function ShareButtons({ title, slug }: ShareButtonsProps) {
+export default function ShareButtons({ title, slug, sharePath }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
-  
-  // Construim link-ul complet
-  const url = `https://www.stirilecrypto.ro/stiri/${slug}`;
+
+  const path = sharePath ?? `/stiri/${slug}`;
+  const url = `https://www.stirilecrypto.ro${path}`;
   const text = `${title} \n\nCitește analiza completă aici:`;
 
   const shareLinks = {

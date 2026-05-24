@@ -44,7 +44,7 @@ export async function generateMetadata({
   const ogImageUrl = coverImage ?? dynamicOgImage;
 
   return {
-    title: `${seoTitle} | Știrile Crypto`,
+    title: { absolute: `${seoTitle} | Știrile Crypto` },
     description: seoDescription,
     alternates: {
       canonical: canonicalUrl,

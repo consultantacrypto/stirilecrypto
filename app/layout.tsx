@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google"; 
 import "./globals.css";
 import Script from "next/script";
-import StructuredData from "@/components/StructuredData";
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"],
@@ -93,8 +92,6 @@ export default function RootLayout({
   return (
     <html lang="ro" className="scroll-smooth">
       <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased bg-black text-white`}>
-        <StructuredData />
-
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-94JGNJHNBZ"
           strategy="afterInteractive"

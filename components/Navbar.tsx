@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+/** Main site navigation — desktop pill + mobile drawer share this list */
 const CENTER_LINKS = [
   { href: '/stiri', label: 'Știri' },
   { href: '/interviuri', label: 'Interviuri' },
@@ -42,7 +43,6 @@ export default function Navbar() {
 
   return (
     <nav className="relative w-full px-6 py-4 flex items-center justify-between sticky top-0 z-50 bg-black/70 backdrop-blur-2xl border-b border-white/10">
-      {/* LEFT — Logo */}
       <Link href="/" className="shrink-0 z-10" aria-label="Știrile Crypto — Acasă">
         <div className="flex items-center gap-3 group cursor-pointer">
           <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center transition-transform group-hover:scale-105">
@@ -52,7 +52,7 @@ export default function Navbar() {
         </div>
       </Link>
 
-      {/* CENTER — Main navigation (desktop) */}
+      {/* Desktop navigation */}
       <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-0.5 p-1 rounded-full border border-white/5 bg-white/[0.03]">
         {CENTER_LINKS.map(({ href, label }) => (
           <Link key={href} href={href} className={centerNavClass(pathname, href)}>
@@ -61,7 +61,6 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* RIGHT — Conversion */}
       <div className="hidden lg:flex items-center gap-3 z-10 shrink-0">
         <Link
           href="/raport-strategic"
@@ -82,7 +81,6 @@ export default function Navbar() {
         </a>
       </div>
 
-      {/* Mobile menu toggle */}
       <button
         type="button"
         className="lg:hidden z-10 text-white p-2 rounded-full hover:bg-white/10 transition-colors"
@@ -93,7 +91,7 @@ export default function Navbar() {
         {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* MOBILE — Dropdown */}
+      {/* Mobile navigation */}
       {mobileMenuOpen && (
         <div className="absolute top-full left-0 w-full lg:hidden bg-black/90 backdrop-blur-3xl border-b border-white/10 px-4 py-6 flex flex-col gap-2">
           {CENTER_LINKS.map(({ href, label }) => (

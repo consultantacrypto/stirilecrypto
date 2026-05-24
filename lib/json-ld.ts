@@ -103,6 +103,58 @@ export function buildOrganizationJsonLd() {
   };
 }
 
+export interface InterviewJsonLdInput {
+  title: string;
+  excerpt: string;
+  guest_name: string;
+  cover_image: string | null;
+  created_at: string;
+  slug: string;
+}
+
+export function buildInterviewArticleJsonLd(interview: InterviewJsonLdInput) {
+  const pageUrl = `${SITE_URL}/interviuri/${interview.slug}`;
+  const imageUrl = toAbsoluteUrl(interview.cover_image);
+  const datePublished = toIsoDateTime(interview.created_at);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageUrl,
+    },
+    headline: interview.title,
+    description: interview.excerpt,
+    image: imageUrl ? [imageUrl] : undefined,
+    datePublished,
+    dateModified: datePublished,
+    author: [
+      {
+        '@type': 'Person',
+        name: interview.guest_name,
+      },
+      {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+    ],
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: PUBLISHER_LOGO_URL,
+      },
+    },
+    articleSection: 'Interviuri',
+    inLanguage: 'ro-RO',
+    isAccessibleForFree: true,
+  };
+}
+
 export function buildWebSiteJsonLd() {
   return {
     '@context': 'https://schema.org',

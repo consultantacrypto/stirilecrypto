@@ -1,8 +1,8 @@
 import InterviewCard from '@/components/InterviewCard';
-import type { MockInterview } from '@/lib/interviews';
+import type { InterviewCardItem } from '@/lib/interviews';
 
 interface InterviewGridProps {
-  interviews: readonly MockInterview[];
+  interviews: readonly InterviewCardItem[];
   className?: string;
 }
 
@@ -13,7 +13,7 @@ export default function InterviewGrid({
   return (
     <ul className={`${className} list-none p-0 m-0`}>
       {interviews.map((item) => (
-        <li key={item.youtubeId} className="min-w-0">
+        <li key={item.slug} className="min-w-0">
           <InterviewCard item={item} />
         </li>
       ))}

@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import AdminSignOutButton from '@/components/admin/AdminSignOutButton';
+import AdminNav from '@/components/admin/AdminNav';
 
 type AdminShellProps = {
   title: string;
   subtitle?: string;
   backHref?: string;
   backLabel?: string;
+  showNav?: boolean;
   children: React.ReactNode;
 };
 
@@ -15,6 +17,7 @@ export default function AdminShell({
   subtitle = 'Admin Panel',
   backHref = '/admin',
   backLabel = 'Dashboard',
+  showNav = true,
   children,
 }: AdminShellProps) {
   return (
@@ -46,7 +49,10 @@ export default function AdminShell({
         </div>
       </header>
 
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6 py-10 lg:py-14">{children}</div>
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6 py-10 lg:py-14">
+        {showNav ? <AdminNav /> : null}
+        {children}
+      </div>
     </main>
   );
 }
