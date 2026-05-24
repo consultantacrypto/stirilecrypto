@@ -1,27 +1,32 @@
 import { createSignedImageUploadUrlAction } from '@/lib/actions/storage';
+import { compressCoverImageForUpload } from '@/lib/storage/compress-cover-image';
 import { getStoragePublicUrl } from '@/lib/image-url';
 import { IMAGINI_STIRI_BUCKET } from '@/lib/storage/constants';
 import { createClient } from '@/lib/supabase/client';
 
 /**
- * 1. Server action mints signed PUT URL (service role).
- * 2. Browser PUTs raw file bytes to Supabase Storage.
- * 3. Returns the public object URL for form state / auto-save.
+ * 1. Client-side WebP compression (~200KB cap).
+ * 2. Server action mints signed PUT URL (service role).
+ * 3. Browser PUTs file bytes to Supabase Storage.
+ * 4. Returns the public object URL for form state / auto-save.
  */
 export async function uploadCoverImageSigned(file: File): Promise<string> {
   if (!file.type.startsWith('image/')) {
     throw new Error('Fișierul trebuie să fie o imagine (JPG, PNG, WebP).');
   }
 
-  const signed = await createSignedImageUploadUrlAction(file.name);
+  const uploadFile =
+    file.type === 'image/webp' && file.size <= 220_000 ? file : await compressCoverImageForUpload(file);
+
+  const signed = await createSignedImageUploadUrlAction(uploadFile.name);
   if (!signed.success) {
     throw new Error(signed.error);
   }
 
-  const contentType = file.type || 'application/octet-stream';
+  const contentType = uploadFile.type || 'image/webp';
   const putResponse = await fetch(signed.signedUrl, {
     method: 'PUT',
-    body: file,
+    body: uploadFile,
     headers: {
       'Content-Type': contentType,
     },
