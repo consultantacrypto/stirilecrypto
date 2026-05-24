@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get('file');
 
-    if (!(file instanceof File)) {
+    if (!(file instanceof File) || file.size === 0) {
       return NextResponse.json({ error: 'Fișier lipsă sau invalid.' }, { status: 400 });
     }
 
