@@ -4,7 +4,7 @@ import ScrollProgress from '@/components/ScrollProgress';
 import HeroNewsPortal from '@/components/hero-concepts/HeroNewsPortal';
 import ConsultingBanner from '@/components/ConsultingBanner';
 import NewsFeed from '@/components/NewsFeed';
-import TrendingArticles from '@/components/TrendingArticles';
+import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
 import { TickerTape } from '@/components/lazy/home-widgets';
 
@@ -25,7 +25,7 @@ export default function Home() {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full mt-16 pt-8 border-t border-white/10">
-        <TrendingArticles />
+        <InterviewsSection />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl mt-16 mb-8 lg:mb-12">

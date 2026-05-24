@@ -214,36 +214,6 @@ export interface ArticlePageData {
   meta_description: string | null;
 }
 
-/** Trending sidebar / homepage */
-export interface TrendingArticle {
-  slug: string;
-  title: string;
-  views: number;
-}
-
-export async function getTrendingArticles(limit = 4): Promise<TrendingArticle[]> {
-  const supabase = getSupabase();
-  if (!supabase) return [];
-
-  const { data, error } = await supabase
-    .from('stiri')
-    .select('slug, title, views')
-    .eq('status', PUBLISHED_STATUS)
-    .order('views', { ascending: false })
-    .limit(limit);
-
-  if (error) {
-    console.error('[getTrendingArticles]', error.message);
-    return [];
-  }
-
-  return (data ?? []).map((row) => ({
-    slug: row.slug as string,
-    title: row.title as string,
-    views: typeof row.views === 'number' ? row.views : Number(row.views ?? 0),
-  }));
-}
-
 function parseStaticImpact(impact: string | undefined): ArticleImpact {
   if (impact === 'bullish' || impact === 'bearish' || impact === 'neutral') {
     return impact;
