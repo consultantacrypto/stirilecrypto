@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AffiliateSection from '@/components/AffiliateSection';
+import CryptoScreener from '@/components/market/CryptoScreener';
 import {
   InstitutionalTracker,
   AltcoinSeasonWidget,
@@ -90,11 +91,7 @@ export default async function MarketPage() {
             </p>
         </div>
 
-        {/* TODO: Insert OpenStock Native Screener/Heatmap here */}
-        <div
-          className="mb-8 min-h-[120px] rounded-2xl border border-dashed border-white/10 bg-white/[0.02]"
-          aria-hidden
-        />
+        <CryptoScreener />
 
         {/* GRID LAYOUT */}
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
