@@ -1,6 +1,5 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import TickerTape from '@/components/TickerTape'; // ✅ 1. IMPORTUL NOU
 import LiquidationFeed from '@/components/LiquidationChart'; 
 import { AlertTriangle, TrendingUp, Skull, Globe2, ShieldCheck, Zap, ExternalLink, Crown } from 'lucide-react';
 import { Metadata } from 'next';
@@ -15,8 +14,6 @@ export default function LiquidationsPage() {
   return (
     <main className="min-h-screen bg-[#020617] text-white flex flex-col">
       <Navbar />
-      {/* ✅ 2. BARA CU PREȚURI (Sub Navbar, consistent cu celelalte pagini) */}
-      <TickerTape />
 
       <div className="container mx-auto px-4 py-12 max-w-7xl flex-grow">
         

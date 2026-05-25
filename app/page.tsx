@@ -6,7 +6,6 @@ import ConsultingBanner from '@/components/ConsultingBanner';
 import NewsFeed from '@/components/NewsFeed';
 import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
-import { TickerTape } from '@/components/lazy/home-widgets';
 
 export const revalidate = 60;
 
@@ -17,7 +16,6 @@ export default function Home() {
       <main className="min-h-screen flex flex-col bg-black text-white font-sans selection:bg-blue-500/30 overflow-x-hidden">
       <ScrollProgress />
       <Navbar />
-      <TickerTape />
       <HeroNewsPortal />
 
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full">

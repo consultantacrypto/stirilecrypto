@@ -3,7 +3,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CategoryFilter from '@/components/CategoryFilter';
 import FearGreed from '@/components/FearGreed';
-import { TickerTape } from '@/components/lazy/home-widgets';
 import Link from 'next/link';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
 import { Calendar, ArrowRight, TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, Terminal } from 'lucide-react';
@@ -49,9 +48,6 @@ export default async function NewsPage({
   return (
     <main className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30 flex flex-col">
       <Navbar />
-      
-      {/* ✅ 2. AICI ESTE BARA CU PREȚURI (S&P500, DXY, BTC...) */}
-      <TickerTape />
 
       <div className="container mx-auto px-6 py-12 flex-grow">
           
