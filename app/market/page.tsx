@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AffiliateSection from '@/components/AffiliateSection';
 import CryptoScreener from '@/components/market/CryptoScreener';
+import ConsultingCta from '@/components/market/ConsultingCta';
 import {
   InstitutionalTracker,
   AltcoinSeasonWidget,
@@ -92,6 +93,10 @@ export default async function MarketPage() {
         </div>
 
         <CryptoScreener />
+
+        <div className="mt-12 mb-8">
+          <ConsultingCta />
+        </div>
 
         {/* GRID LAYOUT */}
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
