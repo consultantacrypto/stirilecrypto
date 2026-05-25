@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CryptoHeatmap from '@/components/market/CryptoHeatmap';
+import AffiliateCta from '@/components/market/AffiliateCta';
 import { Activity } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -33,6 +34,10 @@ export default function LiquidationsPage() {
         </header>
 
         <CryptoHeatmap />
+
+        <div className="mt-12 mb-8">
+          <AffiliateCta />
+        </div>
       </div>
 
       <Footer />
