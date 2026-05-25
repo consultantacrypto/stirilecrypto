@@ -9,8 +9,9 @@ export type ScreenerCoin = {
   marketCap: number;
 };
 
-const COINGECKO_MARKETS_URL =
-  'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false';
+function coingeckoMarketsUrl(perPage: number) {
+  return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=1&sparkline=false`;
+}
 
 type CoinGeckoMarketRow = {
   id: string;
@@ -90,12 +91,12 @@ export const MOCK_SCREENER_COINS: ScreenerCoin[] = [
   },
 ];
 
-export async function getScreenerCoins(): Promise<{
+export async function fetchScreenerData(perPage = 50): Promise<{
   coins: ScreenerCoin[];
   source: 'coingecko' | 'mock';
 }> {
   try {
-    const res = await fetch(COINGECKO_MARKETS_URL, {
+    const res = await fetch(coingeckoMarketsUrl(perPage), {
       next: { revalidate: 60 },
       headers: { Accept: 'application/json' },
     });
@@ -112,9 +113,24 @@ export async function getScreenerCoins(): Promise<{
 
     return { coins: data.map(mapRow), source: 'coingecko' };
   } catch (error) {
-    console.error('[getScreenerCoins]', error);
-    return { coins: MOCK_SCREENER_COINS, source: 'mock' };
+    console.error('[fetchScreenerData]', error);
+    return { coins: MOCK_SCREENER_COINS.slice(0, perPage), source: 'mock' };
   }
+}
+
+/** @deprecated Use fetchScreenerData — kept for existing imports */
+export const getScreenerCoins = () => fetchScreenerData(50);
+
+export function getHeatmapColor(change24h: number): string {
+  if (change24h > 5) return 'bg-emerald-500/80';
+  if (change24h > 0) return 'bg-emerald-800/80';
+  if (change24h > -5) return 'bg-red-800/80';
+  return 'bg-red-500/80';
+}
+
+export function formatHeatmapChange(change24h: number): string {
+  const sign = change24h >= 0 ? '+' : '';
+  return `${sign}${change24h.toFixed(2)}%`;
 }
 
 export function formatScreenerPrice(value: number): string {

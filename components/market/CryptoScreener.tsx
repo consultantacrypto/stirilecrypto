@@ -11,7 +11,7 @@ import {
 import {
   formatScreenerCompactUsd,
   formatScreenerPrice,
-  getScreenerCoins,
+  fetchScreenerData,
 } from '@/lib/screener-data';
 import { cn } from '@/lib/utils';
 
@@ -32,7 +32,7 @@ function ChangeCell({ change }: { change: number }) {
 }
 
 export default async function CryptoScreener() {
-  const { coins, source } = await getScreenerCoins();
+  const { coins, source } = await fetchScreenerData(50);
 
   return (
     <Card className="mb-8 overflow-hidden border-white/[0.06] bg-[#020617]/95 backdrop-blur-sm">
