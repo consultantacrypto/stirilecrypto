@@ -56,7 +56,7 @@ function getStaticFeedArticles(limit: number): NewsFeedItem[] {
  * Homepage feed: Supabase published articles first; if empty, legacy static articles.
  * When Supabase has rows, appends non-duplicate static articles up to `limit`.
  */
-export async function getHomeFeedArticles(limit = 6): Promise<NewsFeedItem[]> {
+export async function getHomeFeedArticles(limit = 9): Promise<NewsFeedItem[]> {
   const fromDb = await getPublishedArticles(limit);
 
   if (!fromDb || fromDb.length === 0) {

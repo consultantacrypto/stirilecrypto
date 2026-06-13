@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
 import { getHomeFeedArticles } from '@/lib/articles-db';
 
-const FEED_PAGE_SIZE = 6;
+const FEED_PAGE_SIZE = 9;
 
 export default async function NewsFeed() {
   const latestNews = await getHomeFeedArticles(FEED_PAGE_SIZE);
@@ -16,7 +16,7 @@ export default async function NewsFeed() {
             Nu există articole disponibile momentan.
           </p>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-12 pt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mt-12 pt-2">
             {latestNews.map((item, index) => (
               <article
                 key={item.id}
