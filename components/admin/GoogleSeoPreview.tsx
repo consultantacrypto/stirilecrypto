@@ -1,3 +1,5 @@
+import { SITE_URL } from '@/lib/json-ld';
+
 type GoogleSeoPreviewProps = {
   slug: string;
   metaTitle: string;
@@ -30,7 +32,7 @@ export default function GoogleSeoPreview({
         Previzualizare Google
       </p>
       <p className="text-sm leading-snug mb-1 truncate font-[var(--font-inter)]">
-        <span className="text-[#202124]">stirilecrypto.ro</span>
+        <span className="text-[#202124]">{new URL(SITE_URL).host}</span>
         <span className="text-[#5f6368]"> › stiri › </span>
         <span className="text-[#006621]">{previewSlug}</span>
       </p>

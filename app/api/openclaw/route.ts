@@ -1,4 +1,7 @@
 import { NextResponse } from 'next/server';
+import { SITE_URL } from '@/lib/json-ld';
+
+const CANONICAL_HOST = new URL(SITE_URL).host;
 
 export const dynamic = 'force-dynamic';
 
@@ -60,7 +63,7 @@ function mockSeo(content: string) {
   return {
     metaTitle: truncate(`${titleBase} | Știrile Crypto`, 60),
     metaDescription: truncate(
-      `${descBase} Citește analiza completă pe stirilecrypto.ro.`,
+      `${descBase} Citește analiza completă pe ${CANONICAL_HOST}.`,
       160
     ),
     mock: true,

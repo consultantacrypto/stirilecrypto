@@ -73,6 +73,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'stirilecrypto.ro' }],
+        destination: 'https://www.stirilecrypto.ro/:path*',
+        permanent: true,
+      },
+      {
         source: '/en',
         destination: '/',
         permanent: true,

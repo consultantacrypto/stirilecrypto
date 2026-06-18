@@ -132,7 +132,7 @@ export async function GET(request: Request) {
               fontWeight: 500,
             }}
           >
-            Citește analiza completă pe stirilecrypto.ro
+            Citește analiza completă pe www.stirilecrypto.ro
           </p>
           <div
             style={{

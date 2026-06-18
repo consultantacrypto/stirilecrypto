@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google"; 
 import "./globals.css";
 import Script from "next/script";
+import { SITE_URL } from "@/lib/json-ld";
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"],
@@ -17,7 +18,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.stirilecrypto.ro'),
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: SITE_URL,
+  },
   title: {
     template: '%s | Știrile Crypto',
     default: 'Știrile Crypto | Informație Financiară & Date On-Chain',
@@ -34,7 +38,7 @@ export const metadata: Metadata = {
     'ethereum stiri',
     'educatie financiara crypto',
   ],
-  authors: [{ name: 'Știrile Crypto', url: 'https://www.stirilecrypto.ro' }],
+  authors: [{ name: 'Știrile Crypto', url: SITE_URL }],
   creator: 'Știrile Crypto',
   publisher: 'Știrile Crypto',
   verification: {
@@ -48,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'ro_RO',
-    url: 'https://www.stirilecrypto.ro',
+    url: SITE_URL,
     siteName: 'Știrile Crypto',
     title: 'Știrile Crypto | Informație Financiară & Date On-Chain',
     description:

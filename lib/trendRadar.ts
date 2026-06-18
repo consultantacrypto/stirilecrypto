@@ -1,4 +1,5 @@
 import Parser from 'rss-parser';
+import { SITE_URL } from '@/lib/json-ld';
 
 export type RadarArticle = {
   title: string;
@@ -22,7 +23,7 @@ const FEEDS = [
 const parser = new Parser({
   timeout: 15_000,
   headers: {
-    'User-Agent': 'StirileCrypto-AlphaRadar/1.0 (+https://www.stirilecrypto.ro)',
+    'User-Agent': `StirileCrypto-AlphaRadar/1.0 (+${SITE_URL})`,
   },
 });
 

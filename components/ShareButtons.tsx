@@ -2,8 +2,8 @@
 
 import { Twitter, Linkedin, Link as LinkIcon, Check, Send } from 'lucide-react';
 import { useState } from 'react';
+import { SITE_URL } from '@/lib/json-ld';
 
-// ✅ ACEASTĂ PARTE ESTE CRITICĂ PENTRU A REZOLVA EROAREA
 interface ShareButtonsProps {
   title: string;
   slug: string;
@@ -15,13 +15,13 @@ export default function ShareButtons({ title, slug, sharePath }: ShareButtonsPro
   const [copied, setCopied] = useState(false);
 
   const path = sharePath ?? `/stiri/${slug}`;
-  const url = `https://www.stirilecrypto.ro${path}`;
+  const url = `${SITE_URL}${path}`;
   const text = `${title} \n\nCitește analiza completă aici:`;
 
   const shareLinks = {
     x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&via=MihaiDanielWeb3`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-    whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`
+    whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`,
   };
 
   const copyToClipboard = () => {
@@ -32,7 +32,6 @@ export default function ShareButtons({ title, slug, sharePath }: ShareButtonsPro
 
   return (
     <div className="flex flex-wrap gap-3 mt-4">
-      {/* Buton X (Twitter) */}
       <a
         href={shareLinks.x}
         target="_blank"
@@ -43,7 +42,6 @@ export default function ShareButtons({ title, slug, sharePath }: ShareButtonsPro
         <Twitter size={16} /> Post
       </a>
 
-      {/* Buton WhatsApp */}
       <a
         href={shareLinks.whatsapp}
         target="_blank"
@@ -54,7 +52,6 @@ export default function ShareButtons({ title, slug, sharePath }: ShareButtonsPro
         <Send size={16} /> WhatsApp
       </a>
 
-      {/* Buton LinkedIn */}
       <a
         href={shareLinks.linkedin}
         target="_blank"
@@ -65,7 +62,6 @@ export default function ShareButtons({ title, slug, sharePath }: ShareButtonsPro
         <Linkedin size={16} /> Share
       </a>
 
-      {/* Buton Copy Link */}
       <button
         onClick={copyToClipboard}
         className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-300 text-sm font-bold transition-all active:scale-95"

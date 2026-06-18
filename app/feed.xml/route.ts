@@ -2,8 +2,7 @@ import { getAllPublishedArticles } from '@/lib/articles-db';
 import { getPublishedInterviews } from '@/lib/interviews-db';
 import type { InterviewCardItem } from '@/lib/interviews';
 import type { Stire } from '@/lib/types/stiri';
-
-const BASE_URL = 'https://www.stirilecrypto.ro';
+import { SITE_FEED_URL, SITE_URL } from '@/lib/json-ld';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,7 +31,7 @@ function toRssPubDateFromIso(iso: string | null | undefined): string {
 }
 
 function buildArticleRssItem(article: Stire): string {
-  const link = `${BASE_URL}/stiri/${article.slug}`;
+  const link = `${SITE_URL}/stiri/${article.slug}`;
   const safeLink = escapeXml(link);
   const pubDate = toRssPubDateFromIso(article.published_at ?? article.created_at);
 
@@ -53,7 +52,7 @@ function buildArticleRssItem(article: Stire): string {
 }
 
 function buildInterviewRssItem(interview: InterviewCardItem): string {
-  const link = `${BASE_URL}/interviuri/${interview.slug}`;
+  const link = `${SITE_URL}/interviuri/${interview.slug}`;
   const safeLink = escapeXml(link);
   const pubDate = toRssPubDateFromIso(interview.created_at);
   const description = `[Interviu] ${interview.excerpt}`;
@@ -113,11 +112,11 @@ export async function GET() {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Știrile Crypto</title>
-    <link>${BASE_URL}</link>
+    <link>${SITE_URL}</link>
     <description>Știri crypto, analize on-chain, interviuri editoriale și context de piață de la Știrile Crypto.</description>
     <language>ro</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
-    <atom:link href="${BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="${SITE_FEED_URL}" rel="self" type="application/rss+xml"/>
 `;
 
   const rssItems = entries.map((entry) => entry.xml).join('');

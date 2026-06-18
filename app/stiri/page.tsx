@@ -1,4 +1,5 @@
 import { getMergedNewsListingArticles } from '@/lib/articles-db';
+import { SITE_URL } from '@/lib/json-ld';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CategoryFilter from '@/components/CategoryFilter';
@@ -12,6 +13,9 @@ export const revalidate = 60;
 export const metadata = {
   title: 'Market Intelligence | Știri Crypto Explicate',
   description: 'Analize de piață, știri crypto traduse și explicate de Știrile Crypto.',
+  alternates: {
+    canonical: `${SITE_URL}/stiri`,
+  },
 };
 
 const ITEMS_PER_PAGE = 6;

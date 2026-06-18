@@ -1,8 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { getAllPublishedArticles } from '@/lib/articles-db';
 import { getPublishedInterviews } from '@/lib/interviews-db';
-
-const BASE_URL = 'https://www.stirilecrypto.ro';
+import { SITE_URL } from '@/lib/json-ld';
 
 /** Runtime generation — avoids blocking build when Supabase is unavailable */
 export const dynamic = 'force-dynamic';
@@ -21,19 +20,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: BASE_URL,
+      url: SITE_URL,
       lastModified: now,
       changeFrequency: 'daily',
       priority: 1,
     },
     {
-      url: `${BASE_URL}/stiri`,
+      url: `${SITE_URL}/stiri`,
       lastModified: now,
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/interviuri`,
+      url: `${SITE_URL}/interviuri`,
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.85,
@@ -45,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const published = await getAllPublishedArticles();
     articleRoutes = published.map((article) => ({
-      url: `${BASE_URL}/stiri/${article.slug}`,
+      url: `${SITE_URL}/stiri/${article.slug}`,
       lastModified: articleLastModified(article),
       changeFrequency: 'daily',
       priority: 0.8,
@@ -59,7 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const interviews = await getPublishedInterviews();
     interviewRoutes = interviews.map((interview) => ({
-      url: `${BASE_URL}/interviuri/${interview.slug}`,
+      url: `${SITE_URL}/interviuri/${interview.slug}`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.75,

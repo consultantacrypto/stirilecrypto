@@ -3,6 +3,8 @@ import type { ArticlePageData } from '@/lib/articles-db';
 export const SITE_URL = 'https://www.stirilecrypto.ro';
 export const SITE_NAME = 'Știrile Crypto';
 export const PUBLISHER_LOGO_URL = `${SITE_URL}/icon.svg`;
+export const SITE_SITEMAP_URL = `${SITE_URL}/sitemap.xml`;
+export const SITE_FEED_URL = `${SITE_URL}/feed.xml`;
 
 /** Resolve relative paths to absolute URLs for schema.org crawlers. */
 export function toAbsoluteUrl(url: string | null | undefined): string | undefined {
