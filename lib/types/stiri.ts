@@ -1,5 +1,7 @@
 export type ArticleStatus = 'draft' | 'published';
 
+export type ArticleContentType = 'news' | 'market_pulse';
+
 export interface Stire {
   id: string;
   title: string;
@@ -7,6 +9,7 @@ export interface Stire {
   excerpt: string;
   content: string;
   category: string;
+  content_type: ArticleContentType;
   status: ArticleStatus;
   image_url: string | null;
   published_at: string | null;
@@ -23,6 +26,7 @@ export interface StireInsert {
   excerpt: string;
   content: string;
   category: string;
+  content_type?: ArticleContentType;
   status: ArticleStatus;
   image_url: string | null;
   published_at: string | null;

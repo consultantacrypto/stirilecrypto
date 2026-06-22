@@ -2,9 +2,10 @@ import { cache } from 'react';
 import { articles } from '@/lib/articles';
 import { resolveImageUrl } from '@/lib/image-url';
 import { getSupabase } from '@/lib/supabase';
-import type { Stire } from '@/lib/types/stiri';
+import type { ArticleContentType, Stire } from '@/lib/types/stiri';
 
 const PUBLISHED_STATUS = 'published';
+const MARKET_PULSE_CONTENT_TYPE: ArticleContentType = 'market_pulse';
 
 /** Matches legacy homepage slice: skip first N featured static articles */
 const FEATURED_ARTICLE_COUNT = 4;
@@ -75,6 +76,28 @@ export async function getHomeFeedArticles(limit = 9): Promise<NewsFeedItem[]> {
   return [...dbItems, ...staticFill];
 }
 
+/** Latest published Market Pulse (daily technical analysis). */
+export async function getLatestMarketPulse(): Promise<Stire | null> {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('*')
+    .eq('status', PUBLISHED_STATUS)
+    .eq('content_type', MARKET_PULSE_CONTENT_TYPE)
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error('[getLatestMarketPulse]', error.message);
+    return null;
+  }
+
+  return data as Stire | null;
+}
+
 export async function getPublishedArticles(limit = 6): Promise<Stire[]> {
   const supabase = getSupabase();
   if (!supabase) return [];
@@ -83,6 +106,7 @@ export async function getPublishedArticles(limit = 6): Promise<Stire[]> {
     .from('stiri')
     .select('*')
     .eq('status', PUBLISHED_STATUS)
+    .neq('content_type', MARKET_PULSE_CONTENT_TYPE)
     .order('published_at', { ascending: false, nullsFirst: false })
     .limit(limit);
 
@@ -101,8 +125,9 @@ export async function getAllPublishedArticles(): Promise<Stire[]> {
 
   const { data, error } = await supabase
     .from('stiri')
-    .select('id, slug, title, excerpt, category, image_url, published_at, status, views')
+    .select('id, slug, title, excerpt, category, content_type, image_url, published_at, status, views')
     .eq('status', PUBLISHED_STATUS)
+    .neq('content_type', MARKET_PULSE_CONTENT_TYPE)
     .order('published_at', { ascending: false, nullsFirst: false });
 
   if (error) {
@@ -176,6 +201,7 @@ export async function getArticleBySlug(slug: string): Promise<Stire | null> {
     .select('*')
     .eq('slug', slug)
     .eq('status', PUBLISHED_STATUS)
+    .neq('content_type', MARKET_PULSE_CONTENT_TYPE)
     .maybeSingle();
 
   if (error) {
@@ -185,6 +211,36 @@ export async function getArticleBySlug(slug: string): Promise<Stire | null> {
 
   return data as Stire | null;
 }
+
+/** Published Market Pulse by slug — only rows with content_type = market_pulse. */
+export async function getMarketPulseBySlug(slug: string): Promise<Stire | null> {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', PUBLISHED_STATUS)
+    .eq('content_type', MARKET_PULSE_CONTENT_TYPE)
+    .maybeSingle();
+
+  if (error) {
+    console.error('[getMarketPulseBySlug]', error.message);
+    return null;
+  }
+
+  return data as Stire | null;
+}
+
+async function fetchMarketPulseForPage(slug: string): Promise<ArticlePageData | null> {
+  const fromDb = await getMarketPulseBySlug(slug);
+  if (!fromDb) return null;
+  return stireToPageData(fromDb);
+}
+
+/** Deduped per request — safe for generateMetadata + page component */
+export const getMarketPulseForPage = cache(fetchMarketPulseForPage);
 
 export type ArticleImpact = 'bullish' | 'bearish' | 'neutral';
 
@@ -305,10 +361,29 @@ export async function getPublishedSlugs(): Promise<{ slug: string }[]> {
   const { data, error } = await supabase
     .from('stiri')
     .select('slug')
-    .eq('status', PUBLISHED_STATUS);
+    .eq('status', PUBLISHED_STATUS)
+    .neq('content_type', MARKET_PULSE_CONTENT_TYPE);
 
   if (error) {
     console.error('[getPublishedSlugs]', error.message);
+    return [];
+  }
+
+  return (data ?? []) as { slug: string }[];
+}
+
+export async function getMarketPulseSlugs(): Promise<{ slug: string }[]> {
+  const supabase = getSupabase();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('slug')
+    .eq('status', PUBLISHED_STATUS)
+    .eq('content_type', MARKET_PULSE_CONTENT_TYPE);
+
+  if (error) {
+    console.error('[getMarketPulseSlugs]', error.message);
     return [];
   }
 
@@ -350,6 +425,7 @@ export async function getMergedRelatedArticles(
       .from('stiri')
       .select('slug, title, excerpt, category, image_url, published_at')
       .eq('status', PUBLISHED_STATUS)
+      .neq('content_type', MARKET_PULSE_CONTENT_TYPE)
       .neq('slug', currentSlug)
       .order('published_at', { ascending: false, nullsFirst: false })
       .limit(limit);

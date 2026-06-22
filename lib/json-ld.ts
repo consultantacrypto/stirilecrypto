@@ -24,8 +24,12 @@ export function toIsoDateTime(value: string | null | undefined): string | undefi
   return parsed.toISOString();
 }
 
-export function buildNewsArticleJsonLd(article: ArticlePageData, slug: string) {
-  const pageUrl = `${SITE_URL}/stiri/${slug}`;
+export function buildNewsArticleJsonLd(
+  article: ArticlePageData,
+  slug: string,
+  options?: { path?: string; articleSection?: string },
+) {
+  const pageUrl = `${SITE_URL}${options?.path ?? `/stiri/${slug}`}`;
   const imageUrl = toAbsoluteUrl(article.image_url);
   const datePublished =
     toIsoDateTime(article.published_at) ?? toIsoDateTime(article.dateLabel);
@@ -60,7 +64,7 @@ export function buildNewsArticleJsonLd(article: ArticlePageData, slug: string) {
         url: PUBLISHER_LOGO_URL,
       },
     },
-    articleSection: article.category,
+    articleSection: options?.articleSection ?? article.category,
     inLanguage: 'ro-RO',
     isAccessibleForFree: true,
   };

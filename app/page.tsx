@@ -4,6 +4,7 @@ import ScrollProgress from '@/components/ScrollProgress';
 import HeroNewsPortal from '@/components/hero-concepts/HeroNewsPortal';
 import ConsultingBanner from '@/components/ConsultingBanner';
 import NewsFeed from '@/components/NewsFeed';
+import MarketPulseSection from '@/components/MarketPulseSection';
 import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
 
@@ -19,6 +20,7 @@ export default function Home() {
       <HeroNewsPortal />
 
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full">
+        <MarketPulseSection />
         <NewsFeed />
       </div>
 

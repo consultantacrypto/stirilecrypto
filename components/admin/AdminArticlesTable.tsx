@@ -102,10 +102,21 @@ export default function AdminArticlesTable({ articles: initialArticles }: AdminA
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <p className="font-semibold text-white line-clamp-2 max-w-xs">{article.title}</p>
-                  <p className="text-xs text-slate-500 font-mono mt-0.5 truncate max-w-xs">
-                    /stiri/{article.slug}
-                  </p>
+                  <div className="flex flex-col gap-1.5">
+                    <p className="font-semibold text-white line-clamp-2 max-w-xs">{article.title}</p>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {article.content_type === 'market_pulse' ? (
+                        <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                          Market Pulse
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="text-xs text-slate-500 font-mono mt-0.5 truncate max-w-xs">
+                      {article.content_type === 'market_pulse'
+                        ? `/market-pulse/${article.slug}`
+                        : `/stiri/${article.slug}`}
+                    </p>
+                  </div>
                 </td>
                 <td className="px-4 py-3">
                   {article.status === 'published' ? (

@@ -29,7 +29,7 @@ import { prepareImageUrlForStorage } from '@/lib/image-url';
 import { compressCoverImageForUpload } from '@/lib/storage/compress-cover-image';
 import { uploadCoverImageSigned } from '@/lib/storage/signed-upload-client';
 import { slugify } from '@/lib/slugify';
-import type { ArticleStatus, Stire } from '@/lib/types/stiri';
+import type { ArticleContentType, ArticleStatus, Stire } from '@/lib/types/stiri';
 
 const CATEGORIES = [
   'ANALIZĂ TEHNICĂ & MACRO',
@@ -48,6 +48,7 @@ type FormState = {
   excerpt: string;
   content: string;
   category: string;
+  content_type: ArticleContentType;
   status: ArticleStatus;
   image_url: string;
   meta_title: string;
@@ -60,6 +61,7 @@ const emptyForm: FormState = {
   excerpt: '',
   content: '',
   category: CATEGORIES[0],
+  content_type: 'news',
   status: 'draft',
   image_url: '',
   meta_title: '',
@@ -73,6 +75,7 @@ function formFromArticle(article: Stire): FormState {
     excerpt: article.excerpt,
     content: article.content,
     category: article.category,
+    content_type: article.content_type ?? 'news',
     status: article.status,
     image_url: article.image_url ?? '',
     meta_title: article.meta_title ?? '',
@@ -287,6 +290,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         excerpt: current.excerpt.trim(),
         content: current.content.trim(),
         category: current.category,
+        content_type: current.content_type,
         status,
         image_url: imageUrl,
         published_at: publishedAt,
@@ -532,6 +536,55 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
             className="w-full rounded-xl border border-white/10 bg-[#1c1c1e] px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             placeholder="Titlul articolului"
           />
+        </div>
+
+        <div className="md:col-span-2 space-y-3">
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
+            Format Editorial
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label
+              className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
+                form.content_type === 'news'
+                  ? 'border-blue-500/40 bg-blue-500/10 text-white'
+                  : 'border-white/10 bg-[#1c1c1e] text-slate-400 hover:border-white/20'
+              }`}
+            >
+              <input
+                type="radio"
+                name="content_type"
+                value="news"
+                checked={form.content_type === 'news'}
+                onChange={() => updateField('content_type', 'news')}
+                className="sr-only"
+              />
+              <span className="text-sm font-semibold">Știre Standard</span>
+            </label>
+            <label
+              className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
+                form.content_type === 'market_pulse'
+                  ? 'border-amber-500/40 bg-amber-500/10 text-white'
+                  : 'border-white/10 bg-[#1c1c1e] text-slate-400 hover:border-white/20'
+              }`}
+            >
+              <input
+                type="radio"
+                name="content_type"
+                value="market_pulse"
+                checked={form.content_type === 'market_pulse'}
+                onChange={() => updateField('content_type', 'market_pulse')}
+                className="sr-only"
+              />
+              <span className="text-sm font-semibold">Market Pulse</span>
+            </label>
+          </div>
+          {form.content_type === 'market_pulse' ? (
+            <p className="text-xs text-amber-200/80 font-[var(--font-inter)]">
+              Apare în secțiunea dedicată de pe homepage și la{' '}
+              <span className="font-mono text-amber-300">/market-pulse/[slug]</span> — nu în grila de
+              știri.
+            </p>
+          ) : null}
         </div>
 
         <div className="space-y-2">
