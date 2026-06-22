@@ -26,7 +26,7 @@ export interface StireInsert {
   excerpt: string;
   content: string;
   category: string;
-  content_type?: ArticleContentType;
+  content_type: ArticleContentType;
   status: ArticleStatus;
   image_url: string | null;
   published_at: string | null;

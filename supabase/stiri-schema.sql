@@ -7,6 +7,8 @@ create table if not exists public.stiri (
   excerpt text not null,
   content text not null,
   category text not null,
+  content_type text not null default 'news'
+    check (content_type in ('news', 'market_pulse')),
   status text not null check (status in ('draft', 'published')),
   image_url text,
   published_at timestamptz,

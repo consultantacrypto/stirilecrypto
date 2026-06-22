@@ -29,6 +29,11 @@ import { prepareImageUrlForStorage } from '@/lib/image-url';
 import { compressCoverImageForUpload } from '@/lib/storage/compress-cover-image';
 import { uploadCoverImageSigned } from '@/lib/storage/signed-upload-client';
 import { slugify } from '@/lib/slugify';
+import {
+  buildStireWritePayload,
+  formatSupabaseWriteError,
+  normalizeArticleContentType,
+} from '@/lib/admin/stire-payload';
 import type { ArticleContentType, ArticleStatus, Stire } from '@/lib/types/stiri';
 
 const CATEGORIES = [
@@ -75,7 +80,7 @@ function formFromArticle(article: Stire): FormState {
     excerpt: article.excerpt,
     content: article.content,
     category: article.category,
-    content_type: article.content_type ?? 'news',
+    content_type: normalizeArticleContentType(article.content_type),
     status: article.status,
     image_url: article.image_url ?? '',
     meta_title: article.meta_title ?? '',
@@ -284,21 +289,21 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
           ? publishedAtRef.current ?? new Date().toISOString()
           : null;
 
-      return {
-        title: current.title.trim() || 'Draft fără titlu',
+      return buildStireWritePayload({
+        title: current.title,
         slug: current.slug.trim() || slugify(current.title) || `draft-${Date.now()}`,
-        excerpt: current.excerpt.trim(),
-        content: current.content.trim(),
+        excerpt: current.excerpt,
+        content: current.content,
         category: current.category,
         content_type: current.content_type,
         status,
         image_url: imageUrl,
         published_at: publishedAt,
-        meta_title: current.meta_title.trim() || null,
-        meta_description: current.meta_description.trim() || null,
-      };
+        meta_title: current.meta_title,
+        meta_description: current.meta_description,
+      });
     },
-    []
+    [],
   );
 
   const performAutoSave = useCallback(async () => {
@@ -324,16 +329,20 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
           .update(payload)
           .eq('id', articleId);
 
-        if (updateError) throw new Error(updateError.message);
+        if (updateError) {
+          throw new Error(formatSupabaseWriteError(updateError, 'update'));
+        }
         lastSavedSnapshotRef.current = serializeFormSnapshot(formRef.current);
       } else {
         const { data, error: insertError } = await supabase
           .from('stiri')
           .insert(payload)
-          .select('id, slug, status, published_at')
+          .select('id, slug, status, published_at, content_type')
           .single();
 
-        if (insertError) throw new Error(insertError.message);
+        if (insertError) {
+          throw new Error(formatSupabaseWriteError(insertError, 'insert'));
+        }
         if (!data) throw new Error('Nu s-a returnat ID-ul articolului.');
 
         setArticleId(data.id as string);
@@ -344,6 +353,7 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
           ...current,
           slug: data.slug as string,
           status: persistedStatusRef.current,
+          content_type: normalizeArticleContentType(data.content_type ?? current.content_type),
         };
 
         setForm(syncedForm);
@@ -353,8 +363,9 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
       }
       setLastSavedTime(new Date());
       setSaveStatus('saved');
-    } catch {
+    } catch (err) {
       setSaveStatus('error');
+      setError(err instanceof Error ? err.message : 'Auto-save eșuat.');
     } finally {
       isAutoSavingRef.current = false;
     }
@@ -451,12 +462,18 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
           .eq('id', articleId);
 
         if (updateError) {
-          throw new Error(updateError.message);
+          throw new Error(formatSupabaseWriteError(updateError, 'update'));
         }
 
-        patchForm(savedForm);
+        patchForm({
+          ...savedForm,
+          content_type: normalizeArticleContentType(savedForm.content_type),
+        });
         persistedStatusRef.current = savedForm.status;
-        lastSavedSnapshotRef.current = serializeFormSnapshot(savedForm);
+        lastSavedSnapshotRef.current = serializeFormSnapshot({
+          ...savedForm,
+          content_type: normalizeArticleContentType(savedForm.content_type),
+        });
 
         setSuccess(
           savedForm.status === 'published'
@@ -468,11 +485,11 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
         const { data, error: insertError } = await supabase
           .from('stiri')
           .insert(payload)
-          .select('id, slug, status, published_at')
+          .select('id, slug, status, published_at, content_type')
           .single();
 
         if (insertError) {
-          throw new Error(insertError.message);
+          throw new Error(formatSupabaseWriteError(insertError, 'insert'));
         }
 
         if (data) {
@@ -482,8 +499,18 @@ export default function AdminArticleForm({ initialData }: AdminArticleFormProps)
           router.replace(`/admin/edit/${data.id}`, { scroll: false });
         }
 
-        patchForm(savedForm);
-        lastSavedSnapshotRef.current = serializeFormSnapshot(savedForm);
+        patchForm({
+          ...savedForm,
+          content_type: normalizeArticleContentType(
+            data?.content_type ?? savedForm.content_type,
+          ),
+        });
+        lastSavedSnapshotRef.current = serializeFormSnapshot({
+          ...savedForm,
+          content_type: normalizeArticleContentType(
+            data?.content_type ?? savedForm.content_type,
+          ),
+        });
 
         setSuccess(
           savedForm.status === 'published'
