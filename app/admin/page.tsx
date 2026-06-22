@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Mic2, Plus } from 'lucide-react';
+import { Activity, Mic2, Plus } from 'lucide-react';
 import AdminShell from '@/components/admin/AdminShell';
 import AdminArticlesTable from '@/components/admin/AdminArticlesTable';
 import { createClient } from '@/lib/supabase/server';
@@ -34,6 +34,13 @@ export default async function AdminDashboardPage() {
           {articles.length} articol{articles.length === 1 ? '' : 'e'} în baza de date (draft + publicat).
         </p>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          <Link
+            href="/admin/create?type=market_pulse"
+            className="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-500 text-black font-bold px-5 py-3 rounded-xl transition-colors shadow-lg shadow-amber-900/25 text-sm"
+          >
+            <Activity size={18} />
+            Analiză Nouă (Market Pulse)
+          </Link>
           <Link
             href="/admin/create"
             className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-3 rounded-xl transition-colors shadow-lg shadow-blue-900/20 text-sm"

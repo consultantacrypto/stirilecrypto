@@ -114,11 +114,21 @@ function autoSaveStatus(
 
 export type AdminArticleFormProps = {
   initialData?: Stire;
+  /** Pre-select editorial format on /admin/create?type=market_pulse */
+  initialContentType?: ArticleContentType;
 };
 
-export default function AdminArticleForm({ initialData }: AdminArticleFormProps) {
+export default function AdminArticleForm({
+  initialData,
+  initialContentType,
+}: AdminArticleFormProps) {
   const router = useRouter();
-  const initialForm = initialData ? formFromArticle(initialData) : emptyForm;
+  const initialForm = initialData
+    ? formFromArticle(initialData)
+    : {
+        ...emptyForm,
+        content_type: normalizeArticleContentType(initialContentType ?? 'news'),
+      };
 
   const [articleId, setArticleId] = useState<string | undefined>(initialData?.id);
   const [form, setForm] = useState<FormState>(initialForm);

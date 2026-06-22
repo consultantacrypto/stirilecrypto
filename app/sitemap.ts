@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { getAllPublishedArticles } from '@/lib/articles-db';
+import { getAllPublishedArticles, getAllPublishedMarketPulseArticles } from '@/lib/articles-db';
 import { getPublishedInterviews } from '@/lib/interviews-db';
 import { SITE_URL } from '@/lib/json-ld';
 
@@ -37,6 +37,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.85,
     },
+    {
+      url: `${SITE_URL}/market-pulse`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.88,
+    },
   ];
 
   let articleRoutes: MetadataRoute.Sitemap = [];
@@ -53,6 +59,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('[sitemap] Failed to fetch published articles:', err);
   }
 
+  let marketPulseRoutes: MetadataRoute.Sitemap = [];
+
+  try {
+    const pulses = await getAllPublishedMarketPulseArticles();
+    marketPulseRoutes = pulses.map((pulse) => ({
+      url: `${SITE_URL}/market-pulse/${pulse.slug}`,
+      lastModified: articleLastModified(pulse),
+      changeFrequency: 'daily',
+      priority: 0.82,
+    }));
+  } catch (err) {
+    console.error('[sitemap] Failed to fetch market pulse articles:', err);
+  }
+
   let interviewRoutes: MetadataRoute.Sitemap = [];
 
   try {
@@ -67,5 +87,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('[sitemap] Failed to fetch published interviews:', err);
   }
 
-  return [...staticRoutes, ...articleRoutes, ...interviewRoutes];
+  return [...staticRoutes, ...articleRoutes, ...marketPulseRoutes, ...interviewRoutes];
 }

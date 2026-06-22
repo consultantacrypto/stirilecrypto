@@ -59,6 +59,15 @@ export default async function MarketPulseSection() {
           <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
         </span>
       </Link>
+
+      <div className="mt-3 flex justify-end max-w-7xl mx-auto">
+        <Link
+          href="/market-pulse"
+          className="text-[10px] font-bold uppercase tracking-widest text-amber-500/70 hover:text-amber-400 transition-colors font-[var(--font-space)]"
+        >
+          Arhivă analize →
+        </Link>
+      </div>
     </section>
   );
 }

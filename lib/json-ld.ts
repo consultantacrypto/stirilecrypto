@@ -70,6 +70,61 @@ export function buildNewsArticleJsonLd(
   };
 }
 
+/** Market Pulse daily technical analysis — Article schema tuned for financial editorial. */
+export function buildFinancialArticleJsonLd(
+  article: ArticlePageData,
+  slug: string,
+  options?: { path?: string },
+) {
+  const pageUrl = `${SITE_URL}${options?.path ?? `/market-pulse/${slug}`}`;
+  const imageUrl = toAbsoluteUrl(article.image_url);
+  const datePublished =
+    toIsoDateTime(article.published_at) ?? toIsoDateTime(article.dateLabel);
+  const dateModified =
+    toIsoDateTime(article.updated_at) ?? datePublished;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': pageUrl,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageUrl,
+    },
+    headline: article.title,
+    name: article.title,
+    description: article.excerpt,
+    image: imageUrl ? [imageUrl] : undefined,
+    datePublished,
+    dateModified,
+    author: [
+      {
+        '@type': 'Person',
+        name: 'Stirile Crypto',
+        url: SITE_URL,
+      },
+    ],
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: PUBLISHER_LOGO_URL,
+      },
+    },
+    articleSection: 'Market Pulse',
+    genre: 'Financial Analysis',
+    keywords: 'Market Pulse, analiză tehnică, crypto, piețe financiare',
+    about: {
+      '@type': 'Thing',
+      name: 'Cryptocurrency financial markets',
+    },
+    inLanguage: 'ro-RO',
+    isAccessibleForFree: true,
+  };
+}
+
 export function buildOrganizationJsonLd() {
   return {
     '@context': 'https://schema.org',

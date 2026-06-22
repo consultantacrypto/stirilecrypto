@@ -10,7 +10,7 @@ import {
   type ArticlePageData,
 } from '@/lib/articles-db';
 import { normalizeImageUrl } from '@/lib/image-url';
-import { buildNewsArticleJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
+import { buildFinancialArticleJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
 import { Activity, ArrowLeft, Calendar, Clock, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -93,9 +93,8 @@ function MarketPulsePageContent({
 }) {
   const { main, conclusion } = splitArticleContent(article.content);
   const coverSrc = normalizeImageUrl(article.image_url);
-  const jsonLd = buildNewsArticleJsonLd(article, slug, {
+  const jsonLd = buildFinancialArticleJsonLd(article, slug, {
     path: `/market-pulse/${slug}`,
-    articleSection: 'Market Pulse',
   });
 
   return (

@@ -98,6 +98,68 @@ export async function getLatestMarketPulse(): Promise<Stire | null> {
   return data as Stire | null;
 }
 
+export interface MarketPulseArchiveItem {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  image_url: string;
+  dateLabel: string;
+  published_at: string | null;
+}
+
+function stireToMarketPulseArchiveItem(stire: Stire): MarketPulseArchiveItem {
+  return {
+    id: stire.id,
+    slug: stire.slug,
+    title: stire.title,
+    excerpt: stire.excerpt,
+    image_url: resolveImageUrl(stire),
+    dateLabel: formatArticleDate(stire.published_at),
+    published_at: stire.published_at,
+  };
+}
+
+/** Chronological archive of published Market Pulse analyses (newest first). */
+export async function getMarketPulseArchive(): Promise<MarketPulseArchiveItem[]> {
+  const supabase = getSupabase();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('id, slug, title, excerpt, image_url, published_at, created_at')
+    .eq('status', PUBLISHED_STATUS)
+    .eq('content_type', MARKET_PULSE_CONTENT_TYPE)
+    .order('published_at', { ascending: false, nullsFirst: false });
+
+  if (error) {
+    console.error('[getMarketPulseArchive]', error.message);
+    return [];
+  }
+
+  return (data ?? []).map((row) => stireToMarketPulseArchiveItem(row as Stire));
+}
+
+/** All published Market Pulse rows — RSS, sitemap, feeds. */
+export async function getAllPublishedMarketPulseArticles(): Promise<Stire[]> {
+  const supabase = getSupabase();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('*')
+    .eq('status', PUBLISHED_STATUS)
+    .eq('content_type', MARKET_PULSE_CONTENT_TYPE)
+    .order('published_at', { ascending: false, nullsFirst: false });
+
+  if (error) {
+    console.error('[getAllPublishedMarketPulseArticles]', error.message);
+    return [];
+  }
+
+  return (data ?? []) as Stire[];
+}
+
 export async function getPublishedArticles(limit = 6): Promise<Stire[]> {
   const supabase = getSupabase();
   if (!supabase) return [];

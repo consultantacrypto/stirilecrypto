@@ -1,4 +1,4 @@
-import { getAllPublishedArticles } from '@/lib/articles-db';
+import { getAllPublishedArticles, getAllPublishedMarketPulseArticles } from '@/lib/articles-db';
 import { getPublishedInterviews } from '@/lib/interviews-db';
 import type { InterviewCardItem } from '@/lib/interviews';
 import type { Stire } from '@/lib/types/stiri';
@@ -51,6 +51,27 @@ function buildArticleRssItem(article: Stire): string {
     </item>`;
 }
 
+function buildMarketPulseRssItem(article: Stire): string {
+  const link = `${SITE_URL}/market-pulse/${article.slug}`;
+  const safeLink = escapeXml(link);
+  const pubDate = toRssPubDateFromIso(article.published_at ?? article.created_at);
+
+  const enclosure =
+    article.image_url && article.image_url.trim() !== ''
+      ? `\n      <enclosure url="${escapeXml(article.image_url)}" length="0" type="image/jpeg"/>`
+      : '';
+
+  return `
+    <item>
+      <title><![CDATA[${article.title}]]></title>
+      <link>${safeLink}</link>
+      <description><![CDATA[${article.excerpt}]]></description>
+      <pubDate>${pubDate}</pubDate>
+      <guid isPermaLink="true">${safeLink}</guid>
+      <category><![CDATA[Market Pulse]]></category>${enclosure}
+    </item>`;
+}
+
 function buildInterviewRssItem(interview: InterviewCardItem): string {
   const link = `${SITE_URL}/interviuri/${interview.slug}`;
   const safeLink = escapeXml(link);
@@ -75,16 +96,24 @@ function buildInterviewRssItem(interview: InterviewCardItem): string {
 
 type FeedEntry =
   | { kind: 'article'; pubDate: Date; xml: string }
+  | { kind: 'market_pulse'; pubDate: Date; xml: string }
   | { kind: 'interview'; pubDate: Date; xml: string };
 
 export async function GET() {
   let published: Stire[] = [];
+  let marketPulse: Stire[] = [];
   let interviews: InterviewCardItem[] = [];
 
   try {
     published = await getAllPublishedArticles();
   } catch (err) {
     console.error('[feed.xml] Failed to fetch published articles:', err);
+  }
+
+  try {
+    marketPulse = await getAllPublishedMarketPulseArticles();
+  } catch (err) {
+    console.error('[feed.xml] Failed to fetch market pulse articles:', err);
   }
 
   try {
@@ -98,6 +127,11 @@ export async function GET() {
       kind: 'article' as const,
       pubDate: new Date(article.published_at ?? article.created_at ?? Date.now()),
       xml: buildArticleRssItem(article),
+    })),
+    ...marketPulse.map((article) => ({
+      kind: 'market_pulse' as const,
+      pubDate: new Date(article.published_at ?? article.created_at ?? Date.now()),
+      xml: buildMarketPulseRssItem(article),
     })),
     ...interviews.map((interview) => ({
       kind: 'interview' as const,
