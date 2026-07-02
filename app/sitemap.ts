@@ -43,6 +43,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 0.88,
     },
+    {
+      url: `${SITE_URL}/dashboard`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.87,
+    },
   ];
 
   let articleRoutes: MetadataRoute.Sitemap = [];

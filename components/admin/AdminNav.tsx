@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FileText, Mic2, Radar } from 'lucide-react';
+import { FileText, Mic2, Radar, LayoutDashboard } from 'lucide-react';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Articole', icon: FileText, exact: true },
   { href: '/admin/interviuri', label: 'Interviuri', icon: Mic2, exact: false },
+  { href: '/admin/dashboard', label: 'Dashboard Public', icon: LayoutDashboard, exact: false },
   { href: '/admin/radar', label: 'Trend Radar', icon: Radar, exact: false },
 ] as const;
 

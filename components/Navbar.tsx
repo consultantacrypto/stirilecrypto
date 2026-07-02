@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation';
 const CENTER_LINKS = [
   { href: '/stiri', label: 'Știri' },
   { href: '/interviuri', label: 'Interviuri' },
+  { href: '/dashboard', label: 'Dashboard' },
   { href: '/market', label: 'Date Piață' },
   { href: '/academie', label: 'Educație' },
   { href: '/lichidari', label: 'Radar Lichidări' },
