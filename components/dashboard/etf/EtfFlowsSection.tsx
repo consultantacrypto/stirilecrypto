@@ -1,3 +1,7 @@
+/**
+ * @deprecated Replaced by client `EtfSection` (API-driven redesign).
+ * Kept for rollback reference — do not mount on /dashboard.
+ */
 import { Building2 } from 'lucide-react';
 import { EtfFlowsChart } from '@/components/lazy/dashboard-widgets';
 import { getEtfSnapshotsLast5Days } from '@/lib/etf-snapshots-db';
