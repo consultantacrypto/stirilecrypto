@@ -3,6 +3,7 @@ import ShareButtons from '@/components/ShareButtons';
 import ArticleContent from '@/components/ArticleContent';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
 import ViewTracker from '@/components/ViewTracker';
+import PremiumTaSection from '@/components/dashboard/premium/PremiumTaSection';
 import { splitArticleContent } from '@/lib/split-article-content';
 import {
   getMarketPulseForPage,
@@ -10,7 +11,7 @@ import {
   type ArticlePageData,
 } from '@/lib/articles-db';
 import { normalizeImageUrl } from '@/lib/image-url';
-import { buildFinancialArticleJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
+import { buildFinancialArticleJsonLd, buildBreadcrumbJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
 import { Activity, ArrowLeft, Calendar, Clock, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -96,12 +97,21 @@ function MarketPulsePageContent({
   const jsonLd = buildFinancialArticleJsonLd(article, slug, {
     path: `/market-pulse/${slug}`,
   });
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Acasă', path: '/' },
+    { name: 'Market Pulse', path: '/market-pulse' },
+    { name: article.title, path: `/market-pulse/${slug}` },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <main className="min-h-screen flex flex-col bg-[#020617] text-white selection:bg-amber-500/30">
@@ -112,7 +122,7 @@ function MarketPulsePageContent({
           <div className="mb-8">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-medium font-[var(--font-inter)]"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-medium font-[var(--font-inter)] min-h-12"
             >
               <ArrowLeft size={16} /> Înapoi acasă
             </Link>
@@ -181,6 +191,8 @@ function MarketPulsePageContent({
               <ArticleContent content={conclusion} />
             </aside>
           ) : null}
+
+          <PremiumTaSection />
 
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">

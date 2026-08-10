@@ -174,7 +174,7 @@ export default async function MarketPage() {
                     </div>
 
                     {/* BUTON TOP 20 - MARE */}
-                    <Link href="/stiri/sezonul-celor-20-investitori-titani" className="block group">
+                    <Link href="/stiri/nu-asteptati-altcoin-season-vine-sezonul-celor-20" className="block group">
                         <div className="w-full bg-gradient-to-r from-blue-900/50 to-indigo-900/50 hover:from-blue-800 hover:to-indigo-800 border border-blue-500/30 p-6 rounded-xl flex items-center justify-between transition-all shadow-lg hover:shadow-blue-900/20 hover:-translate-y-1">
                             <div>
                                 <h3 className="text-xl font-bold text-white mb-1 flex items-center gap-2">

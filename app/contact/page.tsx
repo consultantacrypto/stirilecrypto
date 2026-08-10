@@ -1,6 +1,17 @@
+import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Mail, MapPin, MessageSquare, Clock } from 'lucide-react';
+import { SITE_URL } from '@/lib/json-ld';
+
+export const metadata: Metadata = {
+  title: 'Contact',
+  description:
+    'Contactează echipa Știrile Crypto pentru suport, parteneriate sau sesiuni de consultanță.',
+  alternates: {
+    canonical: `${SITE_URL}/contact`,
+  },
+};
 
 export default function ContactPage() {
   return (

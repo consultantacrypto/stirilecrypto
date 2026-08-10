@@ -19,36 +19,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: SITE_URL,
-      lastModified: now,
-      changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
-      url: `${SITE_URL}/stiri`,
-      lastModified: now,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/interviuri`,
-      lastModified: now,
-      changeFrequency: 'weekly',
-      priority: 0.85,
-    },
-    {
-      url: `${SITE_URL}/market-pulse`,
-      lastModified: now,
-      changeFrequency: 'daily',
-      priority: 0.88,
-    },
-    {
-      url: `${SITE_URL}/dashboard`,
-      lastModified: now,
-      changeFrequency: 'daily',
-      priority: 0.87,
-    },
+    { url: SITE_URL, lastModified: now, changeFrequency: 'daily', priority: 1 },
+    { url: `${SITE_URL}/stiri`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SITE_URL}/interviuri`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${SITE_URL}/market-pulse`, lastModified: now, changeFrequency: 'daily', priority: 0.88 },
+    { url: `${SITE_URL}/market`, lastModified: now, changeFrequency: 'hourly', priority: 0.85 },
+    { url: `${SITE_URL}/academie`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE_URL}/lichidari`, lastModified: now, changeFrequency: 'hourly', priority: 0.75 },
+    { url: `${SITE_URL}/despre`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${SITE_URL}/raport-strategic`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/termeni`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${SITE_URL}/confidentialitate`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${SITE_URL}/cookies`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${SITE_URL}/hub/mica`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
+    { url: `${SITE_URL}/hub/bitcoin`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
+    { url: `${SITE_URL}/hub/securitate`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
   ];
 
   let articleRoutes: MetadataRoute.Sitemap = [];
@@ -58,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     articleRoutes = published.map((article) => ({
       url: `${SITE_URL}/stiri/${article.slug}`,
       lastModified: articleLastModified(article),
-      changeFrequency: 'daily',
+      changeFrequency: 'daily' as const,
       priority: 0.8,
     }));
   } catch (err) {
@@ -72,7 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     marketPulseRoutes = pulses.map((pulse) => ({
       url: `${SITE_URL}/market-pulse/${pulse.slug}`,
       lastModified: articleLastModified(pulse),
-      changeFrequency: 'daily',
+      changeFrequency: 'daily' as const,
       priority: 0.82,
     }));
   } catch (err) {
@@ -86,7 +72,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     interviewRoutes = interviews.map((interview) => ({
       url: `${SITE_URL}/interviuri/${interview.slug}`,
       lastModified: now,
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.75,
     }));
   } catch (err) {

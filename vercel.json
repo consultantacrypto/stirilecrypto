@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "stirilecrypto.ro" }],
+      "destination": "https://www.stirilecrypto.ro/$1",
+      "statusCode": 301
+    }
+  ]
+}

@@ -84,7 +84,7 @@ export default function Navbar() {
 
       <button
         type="button"
-        className="lg:hidden z-10 text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+        className="lg:hidden z-10 text-white p-3 min-w-12 min-h-12 rounded-full hover:bg-white/10 transition-colors inline-flex items-center justify-center"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label={mobileMenuOpen ? 'Închide meniul' : 'Deschide meniul'}
         aria-expanded={mobileMenuOpen}

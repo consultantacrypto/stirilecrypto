@@ -474,15 +474,39 @@ function relatedRowToListingItem(row: RelatedRow, idFallback: string): NewsListi
   };
 }
 
-/** Related cards: narrow Supabase query (no full-table scan, no content HTML). */
+/** Related cards: prefer same category, then fill with latest news. */
 export async function getMergedRelatedArticles(
   currentSlug: string,
-  limit = 3
+  limit = 3,
+  category?: string | null
 ): Promise<NewsListingItem[]> {
   const items: NewsListingItem[] = [];
+  const seen = new Set<string>([currentSlug]);
   const supabase = getSupabase();
 
-  if (supabase) {
+  if (supabase && category?.trim()) {
+    const { data, error } = await supabase
+      .from('stiri')
+      .select('slug, title, excerpt, category, image_url, published_at')
+      .eq('status', PUBLISHED_STATUS)
+      .neq('content_type', MARKET_PULSE_CONTENT_TYPE)
+      .neq('slug', currentSlug)
+      .ilike('category', `%${category.trim()}%`)
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .limit(limit);
+
+    if (!error && data) {
+      for (const row of data as RelatedRow[]) {
+        if (seen.has(row.slug)) continue;
+        seen.add(row.slug);
+        items.push(relatedRowToListingItem(row, row.slug));
+      }
+    } else if (error) {
+      console.error('[getMergedRelatedArticles] category query', error.message);
+    }
+  }
+
+  if (supabase && items.length < limit) {
     const { data, error } = await supabase
       .from('stiri')
       .select('slug, title, excerpt, category, image_url, published_at')
@@ -490,10 +514,13 @@ export async function getMergedRelatedArticles(
       .neq('content_type', MARKET_PULSE_CONTENT_TYPE)
       .neq('slug', currentSlug)
       .order('published_at', { ascending: false, nullsFirst: false })
-      .limit(limit);
+      .limit(limit * 2);
 
     if (!error && data) {
       for (const row of data as RelatedRow[]) {
+        if (items.length >= limit) break;
+        if (seen.has(row.slug)) continue;
+        seen.add(row.slug);
         items.push(relatedRowToListingItem(row, row.slug));
       }
     } else if (error) {
@@ -502,9 +529,8 @@ export async function getMergedRelatedArticles(
   }
 
   if (items.length < limit) {
-    const seen = new Set(items.map((i) => i.slug));
     const staticFill = articles
-      .filter((a) => a.slug !== currentSlug && !seen.has(a.slug))
+      .filter((a) => !seen.has(a.slug))
       .slice(0, limit - items.length)
       .map(staticArticleToListingItem);
     items.push(...staticFill);

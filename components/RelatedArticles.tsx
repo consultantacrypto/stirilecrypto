@@ -1,15 +1,21 @@
 import ArticleCard from '@/components/ArticleCard';
 import { getMergedRelatedArticles } from '@/lib/articles-db';
 
-export default async function RelatedArticles({ currentSlug }: { currentSlug: string }) {
-  const related = await getMergedRelatedArticles(currentSlug, 3);
+export default async function RelatedArticles({
+  currentSlug,
+  category,
+}: {
+  currentSlug: string;
+  category?: string | null;
+}) {
+  const related = await getMergedRelatedArticles(currentSlug, 3, category);
 
   if (related.length === 0) return null;
 
   return (
     <section className="mt-16 pt-12 border-t border-white/10">
       <h2 className="text-2xl font-bold font-[var(--font-space)] text-white mb-6">
-        Știri Recomandate
+        Citește și
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

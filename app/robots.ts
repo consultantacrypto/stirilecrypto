@@ -1,7 +1,25 @@
 import type { MetadataRoute } from 'next';
 import { SITE_SITEMAP_URL } from '@/lib/json-ld';
 
-const AI_SEARCH_BOTS = ['GPTBot', 'PerplexityBot', 'ClaudeBot', 'Google-Extended'] as const;
+const AI_BOTS = [
+  'GPTBot',
+  'ChatGPT-User',
+  'Google-Extended',
+  'CCBot',
+  'anthropic-ai',
+  'ClaudeBot',
+  'PerplexityBot',
+] as const;
+
+const PRIVATE_PATHS = [
+  '/admin/',
+  '/admin',
+  '/api/',
+  '/dashboard',
+  '/login',
+  '/editeaza',
+  '/articol-nou',
+] as const;
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,11 +27,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin/', '/api/'],
+        disallow: [...PRIVATE_PATHS],
       },
-      ...AI_SEARCH_BOTS.map((userAgent) => ({
+      ...AI_BOTS.map((userAgent) => ({
         userAgent,
-        allow: '/',
+        disallow: ['/'],
       })),
     ],
     sitemap: SITE_SITEMAP_URL,

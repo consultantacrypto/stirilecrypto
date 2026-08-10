@@ -11,7 +11,7 @@ import {
   type ArticlePageData,
 } from '@/lib/articles-db';
 import { normalizeImageUrl } from '@/lib/image-url';
-import { buildNewsArticleJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
+import { buildNewsArticleJsonLd, buildBreadcrumbJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
 import { Calendar, Clock, ArrowLeft, User, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -108,12 +108,21 @@ function ArticlePageContent({
   const { main, conclusion } = splitArticleContent(article.content);
   const coverSrc = normalizeImageUrl(article.image_url);
   const newsArticleJsonLd = buildNewsArticleJsonLd(article, slug);
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Acasă', path: '/' },
+    { name: 'Știri', path: '/stiri' },
+    { name: article.title, path: `/stiri/${slug}` },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <main className="min-h-screen flex flex-col bg-[#020617] text-white selection:bg-blue-500/30">
@@ -125,7 +134,7 @@ function ArticlePageContent({
           <div className="mb-8">
             <Link
               href="/stiri"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-medium font-[var(--font-inter)]"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-medium font-[var(--font-inter)] min-h-12"
             >
               <ArrowLeft size={16} /> Înapoi la Știri
             </Link>
@@ -203,7 +212,7 @@ function ArticlePageContent({
             </div>
           </div>
 
-          <RelatedArticles currentSlug={article.slug} />
+          <RelatedArticles currentSlug={article.slug} category={article.category} />
         </article>
 
         <footer className="border-t border-white/5 py-12 bg-black/50 text-center text-gray-600 text-sm font-[var(--font-inter)]">

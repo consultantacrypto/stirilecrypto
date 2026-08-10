@@ -3,6 +3,7 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import { SITE_URL } from "@/lib/json-ld";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"],
@@ -19,9 +20,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  alternates: {
-    canonical: SITE_URL,
-  },
+  // Canonical is set per-route — do NOT default to homepage here
   title: {
     template: '%s | Știrile Crypto',
     default: 'Știrile Crypto | Informație Financiară & Date On-Chain',
@@ -102,13 +101,18 @@ export default function RootLayout({
         />
         <Script id="google-analytics" strategy="lazyOnload">
           {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-94JGNJHNBZ');
+            (function () {
+              var host = window.location.hostname;
+              if (host === 'localhost' || host === '127.0.0.1') return;
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              window.gtag = gtag;
+              gtag('js', new Date());
+              gtag('config', 'G-94JGNJHNBZ');
+            })();
           `}
         </Script>
-
+        <AnalyticsTracker />
         {children}
       </body>
     </html>

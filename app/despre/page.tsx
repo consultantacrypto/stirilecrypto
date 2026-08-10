@@ -1,7 +1,18 @@
+import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
 import { CheckCircle2, Award, ShieldCheck, Users } from 'lucide-react';
+import { SITE_URL } from '@/lib/json-ld';
+
+export const metadata: Metadata = {
+  title: 'Despre Noi',
+  description:
+    'Cine suntem și de ce există Știrile Crypto: știri filtrate, analiză on-chain și educație financiară aplicată.',
+  alternates: {
+    canonical: `${SITE_URL}/despre`,
+  },
+};
 
 export default function AboutPage() {
   return (
