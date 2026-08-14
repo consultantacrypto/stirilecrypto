@@ -5,6 +5,9 @@ import AffiliatePartnerBox from '@/components/AffiliatePartnerBox';
 import EmailCaptureBox from '@/components/EmailCaptureBox';
 import RelatedArticles from '@/components/RelatedArticles';
 import { splitArticleContent } from '@/lib/split-article-content';
+import { removeDuplicateLeadParagraph } from '@/lib/dedupe-lead';
+import { stripBrandSuffix } from '@/lib/seo-title';
+import { formatPublishedDisplay } from '@/lib/published-time';
 import {
   getArticleForPage,
   getAllArticleSlugs,
@@ -17,6 +20,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
 import ViewTracker from '@/components/ViewTracker';
+import EditorialByline from '@/components/EditorialByline';
 import { Metadata } from 'next';
 
 /** ISR: regenerate at most once per minute (TTFB / Supabase load). */
@@ -36,7 +40,7 @@ export async function generateMetadata({
 
   if (!article) return { title: 'Articol Inexistent' };
 
-  const seoTitle = article.meta_title?.trim() || article.title;
+  const seoTitle = stripBrandSuffix(article.meta_title?.trim() || article.title);
   const seoDescription = article.meta_description?.trim() || article.excerpt;
   const canonicalUrl = `${SITE_URL}/stiri/${slug}`;
   const encodedTitle = encodeURIComponent(seoTitle);
@@ -46,7 +50,7 @@ export async function generateMetadata({
   const ogImageUrl = coverImage ?? dynamicOgImage;
 
   return {
-    title: { absolute: `${seoTitle} | Știrile Crypto` },
+    title: seoTitle,
     description: seoDescription,
     alternates: {
       canonical: canonicalUrl,
@@ -59,8 +63,8 @@ export async function generateMetadata({
       siteName: 'Știrile Crypto',
       locale: 'ro_RO',
       publishedTime: article.published_at ?? undefined,
-      modifiedTime: article.updated_at ?? article.published_at ?? undefined,
-      authors: ['Stirile Crypto'],
+      modifiedTime: article.published_at ?? undefined,
+      authors: ['Redacția Știrile Crypto'],
       section: article.category,
       tags: [article.category, 'crypto', 'știri'],
       images: [
@@ -106,7 +110,9 @@ function ArticlePageContent({
   slug: string;
 }) {
   const { main, conclusion } = splitArticleContent(article.content);
+  const { content: mainWithoutLead } = removeDuplicateLeadParagraph(article.excerpt, main);
   const coverSrc = normalizeImageUrl(article.image_url);
+  const published = formatPublishedDisplay(article.published_at, article.dateLabel);
   const newsArticleJsonLd = buildNewsArticleJsonLd(article, slug);
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
@@ -146,7 +152,12 @@ function ArticlePageContent({
                 {article.category}
               </span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
-                <Calendar size={12} /> {article.dateLabel}
+                <Calendar size={12} />
+                {published.dateTime ? (
+                  <time dateTime={published.dateTime}>{published.display}</time>
+                ) : (
+                  published.display
+                )}
               </span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
                 <Clock size={12} /> {article.readTime} citire
@@ -155,7 +166,8 @@ function ArticlePageContent({
                 <Eye size={12} /> {article.views || 0} vizualizări
               </span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)] normal-case">
-                <User size={12} /> Știrile Crypto • Redacție
+                <User size={12} />
+                <EditorialByline />
               </span>
             </div>
 
@@ -184,7 +196,7 @@ function ArticlePageContent({
             {article.excerpt}
           </p>
 
-          {main ? <ArticleContent content={main} /> : null}
+          {mainWithoutLead ? <ArticleContent content={mainWithoutLead} /> : null}
 
           <AffiliatePartnerBox />
 
@@ -201,7 +213,7 @@ function ArticlePageContent({
 
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">
-              Autor: <span className="text-white font-bold">Știrile Crypto</span> • Redacție
+              Autor: <EditorialByline />
             </div>
 
             <div className="flex flex-col gap-2 w-full md:w-auto">

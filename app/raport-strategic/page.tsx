@@ -4,6 +4,17 @@ import Footer from '@/components/Footer';
 import AffiliateSection from '@/components/AffiliateSection';
 import { Building2, Wallet, TrendingUp, Shield, Globe, Rocket, Bitcoin, BrainCircuit, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/json-ld';
+
+export const metadata: Metadata = {
+  title: 'Dosarul Strategic 2026',
+  description:
+    'Analiza detaliată a celor care controlează fluxurile globale de capital, de la asset manageri la vizionarii care construiesc viitorul banilor.',
+  alternates: {
+    canonical: `${SITE_URL}/raport-strategic`,
+  },
+};
 
 // --- BAZA DE DATE EXTINSĂ (DOSARELE COMPLETE) ---
 const dossiers = [

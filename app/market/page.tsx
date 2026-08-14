@@ -11,6 +11,25 @@ import {
 import { getGlobalData, getFearGreed } from '@/lib/market-api';
 import { Activity, DollarSign, Layers, BarChart3, Zap, TrendingUp, Skull, ArrowRight, BrainCircuit, LineChart } from 'lucide-react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
+
+const MARKET_TITLE = 'Date Piață Crypto';
+const MARKET_DESCRIPTION =
+  'Informații instituționale, sentimentul pieței și fluxurile de bani în timp real.';
+
+export const metadata: Metadata = {
+  title: MARKET_TITLE,
+  description: MARKET_DESCRIPTION,
+  alternates: {
+    canonical: `${SITE_URL}/market`,
+  },
+  ...buildWebsiteShareMetadata({
+    title: MARKET_TITLE,
+    description: MARKET_DESCRIPTION,
+    canonical: `${SITE_URL}/market`,
+  }),
+};
 
 // --- TIPURI ---
 interface GlobalData {

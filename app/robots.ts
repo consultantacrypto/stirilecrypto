@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { SITE_SITEMAP_URL } from '@/lib/json-ld';
+import { SITE_NEWS_SITEMAP_URL, SITE_SITEMAP_URL } from '@/lib/json-ld';
 
 const AI_BOTS = [
   'GPTBot',
@@ -34,6 +34,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/'],
       })),
     ],
-    sitemap: SITE_SITEMAP_URL,
+    sitemap: [SITE_SITEMAP_URL, SITE_NEWS_SITEMAP_URL],
   };
 }

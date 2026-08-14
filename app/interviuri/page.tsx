@@ -6,7 +6,7 @@ import { getPublishedInterviews } from '@/lib/interviews-db';
 import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Interviuri & Analize Premium | StirileCrypto',
+  title: 'Interviuri & Analize Premium',
   description:
     'Interviuri exclusive, analize de piață și discuții fără filtru cu fondatori și KOLs din industria crypto și tech.',
   alternates: {

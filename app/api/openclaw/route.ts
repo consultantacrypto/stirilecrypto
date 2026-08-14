@@ -61,7 +61,7 @@ function mockSeo(content: string) {
     'Descoperă analize crypto, context macro și perspective on-chain.';
 
   return {
-    metaTitle: truncate(`${titleBase} | Știrile Crypto`, 60),
+    metaTitle: truncate(titleBase, 60),
     metaDescription: truncate(
       `${descBase} Citește analiza completă pe ${CANONICAL_HOST}.`,
       160

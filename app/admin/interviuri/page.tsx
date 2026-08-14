@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 import type { Interview } from '@/lib/types/interviews';
 
 export const metadata: Metadata = {
-  title: 'Admin Interviuri | Știrile Crypto',
+  title: 'Admin Interviuri',
   robots: { index: false, follow: false },
 };
 

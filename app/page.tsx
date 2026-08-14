@@ -9,14 +9,25 @@ import MarketPulseSection from '@/components/MarketPulseSection';
 import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
 import EmailCaptureBox from '@/components/EmailCaptureBox';
-import { SITE_URL } from '@/lib/json-ld';
+import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 export const revalidate = 60;
 
+const HOME_TITLE = 'Informație Financiară & Date On-Chain | Știrile Crypto';
+const HOME_DESCRIPTION =
+  'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.';
+
 export const metadata: Metadata = {
+  title: { absolute: HOME_TITLE },
+  description: HOME_DESCRIPTION,
   alternates: {
     canonical: SITE_URL,
   },
+  ...buildWebsiteShareMetadata({
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    canonical: SITE_URL,
+  }),
 };
 
 export default function Home() {

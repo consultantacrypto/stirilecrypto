@@ -5,13 +5,18 @@ import ArticleTracker from '@/components/ArticleTracker'; // ✅ Am importat Sen
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Lightbulb, Zap, Clock } from 'lucide-react';
+import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/json-ld';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const term = dictionary.find((t) => t.slug === slug);
   return {
     title: term ? `${term.term} - Explicație Completă | Academia Crypto` : 'Termen Necunoscut',
     description: term?.definition,
+    alternates: {
+      canonical: `${SITE_URL}/academie/${slug}`,
+    },
   };
 }
 

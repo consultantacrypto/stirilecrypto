@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   // Canonical is set per-route — do NOT default to homepage here
   title: {
     template: '%s | Știrile Crypto',
-    default: 'Știrile Crypto | Informație Financiară & Date On-Chain',
+    default: 'Știrile Crypto',
   },
   description:
     'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     'ethereum stiri',
     'educatie financiara crypto',
   ],
-  authors: [{ name: 'Știrile Crypto', url: SITE_URL }],
+  authors: [{ name: 'Redacția Știrile Crypto', url: `${SITE_URL}/redactie` }],
   creator: 'Știrile Crypto',
   publisher: 'Știrile Crypto',
   verification: {
@@ -51,9 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'ro_RO',
-    url: SITE_URL,
     siteName: 'Știrile Crypto',
-    title: 'Știrile Crypto | Informație Financiară & Date On-Chain',
     description:
       'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.',
     images: [
@@ -69,7 +67,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@MIhaiDanielWeb3',
     creator: '@MIhaiDanielWeb3',
-    title: 'Știrile Crypto | Informație Financiară & Date On-Chain',
     description:
       'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.',
     images: ['/mihai-daniel-consultanta.jpg'],

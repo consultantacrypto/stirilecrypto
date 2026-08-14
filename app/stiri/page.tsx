@@ -1,5 +1,12 @@
 import { getMergedNewsListingArticles } from '@/lib/articles-db';
-import { SITE_URL } from '@/lib/json-ld';
+import {
+  parseStiriListParams,
+  stiriListCanonical,
+  stiriListNeedsNormalization,
+  stiriListPath,
+  stiriNormalizedPath,
+} from '@/lib/stiri-url';
+import { buildWebsiteShareMetadata } from '@/lib/json-ld';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CategoryFilter from '@/components/CategoryFilter';
@@ -7,27 +14,61 @@ import FearGreed from '@/components/FearGreed';
 import Link from 'next/link';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
 import { Calendar, ArrowRight, TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, Terminal } from 'lucide-react';
+import { permanentRedirect } from 'next/navigation';
+import type { Metadata } from 'next';
 
 export const revalidate = 60;
 
-export const metadata = {
-  title: 'Market Intelligence | Știri Crypto Explicate',
-  description: 'Analize de piață, știri crypto traduse și explicate de Știrile Crypto.',
-  alternates: {
-    canonical: `${SITE_URL}/stiri`,
-  },
-};
+type StiriSearchParams = { [key: string]: string | string[] | undefined };
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<StiriSearchParams>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const { page, category } = parseStiriListParams(params);
+  const title =
+    page >= 2
+      ? `Market Intelligence | Știri Crypto Explicate — pagina ${page}`
+      : 'Market Intelligence | Știri Crypto Explicate';
+
+  const canonical = stiriListCanonical(page, category);
+  const description =
+    'Analize de piață, știri crypto traduse și explicate de Știrile Crypto.';
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+    },
+    ...buildWebsiteShareMetadata({
+      title,
+      description,
+      canonical,
+    }),
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 const ITEMS_PER_PAGE = 6;
 
 export default async function NewsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<StiriSearchParams>;
 }) {
   const params = await searchParams;
-  const currentPage = Number(params?.page) || 1;
-  const categoryFilter = (params?.category as string) || 'all';
+  const { page: currentPage, category: categoryFilter } = parseStiriListParams(params);
+
+  const parsed = { page: currentPage, category: categoryFilter };
+  if (stiriListNeedsNormalization(params, parsed)) {
+    permanentRedirect(stiriNormalizedPath(params, parsed));
+  }
 
   const allArticles = await getMergedNewsListingArticles();
 
@@ -158,7 +199,7 @@ export default async function NewsPage({
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-4 mt-20 max-w-6xl mx-auto pt-8 border-t border-white/5">
                 {currentPage > 1 ? (
-                    <Link href={`/stiri?page=${currentPage - 1}&category=${categoryFilter}`} className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#0a0f1e] border border-white/10 hover:border-blue-500 text-white transition-all group hover:bg-blue-900/10">
+                    <Link href={stiriListPath(currentPage - 1, categoryFilter)} className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#0a0f1e] border border-white/10 hover:border-blue-500 text-white transition-all group hover:bg-blue-900/10">
                         <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform"/> Pagina Anterioară
                     </Link>
                 ) : (
@@ -172,7 +213,7 @@ export default async function NewsPage({
                 </span>
 
                 {currentPage < totalPages ? (
-                    <Link href={`/stiri?page=${currentPage + 1}&category=${categoryFilter}`} className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#0a0f1e] border border-white/10 hover:border-blue-500 text-white transition-all group hover:bg-blue-900/10">
+                    <Link href={stiriListPath(currentPage + 1, categoryFilter)} className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#0a0f1e] border border-white/10 hover:border-blue-500 text-white transition-all group hover:bg-blue-900/10">
                         Pagina Următoare <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform"/>
                     </Link>
                 ) : (

@@ -13,11 +13,15 @@ import {
   getPublishedInterviewSlugs,
 } from '@/lib/interviews-db';
 import { normalizeImageUrl } from '@/lib/image-url';
+import { stripBrandSuffix } from '@/lib/seo-title';
+import { removeDuplicateLeadParagraph } from '@/lib/dedupe-lead';
+import { formatPublishedDisplay } from '@/lib/published-time';
 import {
   buildInterviewArticleJsonLd,
   SITE_URL,
   toAbsoluteUrl,
 } from '@/lib/json-ld';
+import EditorialByline from '@/components/EditorialByline';
 
 export const revalidate = 60;
 
@@ -34,32 +38,35 @@ export async function generateMetadata({
   const interview = await getInterviewBySlug(slug);
 
   if (!interview) {
-    return { title: { absolute: 'Interviu inexistent | Știrile Crypto' } };
+    return { title: 'Interviu inexistent' };
   }
 
   const canonicalUrl = `${SITE_URL}/interviuri/${slug}`;
-  const encodedTitle = encodeURIComponent(interview.title);
+  const pageTitle = stripBrandSuffix(interview.title);
+  const encodedTitle = encodeURIComponent(pageTitle);
   const dynamicOgImage = `${SITE_URL}/api/og?title=${encodedTitle}&category=${encodeURIComponent('Interviuri')}`;
   const coverImage = toAbsoluteUrl(interview.cover_image);
   const ogImageUrl = coverImage ?? dynamicOgImage;
 
   return {
-    title: { absolute: `${interview.title} | Interviuri — Știrile Crypto` },
+    title: `${pageTitle} | Interviuri`,
     description: interview.excerpt,
     alternates: { canonical: canonicalUrl },
     openGraph: {
-      title: interview.title,
+      title: pageTitle,
       description: interview.excerpt,
       type: 'article',
       url: canonicalUrl,
       siteName: 'Știrile Crypto',
       locale: 'ro_RO',
+      publishedTime: interview.created_at,
+      modifiedTime: interview.created_at,
       images: [
         {
           url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: interview.title,
+          alt: pageTitle,
         },
       ],
     },
@@ -67,7 +74,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       site: '@MIhaiDanielWeb3',
       creator: '@MIhaiDanielWeb3',
-      title: interview.title,
+      title: pageTitle,
       description: interview.excerpt,
       images: [ogImageUrl],
     },
@@ -87,6 +94,11 @@ export default async function InterviewPage({
   }
 
   const coverSrc = normalizeImageUrl(interview.cover_image);
+  const { content: bodyWithoutLead } = removeDuplicateLeadParagraph(
+    interview.excerpt,
+    interview.content,
+  );
+  const published = formatPublishedDisplay(interview.created_at, interview.dateLabel);
   const interviewJsonLd = buildInterviewArticleJsonLd({
     title: interview.title,
     excerpt: interview.excerpt,
@@ -123,10 +135,14 @@ export default async function InterviewPage({
                 >
                   {interview.badge}
                 </span>
-                {interview.dateLabel ? (
+                {published.display ? (
                   <span className="flex items-center gap-1.5 text-xs text-gray-500 font-[var(--font-inter)]">
                     <Calendar size={12} />
-                    <time dateTime={interview.created_at}>{interview.dateLabel}</time>
+                    {published.dateTime ? (
+                      <time dateTime={published.dateTime}>{published.display}</time>
+                    ) : (
+                      published.display
+                    )}
                   </span>
                 ) : null}
               </div>
@@ -138,9 +154,12 @@ export default async function InterviewPage({
               <p className="mt-4 flex items-center gap-2 text-violet-300/90 text-lg font-[var(--font-inter)]">
                 <User size={18} className="shrink-0" aria-hidden />
                 <span>
-                  Cu{' '}
+                  Invitat:{' '}
                   <span className="text-white font-semibold">{interview.guest_name}</span>
                 </span>
+              </p>
+              <p className="mt-2 text-sm text-gray-500 font-[var(--font-inter)]">
+                Autor: <EditorialByline />
               </p>
 
             </header>
@@ -164,7 +183,7 @@ export default async function InterviewPage({
               {interview.excerpt}
             </p>
 
-            <ArticleContent content={interview.content} />
+            <ArticleContent content={bodyWithoutLead} />
 
             <footer className="mt-14 pt-8 border-t border-white/10">
               <p className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-3 font-[var(--font-space)]">

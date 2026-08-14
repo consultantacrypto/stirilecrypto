@@ -160,6 +160,38 @@ export async function getAllPublishedMarketPulseArticles(): Promise<Stire[]> {
   return (data ?? []) as Stire[];
 }
 
+const NEWS_SITEMAP_MAX_URLS = 1000;
+const NEWS_SITEMAP_WINDOW_MS = 48 * 60 * 60 * 1000;
+
+/**
+ * Published /stiri articles from the last 48 hours for Google News sitemap.
+ * Throws on Supabase query failure so the route can return 5xx instead of fake XML.
+ */
+export async function getPublishedNewsForSitemap(now = new Date()): Promise<Stire[]> {
+  const supabase = getSupabase();
+  if (!supabase) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  const since = new Date(now.getTime() - NEWS_SITEMAP_WINDOW_MS).toISOString();
+
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('id, slug, title, excerpt, category, content_type, image_url, published_at, status')
+    .eq('status', PUBLISHED_STATUS)
+    .eq('content_type', 'news')
+    .not('published_at', 'is', null)
+    .gte('published_at', since)
+    .order('published_at', { ascending: false })
+    .limit(NEWS_SITEMAP_MAX_URLS);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return (data ?? []) as Stire[];
+}
+
 export async function getPublishedArticles(limit = 6): Promise<Stire[]> {
   const supabase = getSupabase();
   if (!supabase) return [];
@@ -365,7 +397,7 @@ function parseDisplayDateToIso(display: string): string | null {
 
 function stireToPageData(stire: Stire): ArticlePageData {
   const publishedIso = stire.published_at ?? null;
-  const updatedIso = stire.created_at ?? publishedIso;
+  const updatedIso = publishedIso;
   return {
     id: stire.id,
     slug: stire.slug,

@@ -5,6 +5,9 @@ import ArticleCoverImage from '@/components/ArticleCoverImage';
 import ViewTracker from '@/components/ViewTracker';
 import PremiumTaSection from '@/components/dashboard/premium/PremiumTaSection';
 import { splitArticleContent } from '@/lib/split-article-content';
+import { removeDuplicateLeadParagraph } from '@/lib/dedupe-lead';
+import { stripBrandSuffix } from '@/lib/seo-title';
+import { formatPublishedDisplay } from '@/lib/published-time';
 import {
   getMarketPulseForPage,
   getMarketPulseSlugs,
@@ -12,10 +15,11 @@ import {
 } from '@/lib/articles-db';
 import { normalizeImageUrl } from '@/lib/image-url';
 import { buildFinancialArticleJsonLd, buildBreadcrumbJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
-import { Activity, ArrowLeft, Calendar, Clock, Eye } from 'lucide-react';
+import { Activity, ArrowLeft, Calendar, Clock, Eye, User } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import EditorialByline from '@/components/EditorialByline';
 
 export const revalidate = 60;
 
@@ -33,7 +37,7 @@ export async function generateMetadata({
 
   if (!article) return { title: 'Market Pulse Inexistent' };
 
-  const seoTitle = article.meta_title?.trim() || article.title;
+  const seoTitle = stripBrandSuffix(article.meta_title?.trim() || article.title);
   const seoDescription = article.meta_description?.trim() || article.excerpt;
   const canonicalUrl = `${SITE_URL}/market-pulse/${slug}`;
   const encodedTitle = encodeURIComponent(seoTitle);
@@ -42,7 +46,7 @@ export async function generateMetadata({
   const ogImageUrl = coverImage ?? dynamicOgImage;
 
   return {
-    title: { absolute: `${seoTitle} | Market Pulse — Știrile Crypto` },
+    title: `${seoTitle} | Market Pulse`,
     description: seoDescription,
     alternates: { canonical: canonicalUrl },
     openGraph: {
@@ -53,8 +57,8 @@ export async function generateMetadata({
       siteName: 'Știrile Crypto',
       locale: 'ro_RO',
       publishedTime: article.published_at ?? undefined,
-      modifiedTime: article.updated_at ?? article.published_at ?? undefined,
-      authors: ['Stirile Crypto'],
+      modifiedTime: article.published_at ?? undefined,
+      authors: ['Redacția Știrile Crypto'],
       section: 'Market Pulse',
       tags: ['Market Pulse', 'analiză tehnică', 'crypto'],
       images: [{ url: ogImageUrl, width: 1200, height: 630, alt: seoTitle }],
@@ -93,7 +97,9 @@ function MarketPulsePageContent({
   slug: string;
 }) {
   const { main, conclusion } = splitArticleContent(article.content);
+  const { content: mainWithoutLead } = removeDuplicateLeadParagraph(article.excerpt, main);
   const coverSrc = normalizeImageUrl(article.image_url);
+  const published = formatPublishedDisplay(article.published_at, article.dateLabel);
   const jsonLd = buildFinancialArticleJsonLd(article, slug, {
     path: `/market-pulse/${slug}`,
   });
@@ -139,13 +145,22 @@ function MarketPulsePageContent({
               </span>
               <span className="text-amber-500/70">Analiză Tehnică Zilnică</span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
-                <Calendar size={12} /> {article.dateLabel}
+                <Calendar size={12} />
+                {published.dateTime ? (
+                  <time dateTime={published.dateTime}>{published.display}</time>
+                ) : (
+                  published.display
+                )}
               </span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
                 <Clock size={12} /> {article.readTime} citire
               </span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
                 <Eye size={12} /> {article.views || 0} vizualizări
+              </span>
+              <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)] normal-case">
+                <User size={12} />
+                <EditorialByline />
               </span>
             </div>
 
@@ -181,7 +196,7 @@ function MarketPulsePageContent({
             {article.excerpt}
           </p>
 
-          {main ? <ArticleContent content={main} /> : null}
+          {mainWithoutLead ? <ArticleContent content={mainWithoutLead} /> : null}
 
           {conclusion ? (
             <aside
@@ -196,7 +211,7 @@ function MarketPulsePageContent({
 
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">
-              Autor: <span className="text-white font-bold">Știrile Crypto</span> • Market Pulse
+              Autor: <EditorialByline />
             </div>
 
             <div className="flex flex-col gap-2 w-full md:w-auto">

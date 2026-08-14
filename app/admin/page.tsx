@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 import type { Stire } from '@/lib/types/stiri';
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard | Știrile Crypto',
+  title: 'Admin Dashboard',
   robots: { index: false, follow: false },
 };
 

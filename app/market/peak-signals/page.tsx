@@ -5,10 +5,15 @@ import AffiliateSection from '@/components/AffiliateSection';
 import PeakSignalsContainer from '@/components/PeakSignalsContainer';
 import { ArrowLeft, BrainCircuit } from 'lucide-react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/json-ld';
 
-export const metadata = {
-  title: 'Bitcoin Peak Signals | Analiză On-Chain Știrile Crypto',
+export const metadata: Metadata = {
+  title: 'Bitcoin Peak Signals | Analiză On-Chain',
   description: 'Grafice avansate pentru detectarea vârfurilor de ciclu Bitcoin. 2-Year MA Multiplier.',
+  alternates: {
+    canonical: `${SITE_URL}/market/peak-signals`,
+  },
 };
 
 export default function PeakSignalsPage() {

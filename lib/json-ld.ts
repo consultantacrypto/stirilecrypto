@@ -1,10 +1,45 @@
 import type { ArticlePageData } from '@/lib/articles-db';
+import { stripBrandSuffix } from '@/lib/seo-title';
 
 export const SITE_URL = 'https://www.stirilecrypto.ro';
 export const SITE_NAME = 'Știrile Crypto';
+export const EDITORIAL_DESK_NAME = 'Redacția Știrile Crypto';
+export const EDITORIAL_DESK_PATH = '/redactie';
+export const EDITORIAL_DESK_URL = `${SITE_URL}${EDITORIAL_DESK_PATH}`;
 export const PUBLISHER_LOGO_URL = `${SITE_URL}/icon.svg`;
 export const SITE_SITEMAP_URL = `${SITE_URL}/sitemap.xml`;
+export const SITE_NEWS_SITEMAP_URL = `${SITE_URL}/news-sitemap.xml`;
 export const SITE_FEED_URL = `${SITE_URL}/feed.xml`;
+export const DEFAULT_SHARE_IMAGE = {
+  url: `${SITE_URL}/mihai-daniel-consultanta.jpg`,
+  width: 1200,
+  height: 630,
+  alt: 'Știrile Crypto',
+};
+
+export function buildWebsiteShareMetadata(options: {
+  title: string;
+  description: string;
+  canonical: string;
+}) {
+  return {
+    openGraph: {
+      title: options.title,
+      description: options.description,
+      url: options.canonical,
+      type: 'website' as const,
+      locale: 'ro_RO',
+      siteName: SITE_NAME,
+      images: [DEFAULT_SHARE_IMAGE],
+    },
+    twitter: {
+      card: 'summary_large_image' as const,
+      title: options.title,
+      description: options.description,
+      images: [DEFAULT_SHARE_IMAGE.url],
+    },
+  };
+}
 
 /** Resolve relative paths to absolute URLs for schema.org crawlers. */
 export function toAbsoluteUrl(url: string | null | undefined): string | undefined {
@@ -33,28 +68,27 @@ export function buildNewsArticleJsonLd(
   const imageUrl = toAbsoluteUrl(article.image_url);
   const datePublished =
     toIsoDateTime(article.published_at) ?? toIsoDateTime(article.dateLabel);
-  const dateModified =
-    toIsoDateTime(article.updated_at) ?? datePublished;
+  const dateModified = datePublished;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
+    '@id': pageUrl,
+    url: pageUrl,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': pageUrl,
     },
-    headline: article.title,
+    headline: stripBrandSuffix(article.title),
     description: article.excerpt,
     image: imageUrl ? [imageUrl] : undefined,
     datePublished,
     dateModified,
-    author: [
-      {
-        '@type': 'Person',
-        name: 'Stirile Crypto',
-        url: SITE_URL,
-      },
-    ],
+    author: {
+      '@type': 'Organization',
+      name: EDITORIAL_DESK_NAME,
+      url: EDITORIAL_DESK_URL,
+    },
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,
@@ -80,30 +114,28 @@ export function buildFinancialArticleJsonLd(
   const imageUrl = toAbsoluteUrl(article.image_url);
   const datePublished =
     toIsoDateTime(article.published_at) ?? toIsoDateTime(article.dateLabel);
-  const dateModified =
-    toIsoDateTime(article.updated_at) ?? datePublished;
+  const dateModified = datePublished;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
     '@id': pageUrl,
+    url: pageUrl,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': pageUrl,
     },
-    headline: article.title,
-    name: article.title,
+    headline: stripBrandSuffix(article.title),
+    name: stripBrandSuffix(article.title),
     description: article.excerpt,
     image: imageUrl ? [imageUrl] : undefined,
     datePublished,
     dateModified,
-    author: [
-      {
-        '@type': 'Person',
-        name: 'Stirile Crypto',
-        url: SITE_URL,
-      },
-    ],
+    author: {
+      '@type': 'Organization',
+      name: EDITORIAL_DESK_NAME,
+      url: EDITORIAL_DESK_URL,
+    },
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,
@@ -181,26 +213,28 @@ export function buildInterviewArticleJsonLd(interview: InterviewJsonLdInput) {
   return {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
+    '@id': pageUrl,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': pageUrl,
     },
-    headline: interview.title,
+    url: pageUrl,
+    headline: stripBrandSuffix(interview.title),
     description: interview.excerpt,
     image: imageUrl ? [imageUrl] : undefined,
     datePublished,
     dateModified: datePublished,
-    author: [
-      {
-        '@type': 'Person',
-        name: interview.guest_name,
-      },
-      {
-        '@type': 'Organization',
-        name: SITE_NAME,
-        url: SITE_URL,
-      },
-    ],
+    author: {
+      '@type': 'Organization',
+      name: EDITORIAL_DESK_NAME,
+      url: EDITORIAL_DESK_URL,
+    },
+    about: interview.guest_name
+      ? {
+          '@type': 'Person',
+          name: interview.guest_name,
+        }
+      : undefined,
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,
@@ -233,14 +267,6 @@ export function buildWebSiteJsonLd() {
         '@type': 'ImageObject',
         url: PUBLISHER_LOGO_URL,
       },
-    },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${SITE_URL}/stiri?category={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
     },
   };
 }

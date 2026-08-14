@@ -4,11 +4,15 @@ import CryptoHeatmap from '@/components/market/CryptoHeatmap';
 import AffiliateCta from '@/components/market/AffiliateCta';
 import { Activity } from 'lucide-react';
 import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Radar Volatilitate Crypto | Heatmap Live — Știrile Crypto',
+  title: 'Radar Volatilitate Crypto | Heatmap Live',
   description:
     'Heatmap vizual al pieței crypto: volatilitate 24h pe top active după capitalizare. Terminal nativ, fără widget-uri externe.',
+  alternates: {
+    canonical: `${SITE_URL}/lichidari`,
+  },
 };
 
 export const revalidate = 60;
