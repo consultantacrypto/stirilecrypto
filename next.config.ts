@@ -12,9 +12,9 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
 
-  // 2. Imagini — Next Image Optimization (WebP/AVIF + responsive sizes)
+  // 2. Imagini — unoptimized: true (no /_next/image proxy; avoids Vercel Image Optimization 402)
   images: {
-    unoptimized: false,
+    unoptimized: true,
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
