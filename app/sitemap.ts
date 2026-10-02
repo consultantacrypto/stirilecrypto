@@ -21,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: SITE_URL, lastModified: now, changeFrequency: 'daily', priority: 1 },
     { url: `${SITE_URL}/stiri`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SITE_URL}/crypto-azi`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${SITE_URL}/interviuri`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
     { url: `${SITE_URL}/market-pulse`, lastModified: now, changeFrequency: 'daily', priority: 0.88 },
     { url: `${SITE_URL}/market`, lastModified: now, changeFrequency: 'hourly', priority: 0.85 },

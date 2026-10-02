@@ -62,6 +62,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/crypto-azi" className="hover:text-blue-400 transition-colors">
+                  Crypto Azi
+                </Link>
+              </li>
+              <li>
                 <Link href="/academie" className="hover:text-blue-400 transition-colors">
                   Academia Crypto
                 </Link>

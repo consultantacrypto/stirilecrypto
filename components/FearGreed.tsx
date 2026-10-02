@@ -25,7 +25,13 @@ export default function FearGreed() {
   }, []);
 
   if (loading) return <div className="animate-pulse h-32 w-full bg-white/5 rounded-2xl" />;
-  if (!data) return null;
+  if (!data) {
+    return (
+      <div className="bg-[#0b1221] border border-white/10 rounded-2xl p-5 text-sm text-slate-400">
+        Fear &amp; Greed indisponibil momentan.
+      </div>
+    );
+  }
 
   const score = parseInt(data.value);
   

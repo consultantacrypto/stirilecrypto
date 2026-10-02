@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 /** Main site navigation — desktop pill + mobile drawer share this list */
 const CENTER_LINKS = [
   { href: '/stiri', label: 'Știri' },
+  { href: '/crypto-azi', label: 'Crypto Azi' },
   { href: '/interviuri', label: 'Interviuri' },
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/market', label: 'Date Piață' },

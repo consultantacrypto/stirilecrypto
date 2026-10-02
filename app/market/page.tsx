@@ -32,23 +32,10 @@ export const metadata: Metadata = {
 };
 
 // --- TIPURI ---
-interface GlobalData {
-  marketCap: number;
-  volume: number;
-  btcDominance: number;
-  marketCapChange: number;
-}
-
-interface FearGreedData {
-  value: number;
-  value_classification: string;
-}
-
-// --- UTILITARE ---
 const formatCurrency = (value: number | undefined | null) => {
-  if (value === undefined || value === null || isNaN(value)) return "$0.00";
+  if (value === undefined || value === null || Number.isNaN(value)) return null;
   const absValue = Math.abs(value);
-  const sign = value < 0 ? "-" : "";
+  const sign = value < 0 ? '-' : '';
   if (absValue >= 1e12) return `${sign}$${(absValue / 1e12).toFixed(2)} T`;
   if (absValue >= 1e9) return `${sign}$${(absValue / 1e9).toFixed(2)} B`;
   if (absValue >= 1e6) return `${sign}$${(absValue / 1e6).toFixed(2)} M`;
@@ -65,30 +52,23 @@ const getFearGreedStyles = (value: number) => {
 export const revalidate = 60;
 
 export default async function MarketPage() {
-  
-  // 1. DATA FETCHING
-  let globalData: GlobalData | null = null;
-  let fearGreedData: FearGreedData | null = null;
+  const [globalRes, fgRes] = await Promise.allSettled([getGlobalData(), getFearGreed()]);
+  const globalData = globalRes.status === 'fulfilled' ? globalRes.value : null;
+  const fearGreed =
+    fgRes.status === 'fulfilled' ? fgRes.value : { status: 'unavailable' as const };
 
-  try {
-    const [globalRes, fgRes] = await Promise.allSettled([
-      getGlobalData(),
-      getFearGreed()
-    ]);
-    if (globalRes.status === 'fulfilled') globalData = globalRes.value;
-    if (fgRes.status === 'fulfilled') fearGreedData = fgRes.value;
-  } catch (error) {
-    console.error("API Error:", error);
-  }
-
-  // 2. UI VARIABLES
   const marketCap = formatCurrency(globalData?.marketCap);
   const volume = formatCurrency(globalData?.volume);
-  const dominance = globalData?.btcDominance ? `${globalData.btcDominance.toFixed(1)}%` : "54.2%";
-  const change = globalData?.marketCapChange ? globalData.marketCapChange.toFixed(2) : "+0.00";
-  
-  const fgValue = fearGreedData?.value || 50;
-  const { color: fgColor, text: fgText } = getFearGreedStyles(fgValue);
+  const dominance =
+    globalData?.btcDominance != null ? `${globalData.btcDominance.toFixed(1)}%` : null;
+  const change =
+    globalData?.marketCapChange != null ? globalData.marketCapChange.toFixed(2) : null;
+
+  const fgOk = fearGreed.status === 'ok';
+  const fgValue = fgOk ? fearGreed.value : null;
+  const fgStyles = fgOk ? getFearGreedStyles(fearGreed.value) : null;
+  const fgColor = fgStyles?.color ?? 'text-slate-400';
+  const fgText = fgStyles?.text ?? 'INDISPONIBIL';
 
   return (
     <div className="min-h-screen bg-[#02050a] text-white font-sans selection:bg-blue-500/30">
@@ -127,24 +107,24 @@ export default async function MarketPage() {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><DollarSign size={12}/> Market Cap</div>
-                        <div className="text-2xl font-black text-white font-[var(--font-space)]">{marketCap}</div>
-                        <div className={`text-xs font-bold ${Number(change) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            {Number(change) >= 0 ? '▲' : '▼'} {change}% (24h)
+                        <div className="text-2xl font-black text-white font-[var(--font-space)]">{marketCap ?? '—'}</div>
+                        <div className={`text-xs font-bold ${change == null ? 'text-slate-500' : Number(change) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {change == null ? 'Date indisponibile' : `${Number(change) >= 0 ? '▲' : '▼'} ${change}% (24h)`}
                         </div>
                     </div>
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><BarChart3 size={12}/> Volum 24h</div>
-                        <div className="text-2xl font-black text-white font-[var(--font-space)]">{volume}</div>
-                        <div className="text-xs text-gray-400">Lichiditate Globală</div>
+                        <div className="text-2xl font-black text-white font-[var(--font-space)]">{volume ?? '—'}</div>
+                        <div className="text-xs text-gray-400">{volume ? 'Lichiditate Globală' : 'Date indisponibile'}</div>
                     </div>
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><Layers size={12}/> BTC Dominance</div>
-                        <div className="text-2xl font-black text-yellow-500 font-[var(--font-space)]">{dominance}</div>
-                        <div className="text-xs text-gray-400">Restul e Altseason?</div>
+                        <div className="text-2xl font-black text-yellow-500 font-[var(--font-space)]">{dominance ?? '—'}</div>
+                        <div className="text-xs text-gray-400">{dominance ? 'Restul e Altseason?' : 'Date indisponibile'}</div>
                     </div>
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><Zap size={12}/> Frică & Lăcomie</div>
-                        <div className={`text-2xl font-black font-[var(--font-space)] ${fgColor}`}>{fgValue}</div>
+                        <div className={`text-2xl font-black font-[var(--font-space)] ${fgColor}`}>{fgValue ?? '—'}</div>
                         <div className={`text-xs font-bold uppercase ${fgColor}`}>{fgText}</div>
                     </div>
                 </div>
