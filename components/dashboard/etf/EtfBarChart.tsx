@@ -13,6 +13,7 @@ import {
 import type { EtfPeriod } from '@/lib/etf/types';
 import { EtfErrorState } from './EtfErrorState';
 import { EtfLoadingSkeleton } from './EtfLoadingSkeleton';
+import { EtfUnavailableState } from './EtfUnavailableState';
 import { useEtfData } from './useEtfData';
 
 interface EtfBarChartProps {
@@ -22,8 +23,8 @@ interface EtfBarChartProps {
 interface CombinedPoint {
   date: string;
   label: string;
-  BTC: number;
-  ETH: number;
+  BTC: number | null;
+  ETH: number | null;
 }
 
 function formatLabel(iso: string): string {
@@ -47,35 +48,32 @@ export function EtfBarChart({ period }: EtfBarChartProps) {
     return dates.map((date) => ({
       date,
       label: formatLabel(date),
-      BTC: btc.data.find((d) => d.snapshot_date === date)?.net_flow_m ?? 0,
-      ETH: eth.data.find((d) => d.snapshot_date === date)?.net_flow_m ?? 0,
+      BTC: btc.data.find((d) => d.snapshot_date === date)?.net_flow_m ?? null,
+      ETH: eth.data.find((d) => d.snapshot_date === date)?.net_flow_m ?? null,
     }));
   }, [btc.data, eth.data]);
 
   if (btc.loading || eth.loading) return <EtfLoadingSkeleton height={320} />;
 
+  const retry = () => {
+    btc.refetch();
+    eth.refetch();
+  };
+
   if (btc.error && eth.error) {
-    return (
-      <EtfErrorState
-        error={btc.error}
-        onRetry={() => {
-          btc.refetch();
-          eth.refetch();
-        }}
-      />
-    );
+    return <EtfErrorState error={btc.error} onRetry={retry} />;
   }
 
   if (combined.length === 0) {
-    return (
-      <EtfErrorState
-        error="Nu există date pentru graficul comparativ."
-        onRetry={() => {
-          btc.refetch();
-          eth.refetch();
-        }}
-      />
-    );
+    if (btc.error || eth.error) {
+      return (
+        <EtfErrorState
+          error={btc.error || eth.error || 'Datele ETF nu au putut fi încărcate.'}
+          onRetry={retry}
+        />
+      );
+    }
+    return <EtfUnavailableState onRetry={retry} />;
   }
 
   return (
@@ -105,6 +103,7 @@ export function EtfBarChart({ period }: EtfBarChartProps) {
                 fontSize: 12,
               }}
               formatter={(value) => {
+                if (value == null || Number.isNaN(Number(value))) return ['Date indisponibile', ''];
                 const n = Number(value);
                 const sign = n > 0 ? '+' : '';
                 return [`${sign}${n.toFixed(1)}M`, ''];

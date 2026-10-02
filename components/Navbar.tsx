@@ -12,7 +12,7 @@ const CENTER_LINKS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/market', label: 'Date Piață' },
   { href: '/academie', label: 'Educație' },
-  { href: '/lichidari', label: 'Radar Lichidări' },
+  { href: '/lichidari', label: 'Harta pieței' },
 ] as const;
 
 function isPathActive(pathname: string, href: string): boolean {

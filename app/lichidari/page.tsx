@@ -2,14 +2,14 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CryptoHeatmap from '@/components/market/CryptoHeatmap';
 import AffiliateCta from '@/components/market/AffiliateCta';
-import { Activity } from 'lucide-react';
+import { LayoutGrid } from 'lucide-react';
 import type { Metadata } from 'next';
 import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Radar Volatilitate Crypto | Heatmap Live',
+  title: 'Harta pieței crypto | Variații 24h',
   description:
-    'Heatmap vizual al pieței crypto: volatilitate 24h pe top active după capitalizare. Terminal nativ, fără widget-uri externe.',
+    'Harta pieței crypto: variația pe 24 de ore a principalelor active după capitalizare. Nu este un flux de lichidări live.',
   alternates: {
     canonical: `${SITE_URL}/lichidari`,
   },
@@ -25,15 +25,15 @@ export default function LiquidationsPage() {
       <div className="container mx-auto flex-grow px-4 py-10 md:py-12 max-w-7xl">
         <header className="mb-8 md:mb-10 text-center md:text-left">
           <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-violet-500/25 bg-violet-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-violet-300">
-            <Activity size={14} />
-            Radar Terminal
+            <LayoutGrid size={14} />
+            Harta pieței
           </span>
           <h1 className="mb-3 text-3xl font-black tracking-tight md:text-5xl font-[var(--font-space)]">
-            Heatmap <span className="text-violet-400">Volatilitate</span>
+            Harta <span className="text-violet-400">pieței</span>
           </h1>
           <p className="max-w-2xl text-sm text-slate-400 md:text-base font-[var(--font-inter)] mx-auto md:mx-0">
-            Dimensiunea fiecărui bloc reflectă capitalizarea de piață. Culoarea arată mișcarea
-            pe 24h — verde pentru creșteri, roșu pentru scăderi.
+            Dimensiunea fiecărui bloc reflectă capitalizarea de piață. Culoarea arată variația
+            pe 24 de ore — verde pentru creșteri, roșu pentru scăderi.
           </p>
         </header>
 

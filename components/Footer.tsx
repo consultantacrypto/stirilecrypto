@@ -68,12 +68,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/lichidari" className="hover:text-blue-400 transition-colors">
-                  Lichidări Live
+                  Harta pieței
                 </Link>
               </li>
               <li>
                 <Link href="/#newsletter" className="hover:text-blue-400 transition-colors">
-                  Newsletter
+                  Lista de așteptare
                 </Link>
               </li>
             </ul>

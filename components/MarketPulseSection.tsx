@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Activity } from 'lucide-react';
 import { getLatestMarketPulse } from '@/lib/articles-db';
+import { formatPulseTimestamp } from '@/lib/market-pulse-freshness';
 
 export default async function MarketPulseSection() {
   const pulse = await getLatestMarketPulse();
@@ -9,9 +10,11 @@ export default async function MarketPulseSection() {
     return null;
   }
 
+  const published = formatPulseTimestamp(pulse.published_at);
+
   return (
     <section
-      aria-label="Market Pulse — analiză tehnică zilnică"
+      aria-label="Market Pulse — analiză tehnică"
       className="mt-10 mb-2"
     >
       <Link
@@ -26,15 +29,20 @@ export default async function MarketPulseSection() {
         <div className="relative z-10 flex min-w-0 flex-1 flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-amber-300">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-60" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-400" />
-              </span>
               Market Pulse
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-500/80">
-              Update zilnic
-            </span>
+            {published.dateTime ? (
+              <time
+                dateTime={published.dateTime}
+                className="text-[10px] font-bold uppercase tracking-widest text-amber-500/80"
+              >
+                Articol {published.display}
+              </time>
+            ) : (
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                {published.display}
+              </span>
+            )}
           </div>
 
           <div className="flex items-start gap-2">

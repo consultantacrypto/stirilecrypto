@@ -36,14 +36,14 @@ export default function AffiliateCta() {
           <div className="space-y-3">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">
               <TrendingUp size={12} className="text-emerald-400" aria-hidden />
-              Execuție live
+              Parteneri de tranzacționare
             </span>
             <h2 className="max-w-3xl text-xl font-bold leading-snug tracking-tight text-white md:text-2xl font-[var(--font-space)]">
-              Volatilitatea înseamnă oportunitate. Protejează-te și execută.
+              Vrei să execuți pe o platformă reglementată?
             </h2>
             <p className="max-w-3xl text-sm leading-relaxed text-slate-400 md:text-base font-[var(--font-inter)]">
-              Tranzacționează lichidările în timp real pe platforme de top, cu comisioane
-              optimizate la maximum și securitate garantată pentru capitalul tău.
+              Linkurile de mai jos sunt de afiliere. Tranzacționarea implică risc; nu garantăm
+              siguranța capitalului și nu afișăm lichidări live pe această pagină.
             </p>
           </div>
 

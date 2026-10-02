@@ -9,6 +9,14 @@ export type ScreenerCoin = {
   marketCap: number;
 };
 
+export type ScreenerSource = 'coingecko' | 'stale' | 'unavailable';
+
+export type ScreenerFetchResult = {
+  coins: ScreenerCoin[];
+  source: ScreenerSource;
+  fetchedAt: string | null;
+};
+
 function coingeckoMarketsUrl(perPage: number) {
   return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=1&sparkline=false`;
 }
@@ -37,64 +45,30 @@ function mapRow(row: CoinGeckoMarketRow): ScreenerCoin {
   };
 }
 
-/** Fallback when CoinGecko rate-limits or fails — keeps the screener usable. */
-export const MOCK_SCREENER_COINS: ScreenerCoin[] = [
-  {
-    id: 'bitcoin',
-    symbol: 'BTC',
-    name: 'Bitcoin',
-    image: 'https://assets.coingecko.com/coins/images/1/small/bitcoin.png',
-    price: 95000,
-    change24h: 1.2,
-    volume24h: 42_000_000_000,
-    marketCap: 1_870_000_000_000,
-  },
-  {
-    id: 'ethereum',
-    symbol: 'ETH',
-    name: 'Ethereum',
-    image: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
-    price: 3400,
-    change24h: -0.8,
-    volume24h: 18_000_000_000,
-    marketCap: 410_000_000_000,
-  },
-  {
-    id: 'tether',
-    symbol: 'USDT',
-    name: 'Tether',
-    image: 'https://assets.coingecko.com/coins/images/325/small/Tether.png',
-    price: 1,
-    change24h: 0.01,
-    volume24h: 80_000_000_000,
-    marketCap: 140_000_000_000,
-  },
-  {
-    id: 'solana',
-    symbol: 'SOL',
-    name: 'Solana',
-    image: 'https://assets.coingecko.com/coins/images/4128/small/solana.png',
-    price: 145,
-    change24h: 3.4,
-    volume24h: 4_500_000_000,
-    marketCap: 68_000_000_000,
-  },
-  {
-    id: 'ripple',
-    symbol: 'XRP',
-    name: 'XRP',
-    image: 'https://assets.coingecko.com/coins/images/44/small/xrp-symbol-white-128.png',
-    price: 2.1,
-    change24h: -1.5,
-    volume24h: 3_200_000_000,
-    marketCap: 120_000_000_000,
-  },
-];
-
-export async function fetchScreenerData(perPage = 50): Promise<{
+type LastGoodPayload = {
   coins: ScreenerCoin[];
-  source: 'coingecko' | 'mock';
-}> {
+  fetchedAt: string;
+};
+
+function lastGoodStore(): Map<number, LastGoodPayload> {
+  const globalState = globalThis as typeof globalThis & {
+    __stirilecryptoScreenerLastGood?: Map<number, LastGoodPayload>;
+  };
+  if (!globalState.__stirilecryptoScreenerLastGood) {
+    globalState.__stirilecryptoScreenerLastGood = new Map();
+  }
+  return globalState.__stirilecryptoScreenerLastGood;
+}
+
+function rememberLastGood(perPage: number, payload: LastGoodPayload) {
+  lastGoodStore().set(perPage, payload);
+}
+
+function readLastGood(perPage: number): LastGoodPayload | null {
+  return lastGoodStore().get(perPage) ?? null;
+}
+
+export async function fetchScreenerData(perPage = 50): Promise<ScreenerFetchResult> {
   try {
     const res = await fetch(coingeckoMarketsUrl(perPage), {
       next: { revalidate: 60 },
@@ -111,10 +85,17 @@ export async function fetchScreenerData(perPage = 50): Promise<{
       throw new Error('CoinGecko returned an empty list');
     }
 
-    return { coins: data.map(mapRow), source: 'coingecko' };
+    const coins = data.map(mapRow);
+    const fetchedAt = new Date().toISOString();
+    rememberLastGood(perPage, { coins, fetchedAt });
+    return { coins, source: 'coingecko', fetchedAt };
   } catch (error) {
     console.error('[fetchScreenerData]', error);
-    return { coins: MOCK_SCREENER_COINS.slice(0, perPage), source: 'mock' };
+    const stale = readLastGood(perPage);
+    if (stale && stale.coins.length > 0) {
+      return { coins: stale.coins, source: 'stale', fetchedAt: stale.fetchedAt };
+    }
+    return { coins: [], source: 'unavailable', fetchedAt: null };
   }
 }
 
@@ -162,4 +143,17 @@ export function formatScreenerCompactUsd(value: number): string {
   if (value >= 1e9) return `$${(value / 1e9).toFixed(2)}B`;
   if (value >= 1e6) return `$${(value / 1e6).toFixed(2)}M`;
   return `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+}
+
+export function formatScreenerFetchedAt(iso: string | null): string | null {
+  if (!iso) return null;
+  const parsed = new Date(iso);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed.toLocaleString('ro-RO', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }

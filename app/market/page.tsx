@@ -9,7 +9,7 @@ import {
   WhaleWallWidget,
 } from '@/components/lazy/market-widgets';
 import { getGlobalData, getFearGreed } from '@/lib/market-api';
-import { Activity, DollarSign, Layers, BarChart3, Zap, TrendingUp, Skull, ArrowRight, BrainCircuit, LineChart } from 'lucide-react';
+import { Activity, DollarSign, Layers, BarChart3, Zap, TrendingUp, ArrowRight, BrainCircuit, LineChart } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
@@ -214,25 +214,15 @@ export default async function MarketPage() {
             <div className="xl:col-span-3 flex flex-col gap-6">
                 
                 <div className="sticky top-24 space-y-6">
-                    {/* 1. LICHIDĂRI LIVE */}
                     <Link 
                         href="/lichidari" 
-                        className="block w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 p-4 rounded-xl shadow-lg shadow-orange-900/20 transform hover:scale-[1.02] transition-all group border border-orange-400/20 relative overflow-hidden"
+                        className="block w-full bg-gradient-to-r from-violet-700 to-indigo-700 hover:from-violet-600 hover:to-indigo-600 p-4 rounded-xl shadow-lg shadow-violet-900/20 transform hover:scale-[1.02] transition-all group border border-violet-400/20 relative overflow-hidden"
                     >
-                        <div className="absolute top-2 right-2 flex items-center gap-1">
-                            <span className="relative flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                            </span>
-                            <span className="text-[10px] font-bold text-orange-100 uppercase tracking-wider">LIVE</span>
+                        <div className="flex items-center justify-center gap-2 text-white font-black text-lg">
+                            Harta pieței
                         </div>
-
-                        <div className="flex items-center justify-center gap-2 text-white font-black text-lg animate-pulse">
-                            <Skull className="text-white" size={24} />
-                            LICHIDĂRI LIVE
-                        </div>
-                        <div className="text-center text-orange-100 text-xs font-bold mt-1 uppercase tracking-wider">
-                            Vezi Harta Durerii &rarr;
+                        <div className="text-center text-violet-100 text-xs font-bold mt-1 uppercase tracking-wider">
+                            Variații 24h &rarr;
                         </div>
                     </Link>
 

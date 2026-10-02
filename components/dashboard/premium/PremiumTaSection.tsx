@@ -28,8 +28,8 @@ export default function PremiumTaSection() {
               </span>
             </h2>
             <p className="text-sm leading-relaxed text-slate-400 font-[var(--font-inter)] md:text-base">
-              Trimite ticker-ul activului tău și primești un raport tehnic structurat — niveluri
-              cheie, scenarii bullish/bearish și zone de risc, livrat pe email.
+              Analiză tehnică on-demand (100 RON) — comenzile noi sunt oprite până la activarea
+              plăților și a livrării.
             </p>
           </div>
 
@@ -47,7 +47,7 @@ export default function PremiumTaSection() {
             </li>
             <li className="flex items-start gap-3">
               <Zap size={16} className="mt-0.5 shrink-0 text-amber-400" aria-hidden />
-              <span>Livrare rapidă — raport structurat pe email</span>
+              <span>Livrarea pe email va fi disponibilă odată cu plățile</span>
             </li>
             <li className="flex items-start gap-3">
               <FileText size={16} className="mt-0.5 shrink-0 text-amber-400" aria-hidden />
@@ -59,7 +59,7 @@ export default function PremiumTaSection() {
         <div className="relative w-full shrink-0 lg:max-w-md">
           <div className="rounded-xl border border-white/10 bg-black/20 p-5 md:p-6 backdrop-blur-sm">
             <h3 className="mb-4 font-[var(--font-space)] text-lg font-bold text-white">
-              Comandă analiza
+              Status comenzi
             </h3>
             <PremiumCheckoutForm />
           </div>

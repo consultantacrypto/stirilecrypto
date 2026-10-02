@@ -12,15 +12,10 @@ function ChartInlineSkeleton() {
 
 function PremiumFormSkeleton() {
   return (
-    <div className="space-y-4" aria-hidden>
-      <div className="h-12 animate-pulse rounded-xl bg-white/5" />
-      <div className="h-12 animate-pulse rounded-xl bg-white/5" />
-      <div className="h-12 animate-pulse rounded-xl bg-white/5" />
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="h-12 flex-1 animate-pulse rounded-xl bg-white/5" />
-        <div className="h-12 flex-1 animate-pulse rounded-xl bg-white/5" />
-      </div>
-    </div>
+    <div
+      className="rounded-xl border border-amber-500/25 bg-amber-500/10 px-4 py-8"
+      aria-hidden
+    />
   );
 }
 

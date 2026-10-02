@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const WAITLIST_SUCCESS = 'Înscrierea pe lista de așteptare a fost înregistrată.';
+const WAITLIST_DUPLICATE = 'Această adresă este deja pe lista de așteptare.';
+
 function normalizeEmail(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const email = value.trim().toLowerCase();
@@ -27,7 +30,7 @@ export async function POST(request: Request) {
   if (!email) {
     return NextResponse.json(
       { error: 'Introdu o adresă de email validă.' },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -40,27 +43,27 @@ export async function POST(request: Request) {
       if (error.code === '23505') {
         return NextResponse.json({
           success: true,
-          message: 'Ești deja abonat!',
+          message: WAITLIST_DUPLICATE,
           alreadySubscribed: true,
         });
       }
 
       console.error('[subscribe]', error.message);
       return NextResponse.json(
-        { error: 'Nu am putut procesa abonarea. Încearcă din nou.' },
-        { status: 500 }
+        { error: 'Nu am putut înregistra înscrierea. Încearcă din nou.' },
+        { status: 500 },
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Te-ai abonat cu succes! Verifică inbox-ul.',
+      message: WAITLIST_SUCCESS,
     });
   } catch (err) {
     console.error('[subscribe]', err);
     return NextResponse.json(
-      { error: 'Serviciul de abonare nu este disponibil momentan.' },
-      { status: 503 }
+      { error: 'Serviciul de listă de așteptare nu este disponibil momentan.' },
+      { status: 503 },
     );
   }
 }

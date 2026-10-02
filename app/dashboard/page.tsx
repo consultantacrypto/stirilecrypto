@@ -11,13 +11,14 @@ import { EtfLoadingSkeleton } from '@/components/dashboard/etf/EtfLoadingSkeleto
 // import EtfFlowsSkeleton from '@/components/dashboard/etf/EtfFlowsSkeleton';
 import PremiumTaSection from '@/components/dashboard/premium/PremiumTaSection';
 import { getActivePulseTerminal, getMicaComplianceItems } from '@/lib/dashboard-db';
+import { getMarketPulseBySlug } from '@/lib/articles-db';
 import { SITE_URL } from '@/lib/json-ld';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Dashboard Instituțional | Market Pulse & MiCA Radar',
   description:
-    'Market Pulse Terminal: niveluri tehnice live (suport/rezistență/trend). MiCA Safety Radar: status conformitate exchange-uri și stablecoins.',
+    'Market Pulse Terminal: niveluri de suport și rezistență din snapshot publicat. MiCA Safety Radar: status conformitate exchange-uri și stablecoins.',
   alternates: {
     canonical: `${SITE_URL}/dashboard`,
   },
@@ -31,6 +32,10 @@ export default async function DashboardPage() {
     getMicaComplianceItems('exchange'),
     getMicaComplianceItems('stablecoin'),
   ]);
+
+  const linkedArticle = pulseSnapshot?.linked_article_slug
+    ? await getMarketPulseBySlug(pulseSnapshot.linked_article_slug)
+    : null;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -56,7 +61,10 @@ export default async function DashboardPage() {
 
         <div className="container mx-auto flex-grow px-4 py-10 md:py-12 max-w-7xl">
           <DashboardPageHeader />
-          <MarketPulseTerminal snapshot={pulseSnapshot} />
+          <MarketPulseTerminal
+            snapshot={pulseSnapshot}
+            linkedArticlePublishedAt={linkedArticle?.published_at ?? null}
+          />
           <Suspense fallback={<EtfLoadingSkeleton height={420} />}>
             <EtfSection />
           </Suspense>

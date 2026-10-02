@@ -3,8 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import {
   fetchScreenerData,
   formatHeatmapChange,
+  formatScreenerFetchedAt,
   getHeatmapColor,
   type ScreenerCoin,
+  type ScreenerSource,
 } from '@/lib/screener-data';
 import { cn } from '@/lib/utils';
 
@@ -57,9 +59,17 @@ const LEGEND = [
   { label: '< −5%', className: 'bg-red-500/80' },
 ] as const;
 
+function sourceBadge(source: ScreenerSource): { label: string; variant: 'positive' | 'outline' } {
+  if (source === 'coingecko') return { label: 'Live · CoinGecko', variant: 'positive' };
+  if (source === 'stale') return { label: 'Date întârziate', variant: 'outline' };
+  return { label: 'Date indisponibile', variant: 'outline' };
+}
+
 export default async function CryptoHeatmap() {
-  const { coins, source } = await fetchScreenerData(HEATMAP_SIZE);
+  const { coins, source, fetchedAt } = await fetchScreenerData(HEATMAP_SIZE);
   const maxCap = Math.max(...coins.map((c) => c.marketCap), 1);
+  const badge = sourceBadge(source);
+  const fetchedLabel = formatScreenerFetchedAt(fetchedAt);
 
   return (
     <Card className="overflow-hidden border-white/[0.06] bg-[#020617]/95">
@@ -67,36 +77,50 @@ export default async function CryptoHeatmap() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <CardTitle className="font-[var(--font-space)] text-xl md:text-2xl tracking-tight">
-              Volatility Heatmap
+              Harta pieței
             </CardTitle>
             <CardDescription className="mt-1">
-              Top {coins.length} assets by market cap — 24h performance at a glance.
+              {source === 'unavailable'
+                ? 'Variațiile pe 24h nu pot fi afișate momentan.'
+                : `Top ${coins.length} active după capitalizare — variație pe 24h.`}
             </CardDescription>
+            {fetchedLabel ? (
+              <p className="mt-2 text-xs text-slate-500 font-[var(--font-inter)]">
+                Date din {fetchedLabel}
+                {source === 'stale' ? ' · ultimul set valid' : ''}
+              </p>
+            ) : null}
           </div>
-          <Badge variant={source === 'coingecko' ? 'positive' : 'outline'}>
-            {source === 'coingecko' ? 'Live · CoinGecko' : 'Demo data'}
-          </Badge>
+          <Badge variant={badge.variant}>{badge.label}</Badge>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {LEGEND.map((item) => (
-            <span
-              key={item.label}
-              className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-slate-300"
-            >
-              <span className={cn('h-3 w-3 rounded-sm', item.className)} aria-hidden />
-              {item.label}
-            </span>
-          ))}
-        </div>
+        {source !== 'unavailable' ? (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {LEGEND.map((item) => (
+              <span
+                key={item.label}
+                className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-slate-300"
+              >
+                <span className={cn('h-3 w-3 rounded-sm', item.className)} aria-hidden />
+                {item.label}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </CardHeader>
 
       <CardContent className="p-2 sm:p-3">
-        <div className="flex flex-wrap gap-2" role="list" aria-label="Crypto market heatmap">
-          {coins.map((coin, index) => (
-            <HeatmapTile key={coin.id} coin={coin} index={index} maxCap={maxCap} />
-          ))}
-        </div>
+        {source === 'unavailable' || coins.length === 0 ? (
+          <p className="px-4 py-12 text-center text-sm text-slate-400 font-[var(--font-inter)]">
+            Date indisponibile. Harta se actualizează când sursa de piață răspunde din nou.
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-2" role="list" aria-label="Harta variațiilor pe 24h">
+            {coins.map((coin, index) => (
+              <HeatmapTile key={coin.id} coin={coin} index={index} maxCap={maxCap} />
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

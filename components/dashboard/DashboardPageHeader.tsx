@@ -11,8 +11,8 @@ export default function DashboardPageHeader() {
         Dashboard <span className="text-amber-400">Instituțional</span>
       </h1>
       <p className="max-w-2xl text-sm text-slate-400 md:text-base font-[var(--font-inter)] mx-auto md:mx-0">
-        Market Pulse Terminal și MiCA Safety Radar — semnal tehnic și conformitate, într-un singur
-        ecran premium.
+        Market Pulse Terminal și MiCA Safety Radar — snapshot tehnic și conformitate, într-un
+        singur ecran. Snapshot-ul și articolul editorial sunt surse separate.
       </p>
     </header>
   );

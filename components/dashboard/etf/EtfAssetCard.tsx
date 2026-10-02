@@ -6,6 +6,7 @@ import type { EtfAssetSymbol, EtfPeriod } from '@/lib/etf/types';
 import { EtfErrorState } from './EtfErrorState';
 import { EtfLoadingSkeleton } from './EtfLoadingSkeleton';
 import { EtfSparkline } from './EtfSparkline';
+import { EtfUnavailableState } from './EtfUnavailableState';
 import { useEtfData } from './useEtfData';
 
 interface EtfAssetCardProps {
@@ -19,7 +20,7 @@ export function EtfAssetCard({ asset, period }: EtfAssetCardProps) {
   if (loading) return <EtfLoadingSkeleton />;
   if (error) return <EtfErrorState error={error} onRetry={refetch} />;
   if (data.length === 0) {
-    return <EtfErrorState error={`Nu există date ETF pentru ${asset}.`} onRetry={refetch} />;
+    return <EtfUnavailableState onRetry={refetch} />;
   }
 
   const latest = data[data.length - 1];
@@ -27,6 +28,7 @@ export function EtfAssetCard({ asset, period }: EtfAssetCardProps) {
   const changeUsd = previous ? latest.net_flow_usd - previous.net_flow_usd : 0;
   const isPositive = latest.net_flow_usd >= 0;
   const sparkColor = isPositive ? '#34d399' : '#f87171';
+  const updatedLabel = lastUpdated ?? latest.snapshot_date;
 
   return (
     <article
@@ -81,7 +83,7 @@ export function EtfAssetCard({ asset, period }: EtfAssetCardProps) {
 
       <div className="flex items-center justify-between border-t border-white/10 pt-3 text-xs text-slate-500">
         <span>AUM: {formatAumBillions(latest.aum_usd)}</span>
-        <span>Actualizat: {lastUpdated ?? 'N/A'}</span>
+        <span>Actualizat: {updatedLabel}</span>
       </div>
     </article>
   );
