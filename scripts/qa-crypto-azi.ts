@@ -13,7 +13,10 @@ import {
   validateTakeaways,
   bucharestDateIso,
 } from '../lib/crypto-azi/format';
-import { selectPublicBriefFromRows } from '../lib/crypto-azi/db';
+import {
+  selectPublicBriefFromRows,
+  selectHomepageEditorialSlot,
+} from '../lib/crypto-azi/db';
 import {
   authorizeAdminCandidate,
   parseAdminEmailAllowlist,
@@ -319,6 +322,58 @@ check('auth: user_metadata must not grant access', () => {
   );
   assert.equal(gate.ok, false);
   // Even if metadata claimed role:admin, authorizeAdminCandidate never reads it.
+});
+
+check('homepage A: no today brief → market-pulse slot', () => {
+  assert.equal(
+    selectHomepageEditorialSlot({ todayBrief: null, hasMarketPulse: true }),
+    'market-pulse',
+  );
+});
+
+check('homepage B: today brief → crypto-azi only (no market-pulse slot)', () => {
+  const today = bucharestDateIso(new Date('2026-10-02T12:00:00+03:00'));
+  const brief = fixtureBrief({
+    id: 't',
+    brief_date: today,
+    status: 'published',
+    takeaways: validThree,
+  });
+  assert.equal(
+    selectHomepageEditorialSlot({ todayBrief: brief, hasMarketPulse: true }),
+    'crypto-azi',
+  );
+});
+
+check('homepage C: old published only → not used as todayBrief', () => {
+  const rows = [
+    fixtureBrief({
+      id: 'old',
+      brief_date: '2026-09-20',
+      status: 'published',
+    }),
+  ];
+  const selected = selectPublicBriefFromRows(
+    rows,
+    new Date('2026-10-02T12:00:00+03:00'),
+  );
+  assert.equal(selected.isToday, false);
+  assert.equal(selected.isFallback, true);
+  // Homepage must pass only todayBrief; old brief → null today → market-pulse
+  assert.equal(
+    selectHomepageEditorialSlot({
+      todayBrief: selected.isToday ? selected.brief : null,
+      hasMarketPulse: true,
+    }),
+    'market-pulse',
+  );
+});
+
+check('homepage D: no brief and no market pulse → none', () => {
+  assert.equal(
+    selectHomepageEditorialSlot({ todayBrief: null, hasMarketPulse: false }),
+    'none',
+  );
 });
 
 // --- DB matrix (not executed; migration not applied) ---

@@ -9,9 +9,23 @@ type Props = {
   brief: CryptoDailyBrief;
   isToday: boolean;
   isFallback: boolean;
+  /** When false, parent already rendered the section heading (e.g. „Ce contează astăzi”). */
+  showTakeawaysHeading?: boolean;
+  /** Page-level H1 should own the document title; use h2 when nested under section labels. */
+  titleAs?: 'h1' | 'h2';
+  /** When true, omit the large title (parent already rendered the page H1). */
+  hideDocumentTitle?: boolean;
 };
 
-export default function CryptoAziBriefView({ brief, isToday, isFallback }: Props) {
+export default function CryptoAziBriefView({
+  brief,
+  isToday,
+  isFallback,
+  showTakeawaysHeading = true,
+  titleAs = 'h1',
+  hideDocumentTitle = false,
+}: Props) {
+  const TitleTag = titleAs;
   return (
     <article className="space-y-8">
       <header className="space-y-3">
@@ -29,9 +43,11 @@ export default function CryptoAziBriefView({ brief, isToday, isFallback }: Props
             </span>
           )}
         </div>
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white font-[var(--font-space)]">
-          {brief.title}
-        </h1>
+        {hideDocumentTitle ? null : (
+          <TitleTag className="text-3xl md:text-4xl font-black tracking-tight text-white font-[var(--font-space)]">
+            {brief.title}
+          </TitleTag>
+        )}
         <p className="text-sm text-slate-400 font-[var(--font-inter)]">
           <time dateTime={brief.brief_date}>{formatBucharestDate(brief.brief_date)}</time>
           {' · '}
@@ -45,10 +61,12 @@ export default function CryptoAziBriefView({ brief, isToday, isFallback }: Props
         ) : null}
       </header>
 
-      <section aria-label="Trei lucruri importante" className="space-y-4">
-        <h2 className="text-lg font-bold text-white font-[var(--font-space)]">
-          Trei lucruri importante
-        </h2>
+      <section aria-label="Ce contează astăzi — takeaways" className="space-y-4">
+        {showTakeawaysHeading ? (
+          <h2 className="text-lg font-bold text-white font-[var(--font-space)]">
+            Ce contează astăzi
+          </h2>
+        ) : null}
         <ol className="space-y-4">
           {brief.takeaways.map((item, index) => (
             <li

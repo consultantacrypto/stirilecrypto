@@ -13,11 +13,21 @@ const statusClass: Record<MarketIndicator['status'], string> = {
   unavailable: 'border-white/10 bg-white/5 text-slate-400',
 };
 
-export default function CryptoAziIndicators({ indicators }: { indicators: MarketIndicator[] }) {
+type Props = {
+  indicators: MarketIndicator[];
+  heading?: string;
+  ariaLabel?: string;
+};
+
+export default function CryptoAziIndicators({
+  indicators,
+  heading = 'Indicatori de piață',
+  ariaLabel,
+}: Props) {
   return (
-    <section aria-label="Indicatori de piață" className="mt-10">
+    <section aria-label={ariaLabel ?? heading} className="mt-2">
       <h2 className="text-lg font-bold text-white font-[var(--font-space)] mb-4">
-        Indicatori de piață
+        {heading}
       </h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {indicators.map((item) => (

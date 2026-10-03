@@ -10,7 +10,7 @@ import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
 import EmailCaptureBox from '@/components/EmailCaptureBox';
 import CryptoAziHomeTeaser from '@/components/crypto-azi/CryptoAziHomeTeaser';
-import { getPublicCryptoBrief } from '@/lib/crypto-azi/db';
+import { getTodaysPublishedCryptoBrief } from '@/lib/crypto-azi/db';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 export const revalidate = 60;
@@ -33,7 +33,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const { brief, isToday, isFallback } = await getPublicCryptoBrief();
+  // One query: today's published brief only. Older briefs never surface on homepage.
+  // Table missing / errors → null → Market Pulse branch (no crash, no empty card).
+  const todayBrief = await getTodaysPublishedCryptoBrief();
 
   return (
     <>
@@ -44,8 +46,12 @@ export default async function Home() {
         <HeroNewsPortal />
 
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full">
-          <CryptoAziHomeTeaser brief={brief} isToday={isToday} isFallback={isFallback} />
-          <MarketPulseSection />
+          {/* Max one editorial module between Hero and articles. */}
+          {todayBrief ? (
+            <CryptoAziHomeTeaser brief={todayBrief} />
+          ) : (
+            <MarketPulseSection />
+          )}
           <NewsFeed />
         </div>
 

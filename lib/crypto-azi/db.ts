@@ -66,9 +66,42 @@ export function selectPublicBriefFromRows(
 }
 
 /**
+ * Homepage-only: published brief for today's Europe/Bucharest date.
+ * Single query; older published briefs are intentionally ignored here.
+ * Missing table / errors → null (caller falls back to Market Pulse).
+ */
+export async function getTodaysPublishedCryptoBrief(
+  now = new Date(),
+): Promise<CryptoDailyBrief | null> {
+  const today = bucharestDateIso(now);
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
+  try {
+    const { data, error } = await supabase
+      .from('crypto_daily_briefs')
+      .select('*')
+      .eq('status', 'published')
+      .eq('brief_date', today)
+      .maybeSingle();
+
+    if (error) {
+      console.error('[crypto-azi] today brief', error.message);
+      return null;
+    }
+    if (!data) return null;
+    return mapRow(data as Record<string, unknown>);
+  } catch (err) {
+    console.error('[crypto-azi] getTodaysPublishedCryptoBrief', err);
+    return null;
+  }
+}
+
+/**
  * Public read via anon client (no cookies) — safe for ISR/static generation.
  * RLS: only published rows are visible to anon/authenticated JWT.
  * Admin draft/archived reads go through server actions + service_role.
+ * Used by /crypto-azi (today, else latest published labelled with real date).
  */
 export async function getPublicCryptoBrief(
   now = new Date(),
@@ -80,23 +113,9 @@ export async function getPublicCryptoBrief(
   }
 
   try {
-    const { data: todayRow, error: todayError } = await supabase
-      .from('crypto_daily_briefs')
-      .select('*')
-      .eq('status', 'published')
-      .eq('brief_date', today)
-      .maybeSingle();
-
-    if (todayError) {
-      console.error('[crypto-azi] today brief', todayError.message);
-    }
-
-    if (todayRow) {
-      return {
-        brief: mapRow(todayRow as Record<string, unknown>),
-        isToday: true,
-        isFallback: false,
-      };
+    const todayBrief = await getTodaysPublishedCryptoBrief(now);
+    if (todayBrief) {
+      return { brief: todayBrief, isToday: true, isFallback: false };
     }
 
     const { data: latestRows, error: latestError } = await supabase
@@ -116,13 +135,27 @@ export async function getPublicCryptoBrief(
       return { brief: null, isToday: false, isFallback: false };
     }
 
+    const brief = mapRow(latest as Record<string, unknown>);
+    const isToday = brief.brief_date === today;
     return {
-      brief: mapRow(latest as Record<string, unknown>),
-      isToday: false,
-      isFallback: true,
+      brief,
+      isToday,
+      isFallback: !isToday,
     };
   } catch (err) {
     console.error('[crypto-azi] getPublicCryptoBrief', err);
     return { brief: null, isToday: false, isFallback: false };
   }
+}
+
+/** Pure homepage editorial choice for fixture QA. */
+export type HomepageEditorialSlot = 'crypto-azi' | 'market-pulse' | 'none';
+
+export function selectHomepageEditorialSlot(options: {
+  todayBrief: CryptoDailyBrief | null;
+  hasMarketPulse: boolean;
+}): HomepageEditorialSlot {
+  if (options.todayBrief) return 'crypto-azi';
+  if (options.hasMarketPulse) return 'market-pulse';
+  return 'none';
 }

@@ -4,77 +4,55 @@ import type { CryptoDailyBrief } from '@/lib/crypto-azi/types';
 import { formatBucharestDate } from '@/lib/crypto-azi/format';
 
 type Props = {
-  brief: CryptoDailyBrief | null;
-  isToday: boolean;
-  isFallback: boolean;
+  /** Must be today's published brief — caller never passes empty/fallback. */
+  brief: CryptoDailyBrief;
 };
 
-export default function CryptoAziHomeTeaser({ brief, isToday, isFallback }: Props) {
-  if (!brief) {
-    return (
-      <section
-        aria-label="Crypto Azi"
-        className="mt-10 mb-2 rounded-2xl border border-white/10 bg-zinc-950/80 px-5 py-6 sm:px-8"
-      >
-        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-sky-400 mb-2">
-          Crypto Azi
-        </p>
-        <h2 className="text-xl font-bold text-white font-[var(--font-space)]">
-          Briefingul editorial nu este disponibil momentan
-        </h2>
-        <p className="mt-2 text-sm text-slate-400 font-[var(--font-inter)]">
-          Revenim cu cele trei lucruri importante ale zilei. Fără date demonstrative.
-        </p>
-        <Link
-          href="/crypto-azi"
-          className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-sky-300 hover:text-sky-200"
-        >
-          Deschide Crypto Azi <ArrowRight size={16} />
-        </Link>
-      </section>
-    );
-  }
+/**
+ * Compact homepage module. Server Component only.
+ * No empty state: parent omits this when there is no today brief.
+ */
+export default function CryptoAziHomeTeaser({ brief }: Props) {
+  const firstTitle = brief.takeaways[0]?.title?.trim();
+  if (!firstTitle) return null;
 
   return (
     <section
-      aria-label="Crypto Azi"
-      className="mt-10 mb-2 rounded-2xl border border-sky-500/25 bg-gradient-to-br from-sky-500/[0.07] via-zinc-950 to-zinc-950 px-5 py-6 sm:px-8"
+      aria-label="Crypto Azi — briefingul zilei"
+      className="mt-6 mb-2 max-h-[200px] overflow-hidden rounded-xl border border-sky-500/25 bg-zinc-950/90 sm:max-h-[160px]"
     >
-      <div className="flex flex-wrap items-center gap-2 mb-3">
-        <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-sky-300">
-          Crypto Azi
-        </span>
-        <time
-          dateTime={brief.brief_date}
-          className="text-[10px] font-bold uppercase tracking-widest text-slate-400"
+      <div className="flex h-full min-h-0 flex-col justify-between gap-2 px-4 py-3 sm:flex-row sm:items-center sm:gap-6 sm:px-5 sm:py-3.5">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-sky-400">
+              Crypto Azi
+            </span>
+            <time
+              dateTime={brief.brief_date}
+              className="text-[10px] font-bold uppercase tracking-widest text-slate-500"
+            >
+              {formatBucharestDate(brief.brief_date)}
+            </time>
+          </div>
+          <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400 font-[var(--font-inter)]">
+            3 lucruri de știut astăzi
+          </p>
+          <p className="mt-1 truncate text-base font-bold leading-snug text-white font-[var(--font-space)] sm:text-lg">
+            {firstTitle}
+          </p>
+          <p className="mt-0.5 text-xs text-slate-500 font-[var(--font-inter)]">
+            + încă 2 concluzii în briefing
+          </p>
+        </div>
+
+        <Link
+          href="/crypto-azi"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 self-start rounded-lg bg-sky-600 px-4 py-2 text-sm font-bold text-white hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 sm:self-center"
         >
-          {formatBucharestDate(brief.brief_date)}
-        </time>
-        {!isToday && isFallback ? (
-          <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-300">
-            Briefing anterior
-          </span>
-        ) : null}
+          Vezi briefingul
+          <ArrowRight size={16} aria-hidden />
+        </Link>
       </div>
-      <h2 className="text-xl sm:text-2xl font-bold text-white font-[var(--font-space)] tracking-tight">
-        {brief.title}
-      </h2>
-      <ul className="mt-4 space-y-2">
-        {brief.takeaways.map((item) => (
-          <li
-            key={item.title}
-            className="text-sm text-slate-300 font-[var(--font-inter)] leading-relaxed pl-3 border-l border-sky-500/40"
-          >
-            {item.title}
-          </li>
-        ))}
-      </ul>
-      <Link
-        href="/crypto-azi"
-        className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl bg-sky-600 hover:bg-sky-500 px-5 py-2.5 text-sm font-bold text-white transition-colors"
-      >
-        Vezi briefingul complet <ArrowRight size={16} />
-      </Link>
     </section>
   );
 }
