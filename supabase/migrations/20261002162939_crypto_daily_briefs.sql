@@ -7,6 +7,7 @@ create or replace function public.crypto_daily_briefs_takeaways_valid(t jsonb)
 returns boolean
 language sql
 immutable
+set search_path = ''
 as $$
   select
     t is not null
@@ -82,9 +83,10 @@ create index if not exists crypto_daily_briefs_author_id_idx
 create or replace function public.set_updated_at_timestamp()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
-  new.updated_at = now();
+  new.updated_at = pg_catalog.now();
   return new;
 end;
 $$;
