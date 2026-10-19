@@ -18,6 +18,10 @@ export interface Stire {
   meta_title?: string | null;
   meta_description?: string | null;
   x_content?: string | null;
+  /** NULL for rows written from /admin. `editor_api` for POST /api/editor/articles. */
+  source?: string | null;
+  tags?: string[] | null;
+  source_urls?: string[] | null;
 }
 
 export interface StireInsert {
