@@ -231,7 +231,7 @@ export async function parseEditorImageBody(input: {
     form = await new Request('http://127.0.0.1/api/editor/images', {
       method: 'POST',
       headers: { 'content-type': input.contentType },
-      body: input.body,
+      body: copyBytes(input.body),
     }).formData();
   } catch {
     return { ok: false, status: 400, error: 'Could not read request body.' };
@@ -304,6 +304,13 @@ export function isDuplicateStorageError(error: {
 function blankToNull(value: string | null): string | null {
   const trimmed = value?.trim() ?? '';
   return trimmed || null;
+}
+
+/** A standalone ArrayBuffer. Typed arrays are not a Fetch `BodyInit` under current DOM types. */
+export function copyBytes(bytes: Uint8Array): ArrayBuffer {
+  const copy = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(copy).set(bytes);
+  return copy;
 }
 
 function randomHex(bytes: number): string {

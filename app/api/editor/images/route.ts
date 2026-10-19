@@ -5,6 +5,7 @@ import {
   classifyEditorImageContentType,
   contentLengthStatus,
   isDuplicateStorageError,
+  copyBytes,
   parseEditorImageBody,
   publicImageUrl,
   readLimitedBody,
@@ -60,7 +61,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = createServiceClient();
-    const { error } = await supabase.storage.from(IMAGINI_STIRI_BUCKET).upload(accepted.path, accepted.bytes, {
+    const { error } = await supabase.storage.from(IMAGINI_STIRI_BUCKET).upload(accepted.path, copyBytes(accepted.bytes), {
       contentType: accepted.mime,
       upsert: false,
       cacheControl: '31536000',
