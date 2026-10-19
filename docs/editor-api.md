@@ -129,6 +129,23 @@ curl -sS "https://www.stirilecrypto.ro/api/editor/articles?limit=10&status=publi
   -H "Authorization: Bearer $EDITOR_API_TOKEN"
 ```
 
+### Upload image — `POST /api/editor/images`
+
+Uploads a cover to Supabase Storage (`imagini-stiri/editor-covers/`) with the service role and returns its public URL. Use the URL as `image_url` in create/PATCH.
+
+- Body: `multipart/form-data` with a `file` field (optional `filename` field), **or** the raw bytes with `Content-Type: image/webp|image/png|image/jpeg` (optional `?filename=`).
+- Max 5 MB. The type is checked from the file's magic bytes; anything that is not WebP/PNG/JPEG returns `415`.
+- The stored name is `<slugified-filename>-<timestamp>.<ext>`; path separators and `..` are rejected, so uploads cannot leave `editor-covers/`. Existing objects are never overwritten.
+
+```bash
+curl -sS -X POST "https://www.stirilecrypto.ro/api/editor/images?filename=jpm-coin.webp" \
+  -H "Authorization: Bearer $EDITOR_API_TOKEN" \
+  -H "Content-Type: image/webp" --data-binary @cover.webp
+# 201 {"path":"editor-covers/jpm-coin-1760000000000.webp","url":"https://…/storage/v1/object/public/imagini-stiri/editor-covers/…","content_type":"image/webp","bytes":29250}
+```
+
+There is no delete endpoint; remove objects from `/admin` or the Supabase dashboard.
+
 ## Fields
 
 | Field | Required on create | Notes |
@@ -190,6 +207,8 @@ Draft creates do not flush the public cache. The admin form still does not reval
 | `403` | The id is not an editor-API article. |
 | `404` | Unknown id. |
 | `409` | Slug taken, or the row is Market Pulse. |
+| `413` | Image larger than 5 MB (`/images`). |
+| `415` | Not a WebP/PNG/JPEG image (`/images`). |
 | `503` | `EDITOR_API_TOKEN` or Supabase service credentials are missing, or the provenance migration is required for this operation. |
 | `500` | Save failed. Details are logged on the server, not returned. |
 
@@ -197,7 +216,7 @@ Draft creates do not flush the public cache. The admin form still does not reval
 
 - The bearer token can publish news and edit rows this API created. Treat it like a password. Do not commit it. Rotate it in Vercel if it leaks.
 - Before `editor-api-schema.sql` is applied, new rows are not flagged with `source = editor_api`, and `PATCH` cannot see them. Run the migration first.
-- `PATCH` cannot edit Daniel's admin articles or Market Pulse. Delete and image upload stay in `/admin`.
+- `PATCH` cannot edit Daniel's admin articles or Market Pulse. Delete stays in `/admin`. Covers can be uploaded with `POST /api/editor/images`.
 - There is no rate limit.
 - `tags` and `source_urls` are not shown on the public page. Category chips on `/stiri` use keywords, not `tags`.
 - A cover URL is stored as given. Production images are unoptimized, so an `https` URL outside the Supabase/Unsplash allow-list still renders. A dead URL shows a broken image.
