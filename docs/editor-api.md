@@ -131,17 +131,17 @@ curl -sS "https://www.stirilecrypto.ro/api/editor/articles?limit=10&status=publi
 
 ### Upload image — `POST /api/editor/images`
 
-Uploads a cover to Supabase Storage (`imagini-stiri/editor-covers/`) with the service role and returns its public URL. Use the URL as `image_url` in create/PATCH.
+Uploads a cover to Supabase Storage (`imagini-stiri/editor-covers/`) with the service role and returns its public URL. Use the URL as `image_url` in create/PATCH. The bearer token is checked before the body is read.
 
-- Body: `multipart/form-data` with a `file` field (optional `filename` field), **or** the raw bytes with `Content-Type: image/webp|image/png|image/jpeg` (optional `?filename=`).
-- Max 5 MB. The type is checked from the file's magic bytes; anything that is not WebP/PNG/JPEG returns `415`.
-- The stored name is `<slugified-filename>-<timestamp>.<ext>`; path separators and `..` are rejected, so uploads cannot leave `editor-covers/`. Existing objects are never overwritten.
+- Body: `multipart/form-data` with a `file` field (optional text `filename` field), **or** the raw bytes with `Content-Type: image/webp|image/png|image/jpeg` (optional `?filename=`). For a raw body, that Content-Type must match the bytes.
+- Max 5 MB. A decimal `Content-Length` above the limit is rejected before the body is read. The body stream is capped at the same limit (plus 64 KB for multipart framing) and is not buffered past it. The type is taken from magic bytes — WebP `RIFF`/`WEBP` with a `VP8`, `VP8L`, or `VP8X` chunk, a full PNG signature plus `IHDR`, or JPEG `FF D8 FF` with an end-of-image marker. Anything else returns `415`.
+- The stored key is `editor-covers/<slug>-<timestamp>-<random>.<ext>`. The slug keeps only `[a-z0-9-]`. Slashes, backslashes, NUL, and `..` are rejected, so the key cannot leave `editor-covers/`. Existing objects are never overwritten (`upsert: false`).
 
 ```bash
 curl -sS -X POST "https://www.stirilecrypto.ro/api/editor/images?filename=jpm-coin.webp" \
   -H "Authorization: Bearer $EDITOR_API_TOKEN" \
   -H "Content-Type: image/webp" --data-binary @cover.webp
-# 201 {"path":"editor-covers/jpm-coin-1760000000000.webp","url":"https://…/storage/v1/object/public/imagini-stiri/editor-covers/…","content_type":"image/webp","bytes":29250}
+# 201 {"path":"editor-covers/jpm-coin-1760000000000-a1b2c3d4.webp","bucket":"imagini-stiri","url":"https://…/storage/v1/object/public/imagini-stiri/editor-covers/…","content_type":"image/webp","bytes":29250}
 ```
 
 There is no delete endpoint; remove objects from `/admin` or the Supabase dashboard.
@@ -158,7 +158,7 @@ There is no delete endpoint; remove objects from `/admin` or the Supabase dashbo
 | `slug` | no | Generated from the title. Explicit slugs that are taken return `409`. |
 | `tags` | no | Up to 12 plain-text labels. Stored, not rendered. |
 | `source_urls` | no | Up to 8 `https` URLs. Stored, not rendered. Put citations in the body if readers should see them. |
-| `image_url` or `cover_image_url` | no | `https` URL or a root-relative path. Omitted covers use `/placeholder.jpg`. |
+| `image_url` or `cover_image_url` | no | `https` URL or a root-relative path. Upload a cover with `POST /api/editor/images` and store `url`. Omitted covers use `/placeholder.jpg`. |
 | `meta_title`, `meta_description` | no | SEO overrides. |
 
 Categories:
@@ -206,9 +206,9 @@ Draft creates do not flush the public cache. The admin form still does not reval
 | `401` | Missing or wrong bearer token. |
 | `403` | The id is not an editor-API article. |
 | `404` | Unknown id. |
-| `409` | Slug taken, or the row is Market Pulse. |
+| `409` | Slug taken, the row is Market Pulse, or the cover object name collided (`/images`). |
 | `413` | Image larger than 5 MB (`/images`). |
-| `415` | Not a WebP/PNG/JPEG image (`/images`). |
+| `415` | Not a WebP/PNG/JPEG image, or the raw Content-Type does not match the bytes (`/images`). |
 | `503` | `EDITOR_API_TOKEN` or Supabase service credentials are missing, or the provenance migration is required for this operation. |
 | `500` | Save failed. Details are logged on the server, not returned. |
 

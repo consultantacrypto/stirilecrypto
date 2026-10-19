@@ -1,10 +1,13 @@
 import { NextRequest } from 'next/server';
 import { authorizeEditor, editorJson } from '@/lib/editor/http';
 import {
-  EDITOR_IMAGE_MAX_BYTES,
-  buildEditorImagePath,
+  acceptEditorImage,
+  classifyEditorImageContentType,
+  contentLengthStatus,
+  isDuplicateStorageError,
+  parseEditorImageBody,
   publicImageUrl,
-  sniffImageType,
+  readLimitedBody,
 } from '@/lib/editor/images';
 import { IMAGINI_STIRI_BUCKET } from '@/lib/storage/constants';
 import { createServiceClient } from '@/lib/supabase/service';
@@ -12,73 +15,77 @@ import { createServiceClient } from '@/lib/supabase/service';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+const TOO_LARGE = { error: 'Image too large (max 5 MB).' };
+const EMPTY_FILE = { error: 'Empty file.' };
+
 /**
  * POST /api/editor/images
- * Body: multipart/form-data with a `file` field, or the raw image bytes
- * (Content-Type image/webp|png|jpeg, optional `?filename=`). Max 5 MB.
- * Uploads to imagini-stiri/editor-covers/<safe-name> with the service role.
+ * Auth runs before the body is read. Multipart `file` or a raw
+ * image/webp|png|jpeg body, capped at 5 MB, stored under editor-covers/.
  */
 export async function POST(request: NextRequest) {
   const denied = authorizeEditor(request);
   if (denied) return denied;
 
-  const declaredLength = Number(request.headers.get('content-length') ?? '0');
-  if (declaredLength > EDITOR_IMAGE_MAX_BYTES + 64 * 1024) {
-    return editorJson({ error: 'Image too large (max 5 MB).' }, 413);
-  }
+  const classified = classifyEditorImageContentType(request.headers.get('content-type'));
+  if (!classified.ok) return editorJson({ error: classified.error }, classified.status);
 
-  const contentType = (request.headers.get('content-type') ?? '').toLowerCase();
-  let bytes: Uint8Array;
-  let name: string | null = request.nextUrl.searchParams.get('filename');
+  const lengthStatus = contentLengthStatus(request.headers.get('content-length'), classified.cap);
+  if (lengthStatus === 'too-large') return editorJson(TOO_LARGE, 413);
+  if (lengthStatus === 'empty') return editorJson(EMPTY_FILE, 400);
 
+  let limited: Awaited<ReturnType<typeof readLimitedBody>>;
   try {
-    if (contentType.startsWith('multipart/form-data')) {
-      const form = await request.formData();
-      const file = form.get('file');
-      if (!file || typeof file === 'string') {
-        return editorJson({ error: 'Missing `file` field.' }, 400);
-      }
-      if (file.size > EDITOR_IMAGE_MAX_BYTES) {
-        return editorJson({ error: 'Image too large (max 5 MB).' }, 413);
-      }
-      name = (form.get('filename') as string | null) || file.name || name;
-      bytes = new Uint8Array(await file.arrayBuffer());
-    } else if (/^image\/(webp|png|jpeg)\b/.test(contentType)) {
-      bytes = new Uint8Array(await request.arrayBuffer());
-    } else {
-      return editorJson({ error: 'Send multipart/form-data or an image/webp, image/png or image/jpeg body.' }, 415);
-    }
+    limited = await readLimitedBody(request.body, classified.cap);
   } catch {
     return editorJson({ error: 'Could not read request body.' }, 400);
   }
-
-  if (bytes.byteLength === 0) return editorJson({ error: 'Empty file.' }, 400);
-  if (bytes.byteLength > EDITOR_IMAGE_MAX_BYTES) {
-    return editorJson({ error: 'Image too large (max 5 MB).' }, 413);
+  if (!limited.ok) {
+    return limited.reason === 'too-large' ? editorJson(TOO_LARGE, 413) : editorJson(EMPTY_FILE, 400);
   }
 
-  const mime = sniffImageType(bytes);
-  if (!mime) return editorJson({ error: 'Only WebP, PNG or JPEG images are accepted.' }, 415);
+  const parsed = await parseEditorImageBody({
+    kind: classified.kind,
+    contentType: request.headers.get('content-type') ?? '',
+    body: limited.bytes,
+    queryFilename: request.nextUrl.searchParams.get('filename'),
+  });
+  if (!parsed.ok) return editorJson({ error: parsed.error }, parsed.status);
 
-  const path = buildEditorImagePath(name, mime);
-  if (!path) return editorJson({ error: 'Invalid filename.' }, 400);
+  const accepted = acceptEditorImage(parsed.bytes, classified.declared, parsed.name);
+  if (!accepted.ok) return editorJson({ error: accepted.error }, accepted.status);
+
+  const url = publicImageUrl(accepted.path);
+  if (!url) return editorJson({ error: 'Storage is not configured.' }, 503);
 
   try {
     const supabase = createServiceClient();
-    const { error } = await supabase.storage
-      .from(IMAGINI_STIRI_BUCKET)
-      .upload(path, bytes, { contentType: mime, upsert: false, cacheControl: '31536000' });
+    const { error } = await supabase.storage.from(IMAGINI_STIRI_BUCKET).upload(accepted.path, accepted.bytes, {
+      contentType: accepted.mime,
+      upsert: false,
+      cacheControl: '31536000',
+    });
     if (error) {
       console.error('[editor/images] upload failed', error.message);
+      if (isDuplicateStorageError(error)) return editorJson({ error: 'Upload conflict. Retry.' }, 409);
       return editorJson({ error: 'Upload failed.' }, 500);
     }
   } catch (error) {
     console.error('[editor/images]', error);
-    return editorJson({ error: 'Storage is not configured.' }, 503);
+    if (error instanceof Error && error.message.includes('SUPABASE_SERVICE_ROLE_KEY')) {
+      return editorJson({ error: 'Storage is not configured.' }, 503);
+    }
+    return editorJson({ error: 'Upload failed.' }, 500);
   }
 
   return editorJson(
-    { path, bucket: IMAGINI_STIRI_BUCKET, url: publicImageUrl(path), content_type: mime, bytes: bytes.byteLength },
+    {
+      path: accepted.path,
+      bucket: IMAGINI_STIRI_BUCKET,
+      url,
+      content_type: accepted.mime,
+      bytes: accepted.bytes.byteLength,
+    },
     201,
   );
 }
