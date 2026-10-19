@@ -34,18 +34,8 @@ import {
   formatSupabaseWriteError,
   normalizeArticleContentType,
 } from '@/lib/admin/stire-payload';
+import { ARTICLE_CATEGORIES as CATEGORIES } from '@/lib/stiri-categories';
 import type { ArticleContentType, ArticleStatus, Stire } from '@/lib/types/stiri';
-
-const CATEGORIES = [
-  'ANALIZĂ TEHNICĂ & MACRO',
-  'ON-CHAIN & ANALIZĂ TEHNICĂ',
-  'MACRO & ON-CHAIN',
-  'MACRO & MINING',
-  'PSIHOLOGIE DE PIAȚĂ',
-  'REGLEMENTĂRI',
-  'DEFI & WEB3',
-  'ȘTIRI GENERALE',
-] as const;
 
 type FormState = {
   title: string;
