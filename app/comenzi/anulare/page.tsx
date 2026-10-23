@@ -17,14 +17,9 @@ export default function OrderCancelPage() {
         <p className="mt-4 text-sm leading-relaxed text-slate-400">
           Nu s-a încasat nimic din această încercare. Poți reveni la produs când vrei.
         </p>
-        <div className="mt-8 flex gap-4 text-sm font-semibold">
-          <Link href="/analiza-tehnica" className="text-white underline">
-            Analiză tehnică
-          </Link>
-          <Link href="/raport-risc" className="text-white underline">
-            Raport de risc
-          </Link>
-        </div>
+        <Link href="/analiza-tehnica" className="mt-8 inline-block text-sm font-semibold text-white underline">
+          Înapoi la analiză
+        </Link>
       </main>
       <Footer />
     </div>

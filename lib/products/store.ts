@@ -76,6 +76,62 @@ export async function cancelInquiry(id: string): Promise<void> {
   }
 }
 
+export async function markInquiryPaid(
+  id: string,
+  sessionId: string,
+): Promise<
+  | { ok: true; changed: boolean; email: string; asset: string | null; amountRon: number | null }
+  | { ok: false; reason: 'unconfigured' | 'missing' | 'failed' }
+> {
+  if (!storageConfigured()) return { ok: false, reason: 'unconfigured' };
+
+  try {
+    const supabase = createServiceClient();
+    const { data, error } = await supabase
+      .from('product_inquiries')
+      .select('id, email, asset, amount_ron, status')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error || !data) {
+      console.error('[product_inquiries] paid lookup', error?.message ?? 'missing');
+      return { ok: false, reason: 'missing' };
+    }
+
+    if (data.status === 'paid') {
+      return {
+        ok: true,
+        changed: false,
+        email: String(data.email),
+        asset: data.asset ? String(data.asset) : null,
+        amountRon: data.amount_ron == null ? null : Number(data.amount_ron),
+      };
+    }
+
+    const { error: updateError } = await supabase
+      .from('product_inquiries')
+      .update({ status: 'paid', stripe_session_id: sessionId })
+      .eq('id', id)
+      .neq('status', 'paid');
+
+    if (updateError) {
+      console.error('[product_inquiries] paid', updateError.message);
+      return { ok: false, reason: 'failed' };
+    }
+
+    return {
+      ok: true,
+      changed: true,
+      email: String(data.email),
+      asset: data.asset ? String(data.asset) : null,
+      amountRon: data.amount_ron == null ? null : Number(data.amount_ron),
+    };
+  } catch (err) {
+    console.error('[product_inquiries] paid', err instanceof Error ? err.message : 'unknown');
+    return { ok: false, reason: 'failed' };
+  }
+}
+
 export async function notifyInquiry(body: Record<string, unknown>): Promise<boolean> {
   const url = process.env.PRODUCT_ORDER_WEBHOOK_URL?.trim();
   if (!url?.startsWith('https://')) return false;

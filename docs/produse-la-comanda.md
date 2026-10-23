@@ -1,65 +1,64 @@
-# Produse la comandă și flag-uri
+# Analiză tehnică la comandă
 
-Payments are **off by default**. Nothing in this change charges a card, and the product pages do not render a pay button that calls a failing checkout.
+Payments are **off by default**. This change does not charge a card and does not set any Vercel variable.
 
-The repo has no Stripe SDK and no `STRIPE_*` variables today. When payments are enabled later, `app/api/premium/checkout` creates a Stripe Checkout Session with the REST API (`https://api.stripe.com/v1/checkout/sessions`). Until then, a valid form joins a waitlist.
+`/analiza-tehnica` is the only product. Price **49 RON** (`TA_PRICE_RON`). It covers one asset on 1h, 4h, 12h, 1D, 3D, 1W and 1M, plus a **Risc token** section: liquidity, major-exchange listings, holder distribution from Arkham and public on-chain data, token unlocks, dump risk, and pump-and-dump signals. The sample uses the fictitious asset Exemplum (XMPL). It is educational. It is not a buy or sell call.
 
-## Products
+`/raport-risc` redirects with **301** to `/analiza-tehnica`. It is not in the footer, the dashboard, or the sitemap. New orders are stored as `product = ta_mtf`. Older `risk_report` and `bundle` rows stay valid; the table check constraint is unchanged.
 
-| Product | Path | Price | Chargeable when |
-| --- | --- | --- | --- |
-| Analiză tehnică multi-timeframe | `/analiza-tehnica` | `TA_PRICE_RON`, default **49 RON** | `PAYMENTS_ENABLED=true` and `STRIPE_SECRET_KEY` is set |
-| Raport de risc pentru o monedă crypto | `/raport-risc` | `RISK_REPORT_PRICE_RON`, default **149 RON** | The flag above **and** `RISK_REPORT_PRICE_CONFIRMED=true` |
-| Both together | checkbox on either page | `BUNDLE_PRICE_RON` or the sum of the two prices | Both products are chargeable |
+The order form asks for the asset symbol, an optional chart question, and optional risk fields (name, network, contract or native flag, why, whether they hold it, horizon, concerns, questions, email or PDF). The OUG 34/2014 art. 16 lit. m consent checkbox is required.
 
-**149 RON is a placeholder.** Do not confirm it in the page copy as final, and do not set `RISK_REPORT_PRICE_CONFIRMED` until the price is decided. The page labels it „preț de confirmat”.
+Delivery: a teammate drafts the analysis, Daniel Mihai reviews it, and it is sent by email from `contact@stirilecrypto.ro`, normally within `TA_DELIVERY_LABEL` (default `24 de ore în zilele lucrătoare`).
 
-The technical analysis covers one asset chosen by the buyer on 1h, 4h, 12h, 1D, 3D, 1W and 1M. The risk report scores any coin (not only BTC/ETH): overall 0–100 plus liquidity, listing quality, holder concentration, tokenomics/unlocks, dump risk, pump-and-dump signals, contract/security flags, team transparency, a watch window, and multi-timeframe context. Both are educational. They are not buy/sell calls and not personalized investment advice.
+## How checkout works
 
-Samples on the pages use the fictitious asset **XMPL / Exemplum**. They are not market data.
+This site does **not** send the buyer to mihaidaniel.ro. It already has its own Checkout Session flow.
 
-Delivery time is a placeholder from config:
+`lib/flags.ts` turns payments on only when `PAYMENTS_ENABLED` is exactly `true` **and** `STRIPE_SECRET_KEY` is non-empty. Until then the button is „Înscrie-te pe lista de așteptare” and `POST /api/premium/checkout` never calls Stripe.
 
-- `TA_DELIVERY_LABEL` — default `24–48 de ore lucrătoare`
-- `RISK_DELIVERY_LABEL` — default `2–4 zile lucrătoare`
+When both are set, a valid form with intent `pay`:
 
-The order form requires an express checkbox for immediate digital delivery and loss of the 14-day withdrawal right (OUG 34/2014 art. 16 lit. m).
+1. Inserts `product_inquiries` with `status = pending_payment`, amount 49 RON (or `TA_PRICE_RON`), and the intake JSON.
+2. `lib/products/stripe.ts` POSTs `https://api.stripe.com/v1/checkout/sessions` with `Authorization: Bearer $STRIPE_SECRET_KEY`. Mode is `payment`, currency `ron`, one line item, `customer_email`, and metadata `inquiry_id`. There is no Stripe SDK and no `payment_method_types` list.
+3. The browser is sent to the hosted Checkout URL. Cancel returns to `/comenzi/anulare`. Success returns to `/comenzi/succes?session_id=…`. That page is **not** proof of payment or of delivery.
+4. Stripe later POSTs `checkout.session.completed` (and, for delayed methods, `checkout.session.async_payment_succeeded`) to `/api/premium/webhook`. The route checks `Stripe-Signature` with `STRIPE_WEBHOOK_SECRET`. Only a session whose `payment_status` is `paid` marks the row `paid` and notifies.
 
-## Environment variables
+The Stripe **account** is whichever account owns `STRIPE_SECRET_KEY`. mihaidaniel.ro does the same thing for the course and consultancy: its own `STRIPE_SECRET_KEY` creates a Checkout Session. It does not expose a shared checkout URL for other sites. To land these 49 RON charges in QuickExit LLC’s Stripe (the account behind mihaidaniel.ro), put a restricted key from **that** Stripe account in this project’s `STRIPE_SECRET_KEY`. A key from a different Stripe account charges that other account instead. Do not paste the key into git.
 
-Do not set these in Vercel as part of this change. They are read at runtime; unset means the safe default.
+There is no webhook on the success page. Fulfillment starts from `/api/premium/webhook`.
+
+## What Dani sets to turn payments on
+
+Do this in the Vercel project for stirilecrypto, Production (and Preview only if you want to test there). This PR does not set them.
+
+1. In the Stripe account that should receive the money (QuickExit LLC, if that is the mihaidaniel.ro account), create a **restricted** key that can create Checkout Sessions. Set `STRIPE_SECRET_KEY` to that key.
+2. Set `PAYMENTS_ENABLED` to `true`.
+3. In Stripe → Developers → Webhooks, add an endpoint:
+   `https://www.stirilecrypto.ro/api/premium/webhook`
+   Events: `checkout.session.completed` and `checkout.session.async_payment_succeeded`.
+   Set `STRIPE_WEBHOOK_SECRET` to that endpoint’s signing secret (`whsec_…`).
+4. Apply `supabase/product-inquiries.sql` in the Supabase SQL editor if the table is not there yet. It does not change `stiri`.
+5. Optional: `TA_PRICE_RON` (default 49) and `TA_DELIVERY_LABEL` (default `24 de ore în zilele lucrătoare`).
+6. Optional: `PRODUCT_ORDER_WEBHOOK_URL` (https only) and `PRODUCT_ORDER_WEBHOOK_SECRET`. After a paid webhook, the same JSON is POSTed there (Slack, Make, or an email relay). Waitlist submits use it too.
+7. Redeploy so the server sees the variables. Then place a small live or test payment and confirm the row becomes `paid`.
+
+`/admin/comenzi` lists the latest 100 rows for a signed-in admin (the existing authenticated read policy). It does not send the analysis and it does not touch the article editor. If the webhook URL is unset, that list plus the Stripe Dashboard are the notification. The teammate still sends the finished analysis manually from `contact@stirilecrypto.ro`.
+
+Until step 2, nothing is charged.
+
+## Other flags
 
 | Variable | Default | Effect |
 | --- | --- | --- |
-| `PAYMENTS_ENABLED` | off | Must be `true` before any Stripe session is created. |
-| `STRIPE_SECRET_KEY` | unset | Required together with the flag. Never expose it to the client. |
-| `TA_PRICE_RON` | `49` | Technical-analysis price. |
-| `RISK_REPORT_PRICE_RON` | `149` | Placeholder risk-report price. |
-| `RISK_REPORT_PRICE_CONFIRMED` | off | Must be `true` before the risk report (or a bundle) can be charged. |
-| `BUNDLE_PRICE_RON` | sum of the two prices | Optional package price. Still not charged until the risk price is confirmed. |
-| `TA_DELIVERY_LABEL` | `24–48 de ore lucrătoare` | Shown on the technical-analysis page. |
-| `RISK_DELIVERY_LABEL` | `2–4 zile lucrătoare` | Shown on the risk-report page. |
-| `PRODUCT_ORDER_WEBHOOK_URL` | unset | Optional `https://` endpoint. Receives the intake JSON after a waitlist submit. |
-| `PRODUCT_ORDER_WEBHOOK_SECRET` | unset | Sent as `Authorization: Bearer …` when the webhook URL is set. |
-| `AI_CHAT_ENABLED` | off | `POST /api/chat` returns 404 and does not call xAI unless this is `true`. |
+| `PAYMENTS_ENABLED` | off | Must be `true` together with the secret key. |
+| `STRIPE_SECRET_KEY` | unset | Server only. Chooses the Stripe account. |
+| `STRIPE_WEBHOOK_SECRET` | unset | Required for `/api/premium/webhook` to accept events. |
+| `TA_PRICE_RON` | `49` | Price in RON. |
+| `TA_DELIVERY_LABEL` | `24 de ore în zilele lucrătoare` | Shown on the page. |
+| `PRODUCT_ORDER_WEBHOOK_URL` | unset | Optional https notification after waitlist or paid. |
+| `PRODUCT_ORDER_WEBHOOK_SECRET` | unset | Sent as `Authorization: Bearer …` when the URL is set. |
+| `AI_CHAT_ENABLED` | off | `POST /api/chat` stays 404 unless this is `true`. |
 
-`NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are existing server credentials. The order API uses them only on the server.
+`RISK_REPORT_PRICE_RON`, `RISK_REPORT_PRICE_CONFIRMED`, and `BUNDLE_PRICE_RON` are no longer read. Leave them unset.
 
-## How an order is delivered
-
-Fulfillment is manual.
-
-1. Apply `supabase/product-inquiries.sql` in the Supabase SQL editor. The table is new; it does not change `stiri` or `/admin`.
-2. While payments are off, the form button is **Înscrie-te pe lista de așteptare**. A valid submit inserts a `product_inquiries` row with `status = waitlist` and `amount_ron` null. No card is charged.
-3. If the webhook URL is set, the same payload is POSTed there (email, Slack, Make, or similar). A successful webhook still counts as notified if the table insert fails.
-4. If neither storage nor the webhook is available, the API returns an error and the page asks the reader to write to `consultantacrypto.ro@gmail.com`. It does not pretend the request was saved.
-5. Read new rows in the Supabase table `product_inquiries` (Table Editor, or any SQL client with the service role). There is no new screen under `/admin`.
-6. The analyst writes the piece from the stored intake and sends it to the email on the row, as email text or PDF, matching `payload.risk.delivery` when present.
-7. Later, set `PAYMENTS_ENABLED=true` and `STRIPE_SECRET_KEY`. The technical-analysis button becomes **Continuă către plată**. The risk report stays on the waitlist until `RISK_REPORT_PRICE_CONFIRMED=true`.
-8. A successful Stripe session redirects to `/comenzi/succes`. The row is `pending_payment` and stores `stripe_session_id`. Mark it delivered by hand after the email/PDF is sent. Stripe Dashboard is the payment record. A paid webhook is intentionally not implemented until fulfillment is decided; do not treat the success page as proof of delivery.
-
-Legacy `POST /api/premium/checkout` used to return 503 for every body. Invalid bodies now return 400. A disabled pay button is not rendered, so the page does not invite a 503.
-
-## `/api/chat`
-
-The route has no UI. It calls the xAI API when `XAI_API_KEY` is present. `AI_CHAT_ENABLED` defaults off: the handler returns 404 before it reads the key or calls the provider. Set the flag to `true` only if the chat should run again. The route file is kept.
+`NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are the existing server credentials used to insert and update orders.

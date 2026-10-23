@@ -1,6 +1,6 @@
--- Product waitlist / manual orders for:
---   Analiză tehnică multi-timeframe
---   Raport de risc pentru o monedă crypto
+-- Product waitlist / manual orders for Analiză tehnică multi-timeframe.
+-- The risk section is included in that product. New rows use product = ta_mtf.
+-- risk_report and bundle stay in the check constraint so older rows remain valid.
 -- Additive. Does not alter stiri, premium_orders, or admin tables.
 -- Run in the Supabase SQL editor before expecting the order API to persist rows.
 -- Writes use SUPABASE_SERVICE_ROLE_KEY. Payments stay off until PAYMENTS_ENABLED=true.

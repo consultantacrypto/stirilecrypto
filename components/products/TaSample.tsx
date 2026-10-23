@@ -51,6 +51,37 @@ export default function TaSample() {
           a cumpăra sau de a vinde. Cifrele de mai sus sunt inventate ca să arate formatul.
         </p>
       </div>
+
+      <div className="mt-4 rounded-2xl border border-white/10 p-4 sm:p-6">
+        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">Risc token · tot fictiv</p>
+        <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h3 className="font-[var(--font-space)] text-xl font-bold text-white">Exemplum · XMPL</h3>
+            <p className="mt-1 text-sm text-slate-400">Rețea Exemplaris · contract inventat 0xEXMPL…0000</p>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">Scor de risc</p>
+            <p className="font-[var(--font-space)] text-3xl font-black tabular-nums text-white">64</p>
+            <p className="text-xs text-slate-500">din 100, doar în acest exemplu</p>
+          </div>
+        </div>
+        <dl className="mt-4 divide-y divide-white/10 text-sm">
+          <RiskRow label="Lichiditate" note="Volum și adâncime de ordin inventate. Lichiditate DEX fictivă: 1,2 mil. USD." />
+          <RiskRow label="Listări majore" note="Lipsește de pe bursele mari în exemplu. Doar „Exemplu Exchange”." />
+          <RiskRow label="Deținători" note="Arkham fictiv: portofelul Exemplu-1 are 18%, trezoreria 9%, un portofel de bursă 7%." />
+          <RiskRow label="Deblocări" note="Deblocare inventată de 2% în ziua 9. Nu este un calendar real." />
+          <RiskRow label="Dump și pump-and-dump" note="Concentrare mare și un salt de volum fără știre, ambele desenate pentru mostră." />
+        </dl>
+      </div>
     </section>
+  );
+}
+
+function RiskRow({ label, note }: { label: string; note: string }) {
+  return (
+    <div className="grid gap-1 py-3 sm:grid-cols-[180px_1fr] sm:gap-4">
+      <dt className="font-semibold text-white">{label}</dt>
+      <dd className="leading-relaxed text-slate-400">{note}</dd>
+    </div>
   );
 }
