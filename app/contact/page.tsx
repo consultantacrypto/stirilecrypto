@@ -49,6 +49,14 @@ export default function ContactPage() {
               <a href="mailto:consultantacrypto.ro@gmail.com" className="text-green-400 hover:text-green-300 transition-colors font-medium break-all">
                 consultantacrypto.ro@gmail.com
               </a>
+              <a
+                href="https://www.mihaidaniel.ro/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 block text-sm text-slate-400 underline decoration-white/20 underline-offset-2 hover:text-white"
+              >
+                mihaidaniel.ro
+              </a>
             </div>
 
             <div>

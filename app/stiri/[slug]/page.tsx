@@ -20,7 +20,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
 import ViewTracker from '@/components/ViewTracker';
-import EditorialByline from '@/components/EditorialByline';
+import AuthorByline from '@/components/author/AuthorByline';
+import AuthorBox from '@/components/author/AuthorBox';
+import { authorDisplayName, danielAuthorJsonLd } from '@/lib/authors';
 import { Metadata } from 'next';
 
 /** ISR: regenerate at most once per minute (TTFB / Supabase load). */
@@ -64,7 +66,7 @@ export async function generateMetadata({
       locale: 'ro_RO',
       publishedTime: article.published_at ?? undefined,
       modifiedTime: article.published_at ?? undefined,
-      authors: ['Redacția Știrile Crypto'],
+      authors: [authorDisplayName(article.authorKey)],
       section: article.category,
       tags: [article.category, 'crypto', 'știri'],
       images: [
@@ -113,7 +115,9 @@ function ArticlePageContent({
   const { content: mainWithoutLead } = removeDuplicateLeadParagraph(article.excerpt, main);
   const coverSrc = normalizeImageUrl(article.image_url);
   const published = formatPublishedDisplay(article.published_at, article.dateLabel);
-  const newsArticleJsonLd = buildNewsArticleJsonLd(article, slug);
+  const newsArticleJsonLd = buildNewsArticleJsonLd(article, slug, {
+    author: article.authorKey === 'daniel-mihai' ? danielAuthorJsonLd() : undefined,
+  });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
     { name: 'Știri', path: '/stiri' },
@@ -167,7 +171,7 @@ function ArticlePageContent({
               </span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)] normal-case">
                 <User size={12} />
-                <EditorialByline />
+                <AuthorByline authorKey={article.authorKey} />
               </span>
             </div>
 
@@ -198,6 +202,8 @@ function ArticlePageContent({
 
           {mainWithoutLead ? <ArticleContent content={mainWithoutLead} /> : null}
 
+          {article.authorKey === 'daniel-mihai' ? <AuthorBox /> : null}
+
           <AffiliatePartnerBox />
 
           <EmailCaptureBox />
@@ -213,7 +219,7 @@ function ArticlePageContent({
 
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">
-              Autor: <EditorialByline />
+              Autor: <AuthorByline authorKey={article.authorKey} />
             </div>
 
             <div className="flex flex-col gap-2 w-full md:w-auto">

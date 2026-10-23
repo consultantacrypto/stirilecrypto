@@ -3,7 +3,9 @@ import ShareButtons from '@/components/ShareButtons';
 import ArticleContent from '@/components/ArticleContent';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
 import ViewTracker from '@/components/ViewTracker';
-import PremiumTaSection from '@/components/dashboard/premium/PremiumTaSection';
+import AuthorByline from '@/components/author/AuthorByline';
+import AuthorBox from '@/components/author/AuthorBox';
+import { authorDisplayName, danielAuthorJsonLd } from '@/lib/authors';
 import { splitArticleContent } from '@/lib/split-article-content';
 import { removeDuplicateLeadParagraph } from '@/lib/dedupe-lead';
 import { stripBrandSuffix } from '@/lib/seo-title';
@@ -19,7 +21,6 @@ import { Activity, ArrowLeft, Calendar, Clock, Eye, User } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import EditorialByline from '@/components/EditorialByline';
 
 export const revalidate = 60;
 
@@ -58,7 +59,7 @@ export async function generateMetadata({
       locale: 'ro_RO',
       publishedTime: article.published_at ?? undefined,
       modifiedTime: article.published_at ?? undefined,
-      authors: ['Redacția Știrile Crypto'],
+      authors: [authorDisplayName(article.authorKey)],
       section: 'Market Pulse',
       tags: ['Market Pulse', 'analiză tehnică', 'crypto'],
       images: [{ url: ogImageUrl, width: 1200, height: 630, alt: seoTitle }],
@@ -102,6 +103,7 @@ function MarketPulsePageContent({
   const published = formatPublishedDisplay(article.published_at, article.dateLabel);
   const jsonLd = buildFinancialArticleJsonLd(article, slug, {
     path: `/market-pulse/${slug}`,
+    author: article.authorKey === 'daniel-mihai' ? danielAuthorJsonLd() : undefined,
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
@@ -160,7 +162,7 @@ function MarketPulsePageContent({
               </span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)] normal-case">
                 <User size={12} />
-                <EditorialByline />
+                <AuthorByline authorKey={article.authorKey} />
               </span>
             </div>
 
@@ -207,11 +209,19 @@ function MarketPulsePageContent({
             </aside>
           ) : null}
 
-          <PremiumTaSection />
+          {article.authorKey === 'daniel-mihai' ? <AuthorBox /> : null}
+
+          <p className="text-sm text-slate-500">
+            Pentru un activ anume:{' '}
+            <Link href="/analiza-tehnica" className="text-slate-300 underline decoration-white/20 underline-offset-2">
+              analiză tehnică multi-timeframe
+            </Link>
+            .
+          </p>
 
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">
-              Autor: <EditorialByline />
+              Autor: <AuthorByline authorKey={article.authorKey} />
             </div>
 
             <div className="flex flex-col gap-2 w-full md:w-auto">

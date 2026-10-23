@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Image from 'next/image';
-import { CheckCircle2, Award, ShieldCheck, Users } from 'lucide-react';
+import Link from 'next/link';
+import { Award, ShieldCheck, Users } from 'lucide-react';
 import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
@@ -21,21 +21,8 @@ export default function AboutPage() {
       
       <main className="pt-32 pb-20 px-4 md:px-8 max-w-5xl mx-auto">
         
-        {/* Hero Section */}
-        <div className="flex flex-col md:flex-row items-center gap-12 mb-20">
-            <div className="w-full md:w-1/2">
-                <div className="relative w-full aspect-square md:aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                    {/* ✅ IMAGINE ACTUALIZATĂ: mihai-daniel-consultanta.jpg */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#02050a] via-transparent to-transparent z-10"></div>
-                    <img 
-                        src="/mihai-daniel-consultanta.jpg" 
-                        alt="Știrile Crypto" 
-                        className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-500"
-                    />
-                </div>
-            </div>
-            
-            <div className="w-full md:w-1/2">
+        <div className="mb-20 max-w-3xl">
+            <div>
                 <div className="inline-block bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full text-xs font-bold uppercase mb-4 border border-blue-500/20">
                     Despre Noi
                 </div>
@@ -50,16 +37,13 @@ export default function AboutPage() {
                     Într-o lume plină de headline-uri fără substanță, misiunea noastră este clară: <strong>știri filtrate, analiză on-chain și educație financiară aplicată.</strong> Nu promitem îmbogățire peste noapte — oferim claritate.
                 </p>
                 
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-[#0b1221] p-4 rounded-xl border border-white/5">
-                        <div className="text-2xl font-black text-white mb-1">280K+</div>
-                        <div className="text-xs text-gray-500 uppercase font-bold">Comunitate</div>
-                    </div>
-                    <div className="bg-[#0b1221] p-4 rounded-xl border border-white/5">
-                        <div className="text-2xl font-black text-white mb-1">5 Ani+</div>
-                        <div className="text-xs text-gray-500 uppercase font-bold">Experiență Piață</div>
-                    </div>
-                </div>
+                <p className="text-sm text-gray-500">
+                    Analizele de piață sunt semnate de{' '}
+                    <Link href="/autori/daniel-mihai" className="text-gray-300 underline">
+                        Daniel Mihai
+                    </Link>
+                    . Știrile fără semnătură individuală aparțin redacției.
+                </p>
             </div>
         </div>
 
@@ -81,7 +65,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">Educație, nu Ponturi</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">
-                    Nu îți voi spune "cumpără asta acum". Îți voi explica mecanismele din spate, ca să poți lua singur decizia corectă. Scopul este autonomia ta financiară.
+                    Nu spunem „cumpără asta acum”. Explicăm mecanismele din spate, ca să poți lua singur decizia. Scopul este înțelegerea pieței, nu un pont.
                 </p>
             </div>
 

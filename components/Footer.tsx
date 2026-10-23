@@ -76,6 +76,16 @@ export default function Footer() {
                   Lista de așteptare
                 </Link>
               </li>
+              <li>
+                <Link href="/analiza-tehnica" className="hover:text-blue-400 transition-colors">
+                  Analiză tehnică
+                </Link>
+              </li>
+              <li>
+                <Link href="/raport-risc" className="hover:text-blue-400 transition-colors">
+                  Raport de risc
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -99,6 +109,21 @@ export default function Footer() {
                 <Link href="/contact" className="hover:text-green-400 transition-colors">
                   Contact & Suport
                 </Link>
+              </li>
+              <li>
+                <Link href="/autori/daniel-mihai" className="hover:text-green-400 transition-colors">
+                  Daniel Mihai, analist
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://www.mihaidaniel.ro/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-green-400 transition-colors"
+                >
+                  Consultanță
+                </a>
               </li>
               <li>
                 <Link href="/termeni" className="hover:text-green-400 transition-colors">

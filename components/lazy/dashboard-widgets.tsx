@@ -10,27 +10,10 @@ function ChartInlineSkeleton() {
   );
 }
 
-function PremiumFormSkeleton() {
-  return (
-    <div
-      className="rounded-xl border border-amber-500/25 bg-amber-500/10 px-4 py-8"
-      aria-hidden
-    />
-  );
-}
-
 export const EtfFlowsChart = dynamic(
   () => import('@/components/dashboard/etf/EtfFlowsChart'),
   {
     ssr: false,
     loading: () => <ChartInlineSkeleton />,
-  },
-);
-
-export const PremiumCheckoutForm = dynamic(
-  () => import('@/components/dashboard/premium/PremiumCheckoutForm'),
-  {
-    ssr: false,
-    loading: () => <PremiumFormSkeleton />,
   },
 );
