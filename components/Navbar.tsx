@@ -1,6 +1,6 @@
 'use client';
 
-import { Youtube, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -69,17 +69,8 @@ export default function Navbar() {
             isPathActive(pathname, '/raport-strategic') ? 'ring-2 ring-white/30' : ''
           }`}
         >
-          Analiză Premium
+          Dosar strategic
         </Link>
-        <a
-          href="https://www.youtube.com/@DanielMihaiCrypto"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center w-10 h-10 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-300"
-          aria-label="YouTube"
-        >
-          <Youtube size={20} />
-        </a>
       </div>
 
       <button
@@ -114,18 +105,8 @@ export default function Navbar() {
                 : 'bg-white text-black'
             }`}
           >
-            Analiză Premium
+            Dosar strategic
           </Link>
-          <a
-            href="https://www.youtube.com/@DanielMihaiCrypto"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center justify-center gap-2 rounded-2xl px-5 py-4 text-slate-400 font-medium hover:bg-white/10 hover:text-white transition-all duration-300"
-          >
-            <Youtube size={20} />
-            YouTube
-          </a>
         </div>
       )}
     </nav>

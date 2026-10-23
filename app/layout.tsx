@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     default: 'Știrile Crypto',
   },
   description:
-    'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.',
+    'Știri crypto, analiză de piață și date on-chain, în limba română.',
   keywords: [
     'stiri crypto romania',
     'bitcoin romania',
@@ -53,13 +53,13 @@ export const metadata: Metadata = {
     locale: 'ro_RO',
     siteName: 'Știrile Crypto',
     description:
-      'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.',
+      'Știri crypto, analiză de piață și date on-chain, în limba română.',
     images: [
       {
-        url: '/mihai-daniel-consultanta.jpg',
+        url: '/api/og?title=%C8%98tirile%20Crypto&category=%C8%98tiri',
         width: 1200,
         height: 630,
-        alt: 'Știrile Crypto — Informație Financiară & Date On-Chain',
+        alt: 'Știrile Crypto',
       },
     ],
   },
@@ -67,9 +67,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@MIhaiDanielWeb3',
     creator: '@MIhaiDanielWeb3',
-    description:
-      'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.',
-    images: ['/mihai-daniel-consultanta.jpg'],
+    description: 'Știri crypto, analiză de piață și date on-chain, în limba română.',
+    images: ['/api/og?title=%C8%98tirile%20Crypto&category=%C8%98tiri'],
   },
   robots: {
     index: true,

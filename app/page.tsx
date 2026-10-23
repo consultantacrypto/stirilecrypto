@@ -3,7 +3,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ScrollProgress from '@/components/ScrollProgress';
 import HeroNewsPortal from '@/components/hero-concepts/HeroNewsPortal';
-import ConsultingBanner from '@/components/ConsultingBanner';
 import NewsFeed from '@/components/NewsFeed';
 import MarketPulseSection from '@/components/MarketPulseSection';
 import InterviewsSection from '@/components/InterviewsSection';
@@ -15,7 +14,7 @@ export const revalidate = 60;
 
 const HOME_TITLE = 'Informație Financiară & Date On-Chain | Știrile Crypto';
 const HOME_DESCRIPTION =
-  'Platformă premium de informații crypto, date on-chain instituționale și mentorat privat 1-la-1 pentru investiții inteligente.';
+  'Platformă de informații crypto și date on-chain instituționale. Știri, interviuri și analiză de piață.';
 
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
@@ -48,11 +47,7 @@ export default function Home() {
         <InterviewsSection />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 max-w-6xl mt-16 mb-8 lg:mb-12">
-        <ConsultingBanner />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full mb-16">
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full mt-16 mb-16">
         <EmailCaptureBox id="newsletter" location="homepage" />
       </div>
 

@@ -71,6 +71,15 @@ export default function RedactiePage() {
             </li>
           </ul>
 
+          <h2 className="text-2xl font-bold text-white pt-4">Analist</h2>
+          <p>
+            Analizele Market Pulse sunt semnate de{' '}
+            <Link href="/autori/daniel-mihai" className="text-blue-400 hover:text-blue-300 underline">
+              Daniel Mihai
+            </Link>
+            . Știrile de flux rămân ale redacției atunci când nu au un autor individual.
+          </p>
+
           <h2 className="text-2xl font-bold text-white pt-4">Contact</h2>
           <p>
             Pentru sesizări editoriale, parteneriate sau corecții, folosiți pagina{' '}

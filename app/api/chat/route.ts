@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server';
+import { aiChatEnabled } from '@/lib/flags';
 
 // Forțăm dinamic pentru a evita cache-ul pe Vercel
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
+  if (!aiChatEnabled()) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   const apiKey = process.env.XAI_API_KEY;
 
   if (!apiKey) {

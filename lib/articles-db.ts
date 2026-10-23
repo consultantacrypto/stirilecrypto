@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { authorKeyFromName, type AuthorKey } from '@/lib/authors';
 import { articles } from '@/lib/articles';
 import { resolveImageUrl } from '@/lib/image-url';
 import { getSupabase } from '@/lib/supabase';
@@ -358,6 +359,7 @@ export interface ArticlePageData {
   views: number;
   meta_title: string | null;
   meta_description: string | null;
+  authorKey: AuthorKey;
 }
 
 function parseStaticImpact(impact: string | undefined): ArticleImpact {
@@ -386,6 +388,7 @@ function staticArticleToPageData(article: StaticArticle): ArticlePageData {
     views: 0,
     meta_title: null,
     meta_description: null,
+    authorKey: authorKeyFromName(article.author),
   };
 }
 
@@ -415,6 +418,7 @@ function stireToPageData(stire: Stire): ArticlePageData {
     views: typeof stire.views === 'number' ? stire.views : Number(stire.views ?? 0),
     meta_title: stire.meta_title ?? null,
     meta_description: stire.meta_description ?? null,
+    authorKey: stire.content_type === 'market_pulse' ? 'daniel-mihai' : 'desk',
   };
 }
 

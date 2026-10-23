@@ -194,7 +194,7 @@ check('Newsletter: simulated save error (no false success)', () => {
 });
 
 async function runLiveApiChecks() {
-  await checkAsync('Premium: POST /api/premium/checkout → 503 (no insert)', async () => {
+  await checkAsync('Premium: incomplete checkout body → 400, no payment URL', async () => {
     const base = process.env.QA_BASE_URL || 'http://localhost:3010';
     let res: Response;
     try {
@@ -206,9 +206,10 @@ async function runLiveApiChecks() {
     } catch (err) {
       assert.fail(`Server unreachable at ${base}: ${(err as Error).message}`);
     }
-    assert.equal(res.status, 503);
-    const body = (await res.json()) as { error?: string };
-    assert.match(body.error || '', /indisponibile/i);
+    assert.equal(res.status, 400);
+    const body = (await res.json()) as { error?: string; url?: string };
+    assert.ok(body.error);
+    assert.equal(body.url, undefined);
   });
 
   await checkAsync('Newsletter: invalid email → 400 without DB write', async () => {

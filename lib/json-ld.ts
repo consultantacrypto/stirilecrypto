@@ -11,7 +11,7 @@ export const SITE_SITEMAP_URL = `${SITE_URL}/sitemap.xml`;
 export const SITE_NEWS_SITEMAP_URL = `${SITE_URL}/news-sitemap.xml`;
 export const SITE_FEED_URL = `${SITE_URL}/feed.xml`;
 export const DEFAULT_SHARE_IMAGE = {
-  url: `${SITE_URL}/mihai-daniel-consultanta.jpg`,
+  url: `${SITE_URL}/api/og?title=${encodeURIComponent('Știrile Crypto')}&category=${encodeURIComponent('Știri')}`,
   width: 1200,
   height: 630,
   alt: 'Știrile Crypto',
@@ -62,7 +62,11 @@ export function toIsoDateTime(value: string | null | undefined): string | undefi
 export function buildNewsArticleJsonLd(
   article: ArticlePageData,
   slug: string,
-  options?: { path?: string; articleSection?: string },
+  options?: {
+    path?: string;
+    articleSection?: string;
+    author?: Record<string, unknown>;
+  },
 ) {
   const pageUrl = `${SITE_URL}${options?.path ?? `/stiri/${slug}`}`;
   const imageUrl = toAbsoluteUrl(article.image_url);
@@ -84,7 +88,7 @@ export function buildNewsArticleJsonLd(
     image: imageUrl ? [imageUrl] : undefined,
     datePublished,
     dateModified,
-    author: {
+    author: options?.author ?? {
       '@type': 'Organization',
       name: EDITORIAL_DESK_NAME,
       url: EDITORIAL_DESK_URL,
@@ -108,7 +112,7 @@ export function buildNewsArticleJsonLd(
 export function buildFinancialArticleJsonLd(
   article: ArticlePageData,
   slug: string,
-  options?: { path?: string },
+  options?: { path?: string; author?: Record<string, unknown> },
 ) {
   const pageUrl = `${SITE_URL}${options?.path ?? `/market-pulse/${slug}`}`;
   const imageUrl = toAbsoluteUrl(article.image_url);
@@ -131,7 +135,7 @@ export function buildFinancialArticleJsonLd(
     image: imageUrl ? [imageUrl] : undefined,
     datePublished,
     dateModified,
-    author: {
+    author: options?.author ?? {
       '@type': 'Organization',
       name: EDITORIAL_DESK_NAME,
       url: EDITORIAL_DESK_URL,
