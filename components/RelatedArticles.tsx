@@ -1,4 +1,4 @@
-import ArticleCard from '@/components/ArticleCard';
+import StoryThumb from '@/components/StoryThumb';
 import { getMergedRelatedArticles } from '@/lib/articles-db';
 
 export default async function RelatedArticles({
@@ -18,14 +18,15 @@ export default async function RelatedArticles({
         Citește și
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
         {related.map((item) => (
-          <ArticleCard
+          <StoryThumb
             key={item.slug}
-            slug={item.slug}
+            href={`/stiri/${item.slug}`}
             title={item.title}
             image={item.image}
-            category={item.category}
+            meta={item.category}
+            layout="card"
           />
         ))}
       </div>

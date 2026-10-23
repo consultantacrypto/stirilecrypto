@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import StoryThumb from '@/components/StoryThumb';
 import { DANIEL_MIHAI, danielAuthorJsonLd } from '@/lib/authors';
 import { getMarketPulseArchive } from '@/lib/articles-db';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
@@ -77,14 +78,12 @@ export default async function DanielMihaiPage() {
           <ul className="mt-2 divide-y divide-white/10">
             {analyses.map((item) => (
               <li key={item.id}>
-                <Link href={`/market-pulse/${item.slug}`} className="group block py-4">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                    {item.dateLabel || 'Market Pulse'}
-                  </span>
-                  <span className="mt-1 block font-semibold text-white group-hover:text-blue-300">
-                    {item.title}
-                  </span>
-                </Link>
+                <StoryThumb
+                  href={`/market-pulse/${item.slug}`}
+                  title={item.title}
+                  image={item.image_url}
+                  meta={item.dateLabel || 'Market Pulse'}
+                />
               </li>
             ))}
           </ul>

@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
+import StoryThumb from '@/components/StoryThumb';
 import { DANIEL_MIHAI } from '@/lib/authors';
 import { getHomeFeedArticles, getLatestMarketPulse, type NewsFeedItem } from '@/lib/articles-db';
+import { resolveImageUrl, thumbnailImageUrl } from '@/lib/image-url';
 import { getGlobalData } from '@/lib/market-api';
 
 function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
@@ -131,23 +133,16 @@ export default async function PublicationHome() {
 
             <aside aria-label="Ultimele știri" className="lg:col-span-5 lg:border-l lg:border-white/10 lg:pl-8">
               <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">Ultimele știri</h2>
-              <ol className="mt-4 divide-y divide-white/10">
+              <ol className="mt-2 divide-y divide-white/10">
                 {latest.map((item, index) => (
                   <li key={item.id}>
-                    <Link href={`/stiri/${item.slug}`} className="group flex gap-4 py-4">
-                      <span className="w-6 shrink-0 font-[var(--font-space)] text-sm font-semibold text-slate-600">
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                          {item.category || 'Știri'}
-                          {item.dateLabel ? ` · ${item.dateLabel}` : ''}
-                        </span>
-                        <span className="mt-1 block text-base font-semibold leading-snug text-white group-hover:text-blue-300">
-                          {item.title}
-                        </span>
-                      </span>
-                    </Link>
+                    <StoryThumb
+                      href={`/stiri/${item.slug}`}
+                      title={item.title}
+                      image={item.image_url}
+                      index={index}
+                      meta={storyMeta(item)}
+                    />
                   </li>
                 ))}
               </ol>
@@ -168,7 +163,23 @@ export default async function PublicationHome() {
               </Link>
             </p>
             {pulse ? (
-              <p className="mt-1 line-clamp-2 text-sm text-slate-400">{pulse.title}</p>
+              <Link
+                href={`/market-pulse/${pulse.slug}`}
+                className="group mt-3 flex items-center gap-3"
+              >
+                <span className="w-16 shrink-0">
+                  <ArticleCoverImage
+                    src={thumbnailImageUrl(resolveImageUrl(pulse), 160)}
+                    alt=""
+                    sizes="64px"
+                    aspectRatio="4/3"
+                    className="rounded-md border border-white/10"
+                  />
+                </span>
+                <span className="line-clamp-2 text-sm text-slate-300 group-hover:text-white">
+                  {pulse.title}
+                </span>
+              </Link>
             ) : (
               <p className="mt-1 text-sm text-slate-500">Analizele de piață semnate de redacție.</p>
             )}
@@ -189,15 +200,15 @@ export default async function PublicationHome() {
                 <h2 className="border-b border-white/10 pb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
                   {category}
                 </h2>
-                <ul className="mt-3 space-y-4">
+                <ul className="mt-2 divide-y divide-white/10">
                   {items.slice(0, 3).map((item) => (
                     <li key={item.id}>
-                      <Link href={`/stiri/${item.slug}`} className="group block">
-                        <span className="block text-base font-semibold leading-snug text-white group-hover:text-blue-300">
-                          {item.title}
-                        </span>
-                        <span className="mt-1 block text-xs text-slate-500">{item.dateLabel}</span>
-                      </Link>
+                      <StoryThumb
+                        href={`/stiri/${item.slug}`}
+                        title={item.title}
+                        image={item.image_url}
+                        meta={item.dateLabel}
+                      />
                     </li>
                   ))}
                 </ul>
@@ -218,6 +229,11 @@ export default async function PublicationHome() {
       </div>
     </div>
   );
+}
+
+function storyMeta(item: NewsFeedItem): string {
+  const category = item.category || 'Știri';
+  return item.dateLabel ? `${category} · ${item.dateLabel}` : category;
 }
 
 function MarketCell({ label, value }: { label: string; value: string }) {
