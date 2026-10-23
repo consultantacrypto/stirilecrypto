@@ -38,7 +38,7 @@ export default function Footer() {
                 platform="twitter"
               />
               <SocialLink
-                href="https://www.linkedin.com/"
+                href="https://www.linkedin.com/in/mihaidanielmarius/"
                 icon={<Linkedin size={20} />}
                 label="LinkedIn"
                 platform="linkedin"

@@ -67,22 +67,6 @@ export function resolveImageUrl(source: {
   return normalizeImageUrl(source.image_url ?? source.image);
 }
 
-const SUPABASE_OBJECT_URL =
-  /^(https:\/\/[a-z0-9-]+\.supabase\.co)\/storage\/v1\/object\/public\/([^?#]+)(?:\?[^#]*)?$/i;
-
-/**
- * Smaller display URL for cards and lists.
- * Supabase Storage image transformation is on for this project, so a 100KB+
- * cover can be requested at the rendered width. Other hosts, including files
- * in /public, are returned unchanged. The article hero keeps the original URL.
- */
-export function thumbnailImageUrl(src: string, width = 240): string {
-  const safeWidth = Math.min(1200, Math.max(64, Math.round(width)));
-  const match = src.match(SUPABASE_OBJECT_URL);
-  if (!match) return src;
-  return `${match[1]}/storage/v1/render/image/public/${match[2]}?width=${safeWidth}&quality=60`;
-}
-
 /** Persist only real URLs — never blob previews or the placeholder. */
 export function prepareImageUrlForStorage(raw: string | null | undefined): string | null {
   const trimmed = raw?.trim();
