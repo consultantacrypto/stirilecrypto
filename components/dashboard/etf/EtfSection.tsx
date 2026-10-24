@@ -20,7 +20,7 @@ export default function EtfSection() {
             Flux Instituțional
           </div>
           <h2 className="font-[var(--font-space)] text-2xl font-bold tracking-tight text-white md:text-3xl">
-            ETF Inflow / Outflow
+            Intrări și ieșiri din ETF-uri
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400 font-[var(--font-inter)]">
             Flux net zilnic al ETF-urilor spot BTC și ETH. Verde = capital intrat, roșu = capital

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 const SAVED = 'Emailul a fost înregistrat. Nu s-a încasat nimic. Te anunțăm când verificarea este deschisă.';
 const NOTIFIED = 'Cererea a fost trimisă. Nu s-a încasat nimic. Te anunțăm când verificarea este deschisă.';
 const SAVE_FAILED =
-  'Nu am putut înregistra emailul. Nu s-a încasat nimic. Scrie-ne la consultantacrypto.ro@gmail.com.';
+  'Nu am putut înregistra emailul. Nu s-a încasat nimic. Scrie-ne la contact@stirilecrypto.ro.';
 
 export async function POST(request: Request) {
   const raw = await request.text();

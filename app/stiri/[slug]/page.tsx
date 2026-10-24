@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar';
 import ShareButtons from '@/components/ShareButtons';
 import ArticleContent from '@/components/ArticleContent';
 import AffiliatePartnerBox from '@/components/AffiliatePartnerBox';
-import EmailCaptureBox from '@/components/EmailCaptureBox';
+import MorningNewsletter from '@/components/MorningNewsletter';
 import RelatedArticles from '@/components/RelatedArticles';
 import { splitArticleContent } from '@/lib/split-article-content';
 import { removeDuplicateLeadParagraph } from '@/lib/dedupe-lead';
@@ -168,9 +168,11 @@ function ArticlePageContent({
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
                 <Clock size={12} /> {article.readTime} citire
               </span>
-              <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
-                <Eye size={12} /> {article.views || 0} vizualizări
-              </span>
+              {article.views > 0 ? (
+                <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
+                  <Eye size={12} /> {article.views} vizualizări
+                </span>
+              ) : null}
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)] normal-case">
                 <User size={12} />
                 <AuthorByline authorKey={article.authorKey} />
@@ -208,7 +210,7 @@ function ArticlePageContent({
 
           <AffiliatePartnerBox />
 
-          <EmailCaptureBox />
+          <MorningNewsletter location="article" />
 
           {conclusion ? (
             <aside

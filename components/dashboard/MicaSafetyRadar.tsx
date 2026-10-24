@@ -4,6 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import ComplianceStatusBadge from '@/components/dashboard/ComplianceStatusBadge';
 import type { MicaComplianceItem } from '@/lib/types/dashboard';
 
+function publicNotes(name: string, notes: string | null): string | null {
+  if (!notes?.trim()) return null;
+  const cleaned = notes
+    .replace(/opțiunea recomandată de comunitate\.?/gi, 'Link afiliat.')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  if (/bybit/i.test(name) && !/link afiliat/i.test(cleaned)) {
+    return `${cleaned} Link afiliat.`;
+  }
+  return cleaned;
+}
+
 function ComplianceTable({
   title,
   items,
@@ -35,9 +47,9 @@ function ComplianceTable({
                   {item.jurisdiction ? (
                     <p className="text-xs text-slate-500">{item.jurisdiction}</p>
                   ) : null}
-                  {item.notes ? (
+                  {publicNotes(item.name, item.notes) ? (
                     <p className="text-sm text-slate-400 leading-relaxed font-[var(--font-inter)]">
-                      {item.notes}
+                      {publicNotes(item.name, item.notes)}
                     </p>
                   ) : null}
                 </div>

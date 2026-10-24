@@ -1,7 +1,8 @@
 import { BadgeCheck, ExternalLink } from 'lucide-react';
+import { withAffiliateTags } from '@/lib/affiliates';
 
-const BYBIT_URL = 'https://partner.bybit.eu/b/mihaispecial';
-const REDOTPAY_URL = 'https://url.hk/i/en/kqz74';
+const BYBIT_URL = withAffiliateTags('https://partner.bybit.eu/b/mihaispecial', 'article-bybit');
+const REDOTPAY_URL = withAffiliateTags('https://url.hk/i/en/kqz74', 'article-redotpay');
 
 export default function AffiliatePartnerBox() {
   return (
@@ -15,7 +16,7 @@ export default function AffiliatePartnerBox() {
           Parteneri verificați
         </div>
         <h3 className="text-xl md:text-2xl font-bold text-white font-[var(--font-space)] leading-tight">
-          Recomandarea Ambasadorului: Tranzacționează Inteligent
+          Link afiliat: Bybit și RedotPay
         </h3>
         <p className="text-sm md:text-base text-gray-300 leading-relaxed font-[var(--font-inter)] max-w-xl">
           Linkurile noastre oficiale Bybit și RedotPay îți oferă cashback, comisioane

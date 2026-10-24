@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { ArrowRight, ShieldCheck, Zap, Globe } from 'lucide-react';
+import { withAffiliateTags } from '@/lib/affiliates';
 
 export default function BybitPromo() {
-  const AFFILIATE_LINK = "https://partner.bybit.eu/b/STIRICRYPTO"; 
+  const AFFILIATE_LINK = withAffiliateTags('https://partner.bybit.eu/b/STIRICRYPTO', 'bybit-promo'); 
 
   return (
     <div className="w-full my-16 relative group">

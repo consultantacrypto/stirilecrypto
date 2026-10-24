@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { getAllPublishedArticles, getAllPublishedMarketPulseArticles } from '@/lib/articles-db';
 import { getPublishedInterviews } from '@/lib/interviews-db';
+import { dictionary } from '@/lib/dictionary';
 import { SITE_URL } from '@/lib/json-ld';
 
 /** Runtime generation — avoids blocking build when Supabase is unavailable */
@@ -30,6 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/autori/daniel-mihai`, lastModified: now, changeFrequency: 'weekly', priority: 0.5 },
     { url: `${SITE_URL}/analiza-tehnica`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/verificare-portofel`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${SITE_URL}/despre`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/raport-strategic`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/termeni`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
@@ -82,5 +84,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('[sitemap] Failed to fetch published interviews:', err);
   }
 
-  return [...staticRoutes, ...articleRoutes, ...marketPulseRoutes, ...interviewRoutes];
+  const academyRoutes: MetadataRoute.Sitemap = dictionary.map((guide) => ({
+    url: `${SITE_URL}/academie/${guide.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.65,
+  }));
+
+  return [...staticRoutes, ...academyRoutes, ...articleRoutes, ...marketPulseRoutes, ...interviewRoutes];
 }

@@ -32,7 +32,11 @@ export async function getBitcoinMetrics(): Promise<MetricPoint[]> {
 
     for (let i = 0; i < prices.length; i++) {
       const dateObj = new Date(dates[i]);
-      const date = dateObj.toLocaleDateString('ro-RO', { year: '2-digit', month: 'short' });
+      const date = dateObj.toLocaleDateString('ro-RO', {
+        year: '2-digit',
+        month: 'short',
+        timeZone: 'Europe/Bucharest',
+      });
       const price = prices[i];
 
       let ma2yr = null;

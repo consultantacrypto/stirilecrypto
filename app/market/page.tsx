@@ -40,7 +40,7 @@ interface GlobalData {
 
 interface FearGreedData {
   value: number;
-  value_classification: string;
+  label: string;
 }
 
 // --- UTILITARE ---
@@ -55,10 +55,10 @@ const formatCurrency = (value: number | undefined | null) => {
 };
 
 const getFearGreedStyles = (value: number) => {
-  if (value >= 70) return { color: 'text-green-400', text: 'EUFORIE' };
-  if (value >= 50) return { color: 'text-emerald-500', text: 'LĂCOMIE' };
-  if (value >= 30) return { color: 'text-orange-400', text: 'CALM' };
-  return { color: 'text-red-500', text: 'TEAMĂ' };
+  if (value >= 55) return { color: 'text-green-400' };
+  if (value >= 45) return { color: 'text-emerald-500' };
+  if (value >= 25) return { color: 'text-orange-400' };
+  return { color: 'text-red-500' };
 };
 
 export const revalidate = 60;
@@ -93,7 +93,7 @@ export default async function MarketPage() {
       : null;
 
   const fgValue =
-    fearGreedData && Number.isFinite(fearGreedData.value) ? fearGreedData.value : null;
+    fearGreedData && Number.isFinite(Number(fearGreedData.value)) ? Number(fearGreedData.value) : null;
   const fgStyles = fgValue == null ? null : getFearGreedStyles(fgValue);
 
   return (
@@ -109,7 +109,7 @@ export default async function MarketPage() {
                     <Activity className="text-white" size={24} />
                 </div>
                 <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white">
-                    Market <span className="text-blue-500">Data</span>
+                    Date de <span className="text-blue-500">piață</span>
                 </h1>
             </div>
             <p className="text-gray-400 text-sm md:text-base max-w-2xl">
@@ -128,7 +128,7 @@ export default async function MarketPage() {
                 {/* 1. METRICS CARDS */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
-                        <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><DollarSign size={12}/> Market Cap</div>
+                        <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><DollarSign size={12}/> Capitalizare</div>
                         <div className="text-2xl font-black text-white font-[var(--font-space)]">{marketCap}</div>
                         <div className={`text-xs font-bold ${change == null ? 'text-gray-500' : Number(change) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {change == null ? 'Date indisponibile' : `${Number(change) >= 0 ? '▲' : '▼'} ${change}% (24h)`}
@@ -140,15 +140,17 @@ export default async function MarketPage() {
                         <div className="text-xs text-gray-400">Lichiditate Globală</div>
                     </div>
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
-                        <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><Layers size={12}/> BTC Dominance</div>
+                        <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><Layers size={12}/> Dominanța Bitcoin</div>
                         <div className="text-2xl font-black text-yellow-500 font-[var(--font-space)]">{dominance}</div>
                         <div className="text-xs text-gray-400">Restul e Altseason?</div>
                     </div>
+                    {fgValue == null || !fgStyles ? null : (
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
-                        <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><Zap size={12}/> Frică & Lăcomie</div>
-                        <div className={`text-2xl font-black font-[var(--font-space)] ${fgStyles?.color ?? 'text-gray-500'}`}>{fgValue ?? '—'}</div>
-                        <div className={`text-xs font-bold uppercase ${fgStyles?.color ?? 'text-gray-500'}`}>{fgStyles?.text ?? 'Indisponibil'}</div>
+                        <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><Zap size={12}/> Frică și lăcomie</div>
+                        <div className={`text-2xl font-black font-[var(--font-space)] ${fgStyles.color}`}>{fgValue}</div>
+                        <div className={`text-xs font-bold uppercase ${fgStyles.color}`}>{fearGreedData?.label}</div>
                     </div>
+                    )}
                 </div>
 
                 {/* BANNER PEAK SIGNALS */}

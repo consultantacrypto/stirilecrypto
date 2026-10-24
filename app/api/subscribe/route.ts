@@ -3,8 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const WAITLIST_SUCCESS = 'Înscrierea pe lista de așteptare a fost înregistrată.';
-const WAITLIST_DUPLICATE = 'Această adresă este deja pe lista de așteptare.';
+const SIGNUP_SUCCESS = 'Ești înscris la Știrile Crypto de dimineață.';
+const SIGNUP_DUPLICATE = 'Această adresă primește deja emailul de dimineață.';
 
 function normalizeEmail(value: unknown): string | null {
   if (typeof value !== 'string') return null;
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       if (error.code === '23505') {
         return NextResponse.json({
           success: true,
-          message: WAITLIST_DUPLICATE,
+          message: SIGNUP_DUPLICATE,
           alreadySubscribed: true,
         });
       }
@@ -57,12 +57,12 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: WAITLIST_SUCCESS,
+      message: SIGNUP_SUCCESS,
     });
   } catch (err) {
     console.error('[subscribe]', err);
     return NextResponse.json(
-      { error: 'Serviciul de listă de așteptare nu este disponibil momentan.' },
+      { error: 'Înscrierea nu este disponibilă momentan.' },
       { status: 503 },
     );
   }

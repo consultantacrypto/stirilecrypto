@@ -4,6 +4,7 @@ import { Menu, Shield, X } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { SOCIAL_LINKS } from '@/lib/social';
 
 /** Main site navigation — desktop pill + mobile drawer share this list */
 const CENTER_LINKS = [
@@ -106,6 +107,17 @@ export default function Navbar() {
           <Shield size={14} aria-hidden />
           Verificare portofel crypto
         </Link>
+        {SOCIAL_LINKS.map((link) => (
+          <a
+            key={link.href}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white"
+          >
+            {link.shortLabel}
+          </a>
+        ))}
       </div>
 
       {mobileMenuOpen ? (

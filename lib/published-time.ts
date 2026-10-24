@@ -1,3 +1,5 @@
+import { BUCHAREST_TIME_ZONE } from './site';
+
 function isoIncludesClockTime(iso: string): boolean {
   const match = iso.match(/T(\d{2}):(\d{2})(?::(\d{2}))?/);
   if (!match) return false;
@@ -28,11 +30,13 @@ export function formatPublishedDisplay(
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
+        timeZone: BUCHAREST_TIME_ZONE,
       })
     : parsed.toLocaleDateString('ro-RO', {
         day: 'numeric',
         month: 'short',
         year: 'numeric',
+        timeZone: BUCHAREST_TIME_ZONE,
       });
 
   return { dateTime, display };

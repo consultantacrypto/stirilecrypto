@@ -6,17 +6,14 @@ import ViewTracker from '@/components/ViewTracker';
 import AuthorByline from '@/components/author/AuthorByline';
 import AuthorBox from '@/components/author/AuthorBox';
 import { authorDisplayName, danielAuthorJsonLd } from '@/lib/authors';
+import MorningNewsletter from '@/components/MorningNewsletter';
 import ArticleServiceCta from '@/components/services/ArticleServiceCta';
 import { mentionedAsset } from '@/lib/products/placement';
 import { splitArticleContent } from '@/lib/split-article-content';
 import { removeDuplicateLeadParagraph } from '@/lib/dedupe-lead';
 import { stripBrandSuffix } from '@/lib/seo-title';
 import { formatPublishedDisplay } from '@/lib/published-time';
-import {
-  getMarketPulseForPage,
-  getMarketPulseSlugs,
-  type ArticlePageData,
-} from '@/lib/articles-db';
+import { getMarketPulseForPage, type ArticlePageData } from '@/lib/articles-db';
 import { normalizeImageUrl } from '@/lib/image-url';
 import { buildFinancialArticleJsonLd, buildBreadcrumbJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
 import { Activity, ArrowLeft, Calendar, Clock, Eye, User } from 'lucide-react';
@@ -24,11 +21,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
-export const revalidate = 60;
-
-export async function generateStaticParams() {
-  return getMarketPulseSlugs();
-}
+// A new pulse is published after the last deploy. Static params cached the
+// first miss as a 404, so this page is rendered from the database on each request.
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -159,9 +155,11 @@ function MarketPulsePageContent({
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
                 <Clock size={12} /> {article.readTime} citire
               </span>
-              <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
-                <Eye size={12} /> {article.views || 0} vizualizări
-              </span>
+              {article.views > 0 ? (
+                <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
+                  <Eye size={12} /> {article.views} vizualizări
+                </span>
+              ) : null}
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)] normal-case">
                 <User size={12} />
                 <AuthorByline authorKey={article.authorKey} />
@@ -171,7 +169,7 @@ function MarketPulsePageContent({
             <div className="flex items-center gap-2 mb-4 justify-center md:justify-start text-amber-400/80">
               <Activity size={16} aria-hidden />
               <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
-                Daily Technical Analysis
+                Analiză tehnică zilnică
               </span>
             </div>
 
@@ -212,6 +210,8 @@ function MarketPulsePageContent({
           ) : null}
 
           {article.authorKey === 'daniel-mihai' ? <AuthorBox /> : null}
+
+          <MorningNewsletter location="market_pulse" />
 
           <ArticleServiceCta asset={mentionedAsset(article.title, article.excerpt, article.content)} />
 

@@ -35,8 +35,8 @@ export default function ContactPage() {
                 <Mail className="text-blue-500" /> Email
               </h3>
               <p className="text-gray-400 mb-2">Pentru suport, întrebări și parteneriate:</p>
-              <a href="mailto:consultantacrypto.ro@gmail.com" className="text-blue-400 hover:text-blue-300 transition-colors font-medium break-all">
-                consultantacrypto.ro@gmail.com
+              <a href="mailto:contact@stirilecrypto.ro" className="text-blue-400 hover:text-blue-300 transition-colors font-medium break-all">
+                contact@stirilecrypto.ro
               </a>
             </div>
 
@@ -45,8 +45,8 @@ export default function ContactPage() {
                 <MessageSquare className="text-green-500" /> Consultanță
               </h3>
               <p className="text-gray-400 mb-2">Programează o sesiune de strategie:</p>
-              <a href="mailto:consultantacrypto.ro@gmail.com" className="text-green-400 hover:text-green-300 transition-colors font-medium break-all">
-                consultantacrypto.ro@gmail.com
+              <a href="mailto:contact@stirilecrypto.ro" className="text-green-400 hover:text-green-300 transition-colors font-medium break-all">
+                contact@stirilecrypto.ro
               </a>
               <a
                 href="https://www.mihaidaniel.ro/"
@@ -69,7 +69,7 @@ export default function ContactPage() {
             </div>
 
             <a
-              href="mailto:consultantacrypto.ro@gmail.com"
+              href="mailto:contact@stirilecrypto.ro"
               className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700"
             >
               Scrie-ne pe email

@@ -6,9 +6,9 @@ import { getPublishedInterviews } from '@/lib/interviews-db';
 import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Interviuri & Analize Premium',
+  title: 'Interviuri',
   description:
-    'Interviuri exclusive, analize de piață și discuții fără filtru cu fondatori și KOLs din industria crypto și tech.',
+    'Interviuri gratuite cu fondatori și oameni din industria crypto și tech.',
   alternates: {
     canonical: `${SITE_URL}/interviuri`,
   },

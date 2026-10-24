@@ -48,12 +48,12 @@ export default async function CryptoScreener() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle className="font-[var(--font-space)] text-xl tracking-tight">
-              Crypto Screener
+              Clasament crypto
             </CardTitle>
             <CardDescription>
               {source === 'unavailable'
                 ? 'Variațiile pe 24h nu pot fi afișate momentan.'
-                : `Top ${coins.length} assets by market cap — 24h change.`}
+                : `Primele ${coins.length} monede după capitalizare. Variația din ultimele 24 de ore.`}
             </CardDescription>
             {fetchedLabel ? (
               <p className="mt-2 text-xs text-slate-500">
@@ -75,18 +75,18 @@ export default async function CryptoScreener() {
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent border-white/5">
-                <TableHead className="sticky top-0 z-10 bg-[#0f172a] pl-6">Asset</TableHead>
+                <TableHead className="sticky top-0 z-10 bg-[#0f172a] pl-6">Monedă</TableHead>
                 <TableHead className="sticky top-0 z-10 bg-[#0f172a] text-right">
-                  Price
+                  Preț
                 </TableHead>
                 <TableHead className="sticky top-0 z-10 bg-[#0f172a] text-right">
-                  24h Change
+                  Variație 24h
                 </TableHead>
                 <TableHead className="sticky top-0 z-10 bg-[#0f172a] text-right hidden md:table-cell">
-                  24h Volume
+                  Volum 24h
                 </TableHead>
                 <TableHead className="sticky top-0 z-10 bg-[#0f172a] text-right pr-6 hidden md:table-cell">
-                  Market Cap
+                  Capitalizare
                 </TableHead>
               </TableRow>
             </TableHeader>

@@ -17,7 +17,11 @@ const EMPTY_RESULT: EtfSnapshotsByAsset = {
 function formatChartLabel(isoDate: string): string {
   const parsed = new Date(`${isoDate}T12:00:00`);
   if (Number.isNaN(parsed.getTime())) return isoDate;
-  return parsed.toLocaleDateString('ro-RO', { day: 'numeric', month: 'short' });
+  return parsed.toLocaleDateString('ro-RO', {
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'Europe/Bucharest',
+  });
 }
 
 function rowToChartPoint(row: {
@@ -97,4 +101,24 @@ export async function getEtfSnapshotsLast5Days(
       tags: ['etf-snapshots'],
     },
   )();
+}
+
+/** Newest stored flow date. Not cached, so a stale table is hidden immediately. */
+export async function getLatestEtfSnapshotDate(): Promise<string | null> {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from('etf_snapshots')
+    .select('snapshot_date')
+    .order('snapshot_date', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error || !data?.snapshot_date) {
+    if (error) console.error('[getLatestEtfSnapshotDate]', error.message);
+    return null;
+  }
+
+  return String(data.snapshot_date);
 }

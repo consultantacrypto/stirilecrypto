@@ -9,7 +9,9 @@ import {
   Layers, 
   Landmark, 
   GraduationCap, 
-  Zap 
+  Zap,
+  Scale,
+  Newspaper,
 } from 'lucide-react';
 
 export default function CategoryFilter() {
@@ -23,6 +25,8 @@ export default function CategoryFilter() {
     { id: 'macro', label: 'Macro & Fed', icon: Landmark, color: 'text-green-500' },
     { id: 'alts', label: 'Altcoins', icon: Layers, color: 'text-blue-500' },
     { id: 'edu', label: 'Educație', icon: GraduationCap, color: 'text-pink-500' },
+    { id: 'reglementari', label: 'Reglementări', icon: Scale, color: 'text-amber-400' },
+    { id: 'generale', label: 'Știri generale', icon: Newspaper, color: 'text-slate-300' },
   ];
 
   return (
