@@ -4684,7 +4684,7 @@ export const articles = [
     id: 'global-strategic-report-2025-2026-capital-architects',
     slug: 'raport-strategic-global-arhitectii-capitalului-2026',
     title: 'Raport Strategic Global: Arhitecții Capitalului (2015-2025) și Orizontul Investițional 2026',
-    summary: 'Investigație de profunzime asupra Top 20 Firme de Investiții Globale. Analiza completă a strategiilor BlackRock, Citadel, a16z și MicroStrategy. De ce "Marea De-dolarizare" și "Superciclul AI" sunt temele dominante pentru 2026.',
+    summary: 'Investigație de profunzime asupra Top 20 Firme de Investiții Globale. Analiza completă a strategiilor BlackRock, Citadel, a16z și Strategy (fostă MicroStrategy). De ce "Marea De-dolarizare" și "Superciclul AI" sunt temele dominante pentru 2026.',
     category: 'INVESTIGAȚIE & MARKET INTEL',
     image: '/analizatopinvestitori.jpg',
     date: '03 Jan 2026',
@@ -4722,7 +4722,7 @@ export const articles = [
         <p class="text-sm text-blue-300 font-bold mb-4 uppercase tracking-widest">Arhitectul Sistemului Financiar Modern</p>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-xs text-gray-400 border-b border-gray-700 pb-4">
             <div><strong>Tip:</strong> Asset Manager Global</div>
-            <div><strong>AUM (2025):</strong> $11.55 Trilioane</div>
+            <div><strong>AUM (30 sep. 2026):</strong> $15,49 trilioane</div>
             <div><strong>Sediul:</strong> New York, SUA</div>
             <div><strong>CEO:</strong> Larry Fink</div>
         </div>
@@ -4747,13 +4747,13 @@ export const articles = [
         <p class="text-sm text-gray-400 font-bold mb-4 uppercase tracking-widest">Fortăreața Conservatorismului Pasiv</p>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-xs text-gray-400 border-b border-gray-700 pb-4">
             <div><strong>Tip:</strong> Mutual Structure</div>
-            <div><strong>AUM (2025):</strong> $10.10 Trilioane</div>
+            <div><strong>AUM (31 iul. 2026):</strong> $13,3 trilioane</div>
             <div><strong>Sediul:</strong> Pennsylvania, SUA</div>
-            <div><strong>CEO:</strong> Mortimer J. Buckley</div>
+            <div><strong>CEO:</strong> Salim Ramji</div>
         </div>
-        <p class="text-gray-300 mb-4"><strong>Analiză Strategică:</strong> Vanguard a rămas "Imperiul Costurilor Minime". În timp ce concurenții au diversificat, Vanguard a "săpat șanțul" mai adânc, reducând comisioanele și concentrându-se obsesiv pe investitorul de retail pe termen lung. Structura sa unică îi permite să opereze la costuri imposibile pentru rivali. Deceniul a fost marcat de o rezistență stoică în fața tendințelor "la modă". Vanguard a refuzat explicit să lanseze ETF-uri tematice speculative sau produse crypto, protejându-și clienții de volatilitate.</p>
-        <p class="text-gray-300 mb-4"><strong>Semnătura Strategică:</strong> Marele Refuz Crypto. Într-un moment de euforie generală în 2024-2025, când toate marile firme se grăbeau să listeze ETF-uri Bitcoin, Vanguard a blocat accesul clienților săi la aceste produse. Această decizie controversată a definit brandul Vanguard: un gardian al valorii intrinseci și al prudenței.</p>
-        <p class="text-gray-300 text-sm mb-4"><strong class="text-red-400">Poziția față de Crypto:</strong> Ostilitate Principială. Consideră criptomonedele o clasă de active speculativă, fără fluxuri de numerar.</p>
+        <p class="text-gray-300 mb-4"><strong>Analiză Strategică:</strong> Vanguard a rămas "Imperiul Costurilor Minime". În timp ce concurenții au diversificat, Vanguard a "săpat șanțul" mai adânc, reducând comisioanele și concentrându-se obsesiv pe investitorul de retail pe termen lung. Structura sa unică îi permite să opereze la costuri imposibile pentru rivali. În 2024-2025 a refuzat să lanseze produse crypto proprii. Din decembrie 2025, clienții pot tranzacționa ETF-uri crypto ale terților. Vanguard tot nu lansează ETF-uri crypto proprii.</p>
+        <p class="text-gray-300 mb-4"><strong>Semnătura Strategică:</strong> Acces, nu produs propriu. În 2024-2025 Vanguard a blocat accesul clienților la ETF-urile Bitcoin. Din decembrie 2025 permite tranzacționarea celor mai multe ETF-uri și fonduri crypto ale terților, fără să lanseze un produs Vanguard.</p>
+        <p class="text-gray-300 text-sm mb-4"><strong class="text-red-400">Poziția față de Crypto:</strong> Fără produs propriu. Din decembrie 2025, ETF-urile crypto ale terților pot fi tranzacționate în contul de brokeraj Vanguard.</p>
         <div class="flex items-center gap-2 text-blue-400 text-sm font-bold border-t border-gray-700 pt-3">
             <span>🎯 Pariul pentru 2026:</span> Revenirea la Fundamente (Income Investing)
         </div>
@@ -4764,7 +4764,7 @@ export const articles = [
         <p class="text-sm text-green-400 font-bold mb-4 uppercase tracking-widest">Supermarketul Financiar Agil</p>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-xs text-gray-400 border-b border-gray-700 pb-4">
             <div><strong>Tip:</strong> Asset Manager Privat</div>
-            <div><strong>AUM (2025):</strong> $5.52 Trilioane</div>
+            <div><strong>AUM:</strong> peste $5,52 trilioane (date din 2025)</div>
             <div><strong>Sediul:</strong> Boston, SUA</div>
             <div><strong>CEO:</strong> Abigail Johnson</div>
         </div>
@@ -4816,7 +4816,7 @@ export const articles = [
         <p class="text-sm text-purple-300 font-bold mb-4 uppercase tracking-widest">Împăratul Piețelor Private</p>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-xs text-gray-400 border-b border-gray-700 pb-4">
             <div><strong>Tip:</strong> Private Equity</div>
-            <div><strong>AUM (2025):</strong> $1.21 Trilioane</div>
+            <div><strong>AUM (30 sep. 2026):</strong> $1,37 trilioane</div>
             <div><strong>Sediul:</strong> New York, SUA</div>
             <div><strong>CEO:</strong> Stephen Schwarzman</div>
         </div>
@@ -4886,7 +4886,7 @@ export const articles = [
         <h3 class="text-2xl font-bold text-white mb-2">13. Andreessen Horowitz (a16z)</h3>
         <p class="text-sm text-blue-400 font-bold mb-4 uppercase tracking-widest">Software-ul și Dinamismul American</p>
         <div class="grid grid-cols-2 gap-4 mb-4 text-xs text-gray-400">
-            <div><strong>AUM:</strong> ~$52 Mld</div>
+            <div><strong>AUM:</strong> peste $52 mld. (date din 2025)</div>
             <div><strong>Sediul:</strong> Silicon Valley</div>
         </div>
         <p class="text-gray-300 mb-4"><strong>Analiză Strategică:</strong> a16z a reinventat modelul VC, construind o firmă care arată mai mult ca o agenție de talente de la Hollywood + o firmă de lobby. Au creat fonduri dedicate masive pentru Crypto, Bio și Jocuri. În ultimii ani, au lansat conceptul de "American Dynamism", investind în companii care rezolvă probleme naționale critice (apărare, producție, spațiu).</p>
@@ -4953,14 +4953,14 @@ export const articles = [
       <h2 class="text-3xl font-black text-white mb-6">Partea IV: Disruptorii Corporativi</h2>
 
       <div class="bg-gradient-to-r from-orange-900/40 to-black p-6 rounded-2xl border border-orange-500/40 mb-8">
-        <h3 class="text-2xl font-bold text-white mb-2">19. MicroStrategy</h3>
+        <h3 class="text-2xl font-bold text-white mb-2">19. Strategy (fostă MicroStrategy)</h3>
         <p class="text-sm text-orange-400 font-bold mb-4 uppercase tracking-widest">Banca Centrală a Bitcoin-ului</p>
         <div class="grid grid-cols-2 gap-4 mb-4 text-xs text-white">
-            <div><strong>Dețineri BTC:</strong> ~671,268 BTC</div>
-            <div><strong>Valoare BTC:</strong> ~$74 Miliarde</div>
+            <div><strong>Dețineri BTC (18 oct. 2026):</strong> 848.517 BTC</div>
+            <div><strong>Cost de achiziție:</strong> $64,02 miliarde</div>
         </div>
-        <p class="text-gray-300 mb-4"><strong>Analiză Strategică:</strong> Michael Saylor a realizat probabil cea mai spectaculoasă transformare corporativă din istorie. Confruntat cu o afacere software stagnantă și o trezorerie care pierdea valoare reală, a pariat totul pe Bitcoin în 2020. A creat un "flywheel": emite datorie/acțiuni -> cumpără BTC -> prețul acțiunii crește -> emite mai mult. Strategia a funcționat, MSTR depășind performanța S&P 500.</p>
-        <p class="text-gray-300 mb-4"><strong>Semnătura Strategică:</strong> <span class="text-white font-bold">Atacul Speculativ asupra Fiat.</span> MicroStrategy se împrumută în dolari (monedă care se devalorizează) pentru a cumpăra Bitcoin (activ care se apreciază), arbitrând diferența.</p>
+        <p class="text-gray-300 mb-4"><strong>Analiză Strategică:</strong> Michael Saylor a realizat probabil cea mai spectaculoasă transformare corporativă din istorie. Confruntat cu o afacere software stagnantă și o trezorerie care pierdea valoare reală, a pariat totul pe Bitcoin în 2020. A creat un "flywheel": emite datorie/acțiuni -> cumpără BTC -> prețul acțiunii crește -> emite mai mult. La 5 octombrie 2026, Phong Le este președinte și CEO, iar Saylor este președinte executiv. Compania se numește Strategy.</p>
+        <p class="text-gray-300 mb-4"><strong>Semnătura Strategică:</strong> <span class="text-white font-bold">Atacul Speculativ asupra Fiat.</span> Strategy se împrumută în dolari pentru a cumpăra Bitcoin. Cifra de 848.517 BTC este deținerea raportată la 18 octombrie 2026, nu valoarea de piață. Costul de achiziție raportat atunci este 64,02 miliarde de dolari.</p>
         <div class="flex items-center gap-2 text-white text-sm font-bold border-t border-orange-500/30 pt-3">
             <span>🎯 Pariul pentru 2026:</span> Standardul Bitcoin Global
         </div>
