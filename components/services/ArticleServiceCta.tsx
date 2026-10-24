@@ -22,6 +22,12 @@ export default function ArticleServiceCta({ asset }: { asset: string | null }) {
       >
         {asset ? `Comandă analiza pentru ${asset}` : 'Comandă analiza'}
       </Link>
+      <Link
+        href={withSource('/verificare-portofel', 'article')}
+        className="mt-4 block border-t border-white/10 pt-4 text-sm leading-relaxed text-slate-300 hover:text-white"
+      >
+        Ai de trimis sau ai primit crypto de la cineva? Verifică portofelul înainte.
+      </Link>
     </aside>
   );
 }

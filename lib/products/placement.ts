@@ -79,6 +79,13 @@ export function addressCheckUrl(): string | null {
   }
 }
 
+/** True when the address checker is open. Either flag is enough; neither is set in this repo. */
+export function walletCheckIsLive(): boolean {
+  const flag = process.env.WALLET_CHECK_LIVE?.trim().toLowerCase();
+  if (flag === '1' || flag === 'true' || flag === 'yes') return true;
+  return addressCheckUrl() !== null;
+}
+
 export function withSource(href: string, source: string): string {
   const safe = sanitizeSource(source) ?? 'direct';
   const absolute = /^https?:\/\//i.test(href);

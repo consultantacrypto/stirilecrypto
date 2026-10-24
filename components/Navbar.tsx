@@ -8,18 +8,20 @@ import { MAJOR_PRICE_RON } from '@/lib/products/tiers';
 
 type NavItem = { href: string; label: string };
 
+const WALLET_LINK: NavItem = { href: '/verificare-portofel?src=nav', label: 'Verificare portofel' };
+
 const MAIN_LINKS: NavItem[] = [
   { href: '/stiri', label: 'Știri' },
   { href: '/market', label: 'Piața azi' },
   { href: '/market-pulse', label: 'Pulsul Bitcoin' },
-  { href: '/raport-strategic', label: 'Ce cumpără balenele' },
+  WALLET_LINK,
   { href: '/academie', label: 'Educație' },
 ];
 
 const MORE_LINKS: NavItem[] = [
+  { href: '/raport-strategic', label: 'Ce cumpără balenele' },
   { href: '/incepe-aici', label: 'Începe aici' },
   { href: '/interviuri', label: 'Față în față cu Dani' },
-  { href: '/verificare-portofel?src=nav', label: 'Verificare portofel crypto' },
   { href: '/lichidari', label: 'Harta pieței' },
   { href: '/dashboard', label: 'Tablou' },
   { href: '/glosar', label: 'Glosar' },
@@ -168,8 +170,17 @@ export default function Navbar() {
           >
             Analiză tehnică – de la {MAJOR_PRICE_RON} lei
           </Link>
+          <Link
+            href={WALLET_LINK.href}
+            onClick={() => setMobileOpen(false)}
+            className={`mb-2 rounded-xl px-3 py-3 text-base hover:bg-white/10 ${
+              isPathActive(pathname, WALLET_LINK.href) ? 'bg-white/10 font-semibold text-white' : 'text-slate-200'
+            }`}
+          >
+            {WALLET_LINK.label}
+          </Link>
           <div className="flex flex-col gap-1">
-            {[...MAIN_LINKS, ...MORE_LINKS].map((item) => (
+            {[...MAIN_LINKS.filter((item) => item.href !== WALLET_LINK.href), ...MORE_LINKS].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
