@@ -26,7 +26,7 @@ const dossiers = [
       {
         name: "BlackRock",
         role: "Arhitectul Sistemului",
-        aum: "$11.55 Trilioane",
+        aum: "$15,49 trilioane (30 sep. 2026)",
         ceo: "Larry Fink",
         analysis: "A definit deceniul prin sistemul Aladdin și legitimarea Bitcoin. Pivotul de la ESG la 'Infrastructură de Tranziție' și Crypto a schimbat regulile jocului.",
         bet2026: "Tokenizarea Activelor (RWA) & Infrastructura AI.",
@@ -35,16 +35,16 @@ const dossiers = [
       {
         name: "Vanguard",
         role: "Fortăreața Conservatoare",
-        aum: "$10.10 Trilioane",
-        ceo: "Mortimer J. Buckley",
-        analysis: "A refuzat explicit ETF-urile Bitcoin, pariind pe reputație și stabilitate. Rămâne regele costurilor mici și al investițiilor pasive pe termen lung.",
+        aum: "$13,3 trilioane (31 iul. 2026)",
+        ceo: "Salim Ramji",
+        analysis: "Nu lansează ETF-uri crypto proprii. Din decembrie 2025, clienții pot tranzacționa ETF-uri crypto ale terților. Rămâne regele costurilor mici și al investițiilor pasive pe termen lung.",
         bet2026: "Income Investing (Obligațiuni & Dividende).",
         icon: <Shield className="w-8 h-8 text-gray-400" />
       },
       {
         name: "Fidelity",
         role: "Supermarketul Agil",
-        aum: "$5.52 Trilioane",
+        aum: "peste $5,52 trilioane (date din 2025)",
         ceo: "Abigail Johnson",
         analysis: "Singurul gigant tradițional care a minat Bitcoin din 2014. A integrat Crypto în planurile de pensii 401(k), normalizând activele digitale.",
         bet2026: "DeFi Instituțional & Servicii de Custodie.",
@@ -60,7 +60,7 @@ const dossiers = [
       {
         name: "Citadel",
         role: "Stăpânii Volatilității",
-        aum: "$65 Miliarde (Net)",
+        aum: "peste $65 mld. net (date din 2025)",
         ceo: "Ken Griffin",
         analysis: "Domină prin Market Making și strategii de arbitraj ('Basis Trade'). Au trecut de la scepticism la deschiderea unui desk crypto dedicat.",
         bet2026: "The Debasement Trade (Pariu pe inflație).",
@@ -69,7 +69,7 @@ const dossiers = [
       {
         name: "Blackstone",
         role: "Împăratul Piețelor Private",
-        aum: "$1.21 Trilioane",
+        aum: "$1,37 trilioane (30 sep. 2026)",
         ceo: "Stephen Schwarzman",
         analysis: "Cel mai mare proprietar de centre de date din lume. Au înțeles că AI-ul are nevoie de imobiliare și energie masivă.",
         bet2026: "Infrastructură Energetică & Credit Privat.",
@@ -78,7 +78,7 @@ const dossiers = [
       {
         name: "Millennium",
         role: "Uzina de Alpha",
-        aum: "$67.9 Miliarde",
+        aum: "peste $67,9 mld. (date din 2025)",
         ceo: "Israel Englander",
         analysis: "Unul dintre cei mai mari cumpărători de ETF-uri Bitcoin pentru arbitraj. Nu au atașament emoțional, doar matematic.",
         bet2026: "Dispersia Randamentelor (Volatility Arbitrage).",
@@ -94,18 +94,18 @@ const dossiers = [
       {
         name: "a16z (Andreessen Horowitz)",
         role: "Software & Politică",
-        aum: "~$52 Miliarde",
+        aum: "peste $52 mld. (date din 2025)",
         ceo: "Marc Andreessen",
         analysis: "Au devenit vocea industriei crypto la Washington (Lobby). Investesc masiv în 'American Dynamism' (Apărare, Spațiu).",
         bet2026: "Agentic AI & Defense Tech.",
         icon: <Rocket className="w-8 h-8 text-blue-500" />
       },
       {
-        name: "MicroStrategy",
+        name: "Strategy",
         role: "Banca Bitcoin",
-        aum: "671k+ BTC",
-        ceo: "Michael Saylor",
-        analysis: "Au transformat bilanțul companiei într-o armă speculativă împotriva dolarului. Se împrumută fiat pentru a cumpăra 'hard money'.",
+        aum: "848.517 BTC (18 oct. 2026)",
+        ceo: "Phong Le",
+        analysis: "Fostă MicroStrategy. Phong Le este CEO, iar Michael Saylor este președinte executiv. Au transformat bilanțul companiei într-o armă speculativă împotriva dolarului. Se împrumută fiat pentru a cumpăra 'hard money'.",
         bet2026: "Standardul Bitcoin Global.",
         icon: <Bitcoin className="w-8 h-8 text-orange-500" />
       }
@@ -130,7 +130,7 @@ export default function RaportStrategicPage() {
             </h1>
             <p className="text-xl text-gray-400 max-w-3xl leading-relaxed">
                 Analiza detaliată a celor care controlează fluxurile globale de capital. 
-                De la "Leviatanii" de 10 Trilioane $ la "Vizionarii" care construiesc viitorul banilor.
+                De la leviatanii de peste 13 trilioane $ la vizionarii care construiesc viitorul banilor.
             </p>
         </div>
 
