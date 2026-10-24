@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import Navbar from '@/components/Navbar';
+import PiataAziTabs from '@/components/PiataAziTabs';
 import Footer from '@/components/Footer';
 import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
 import MarketPulseTerminal from '@/components/dashboard/MarketPulseTerminal';
@@ -52,7 +53,7 @@ export default async function DashboardPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Dashboard Instituțional — Știrile Crypto',
+    name: 'Tablou de bord — Știrile Crypto',
     url: `${SITE_URL}/dashboard`,
     description: metadata.description,
     isPartOf: {
@@ -72,6 +73,7 @@ export default async function DashboardPage() {
         <Navbar />
 
         <div className="container mx-auto flex-grow px-4 py-10 md:py-12 max-w-7xl">
+          <PiataAziTabs />
           <DashboardPageHeader />
           {showPulse && pulseSnapshot ? (
             <MarketPulseTerminal

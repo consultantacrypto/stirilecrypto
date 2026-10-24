@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            'Plata nu este disponibilă pentru această comandă. Poți trimite cererea pe lista de așteptare, fără plată.',
+            'Plata nu a putut fi deschisă. Încearcă din nou sau scrie la contact@stirilecrypto.ro.',
         },
         { status: 409 },
       );

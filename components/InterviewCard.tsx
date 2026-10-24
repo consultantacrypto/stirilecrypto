@@ -34,7 +34,10 @@ export default function InterviewCard({ item }: InterviewCardProps) {
       />
 
       <div className="flex flex-1 flex-col p-5 md:p-6">
-        <h3 className="text-base md:text-lg font-bold text-white leading-snug line-clamp-2 font-[var(--font-space)] group-hover:text-violet-300 transition-colors duration-300">
+        {item.guest_name ? (
+          <p className="text-xs font-semibold uppercase tracking-wide text-violet-300">{item.guest_name}</p>
+        ) : null}
+        <h3 className="mt-1 text-base md:text-lg font-bold text-white leading-snug line-clamp-2 font-[var(--font-space)] group-hover:text-violet-300 transition-colors duration-300">
           {item.title}
         </h3>
         <p className="mt-2 text-sm text-gray-400 leading-relaxed line-clamp-3 font-[var(--font-inter)]">

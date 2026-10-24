@@ -71,8 +71,13 @@ export default function AcademyPageClient() {
           <h1 className="text-4xl md:text-6xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 font-[var(--font-space)]">
               Academia Crypto
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-6">
               Nu ghici. Învață. Ghiduri complete de la zero la expert, explicate pe înțelesul tuturor.
+          </p>
+          <p className="mb-10">
+            <Link href="/glosar" className="text-sm font-semibold text-blue-300 underline underline-offset-4">
+              Glosar: cuvintele din știri, pe scurt
+            </Link>
           </p>
 
           {/* === 🧠 BARA DE PROGRES (Gamification) === */}

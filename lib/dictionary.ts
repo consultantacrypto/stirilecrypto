@@ -697,7 +697,7 @@ export const dictionary: AcademyItem[] = [
   // === 10. RAPORT LEGISLATIV (ANALIZĂ FUNDAMENTALĂ) ===
   {
     slug: "legislatie-fiscalitate-crypto-romania-2026-raport-complet",
-    term: "Raport: Legislația & Fiscalitatea Crypto (2026)",
+    term: "Taxe crypto 2026: cât plătești și cum faci D212",
     category: "ANALIZĂ FUNDAMENTALĂ", 
     image: "/cryptoromanialege.jpg",  
     definition: "Raportul de cercetare integral privind cadrul legal și fiscal din România în 2026. Analiza exhaustivă a Legii 239/2025, MiCA, OUG 10/2025 și a impozitării de 16%.",
@@ -892,7 +892,7 @@ export const dictionary: AcademyItem[] = [
           <li><strong>ANAF:</strong> Primește automat date despre portofoliile și tranzacțiile rezidenților români. Capacitatea de a încrucișa aceste date cu Declarația Unică este acum automatizată. Riscul nedeclarării este critic, deoarece ANAF poate impozita din oficiu veniturile nedeclarate, aplicând și penalități de nedeclarare.</li>
         </ul>
 
-        <h4 class="text-xl font-bold text-blue-400 mt-6">4.5. Pas cu pas: Declarația Unică (formularul 212)</h4>
+        <h4 id="d212" class="text-xl font-bold text-blue-400 mt-6">4.5. Pas cu pas: Declarația Unică (formularul 212)</h4>
         <p>Nimeni nu îți reține impozitul pe crypto în România, nici exchange-ul, nici banca. Îl calculezi tu, îl declari și îl plătești o singură dată pe an, prin Declarația Unică (D212), la capitolul I „Date privind veniturile realizate”, la veniturile din alte surse obținute din transferul de monedă virtuală. Contează câștigurile, indiferent dacă platforma e din România sau din străinătate.</p>
         <ul class="list-disc pl-6 space-y-2 mt-2">
           <li><strong>Cota:</strong> 16% pentru câștigurile realizate începând cu 1 ianuarie 2026 (până în 2025 a fost 10%). Modificarea vine din Legea nr. 239/2025.</li>

@@ -8,7 +8,7 @@ import type { Metadata } from 'next';
 import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Dosarul Strategic 2026',
+  title: 'Ce cumpără balenele',
   description:
     'Analiza detaliată a celor care controlează fluxurile globale de capital, de la asset manageri la vizionarii care construiesc viitorul banilor.',
   alternates: {
@@ -126,7 +126,7 @@ export default function RaportStrategicPage() {
                 <ArrowLeft size={16} /> Înapoi la datele de piață
             </Link>
             <h1 className="text-4xl md:text-6xl font-black text-white mb-4 font-[var(--font-space)]">
-                DOSARUL <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-600">STRATEGIC 2026</span>
+                Ce cumpără <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-600">balenele</span>
             </h1>
             <p className="text-xl text-gray-400 max-w-3xl leading-relaxed">
                 Analiza detaliată a celor care controlează fluxurile globale de capital. 

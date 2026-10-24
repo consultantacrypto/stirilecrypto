@@ -8,9 +8,9 @@ import { getMarketPulseArchive } from '@/lib/articles-db';
 import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Market Pulse | Arhivă Analize Tehnice Zilnice',
+  title: 'Pulsul Bitcoin | luni și joi, ora 19',
   description:
-    'Arhiva completă Market Pulse: analize tehnice zilnice ale pieței crypto, publicate cronologic de Știrile Crypto.',
+    'Arhiva Pulsul Bitcoin: analizele lui Mihai Daniel, luni și joi, ora 19.',
   alternates: {
     canonical: `${SITE_URL}/market-pulse`,
   },
@@ -32,20 +32,19 @@ export default async function MarketPulseArchivePage() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-400" />
             </span>
-            Market Pulse
+            Pulsul Bitcoin
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight font-[var(--font-space)]">
-            Arhivă Analize Tehnice
+            Pulsul Bitcoin
           </h1>
           <p className="mt-4 max-w-2xl text-base md:text-lg text-slate-400 leading-relaxed font-[var(--font-inter)]">
-            Cronologia completă a analizelor zilnice. Fiecare ediție Market Pulse decodează
-            volatilitatea și structura pieței — fără zgomot.
+            Luni și joi, ora 19. Aici stau edițiile publicate, de la cea mai nouă.
           </p>
         </header>
 
         {archive.length === 0 ? (
           <p className="pb-16 text-center text-slate-500 text-sm font-[var(--font-inter)]">
-            Nu există analize Market Pulse publicate momentan. Revino în curând.
+            Nu e publicat încă un puls. Revino luni sau joi, ora 19.
           </p>
         ) : (
           <ul className="flex flex-col gap-4 list-none p-0 m-0 pb-16">

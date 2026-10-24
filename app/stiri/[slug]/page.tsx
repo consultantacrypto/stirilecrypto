@@ -210,7 +210,7 @@ function ArticlePageContent({
 
           <AffiliatePartnerBox />
 
-          <MorningNewsletter location="article" />
+          <MorningNewsletter location="article" variant="compact" id="newsletter-article" />
 
           {conclusion ? (
             <aside

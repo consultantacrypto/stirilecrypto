@@ -22,7 +22,7 @@ export default function MarketNarrative() {
         {/* ✅ REPARAȚIA: Link Activ către Dosarul Strategic */}
         <div className="hidden md:block ml-auto">
              <Link href="/raport-strategic" className="text-[10px] text-gray-500 flex items-center gap-1 cursor-pointer hover:text-white transition-colors group">
-                Vezi analiza în Dosarul Strategic <ArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
+                Ce cumpără balenele <ArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
              </Link>
         </div>
 

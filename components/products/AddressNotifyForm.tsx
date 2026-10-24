@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from 'react';
 
 const fieldClass =
-  'w-full min-h-12 rounded-lg border border-white/10 bg-black/40 px-3 text-sm text-white outline-none focus:border-sky-400/70';
+  'w-full min-h-12 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white outline-none focus:border-blue-500';
 
 export default function AddressNotifyForm({ source }: { source: string | null }) {
   const [consent, setConsent] = useState(false);

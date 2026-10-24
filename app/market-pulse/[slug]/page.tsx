@@ -7,6 +7,7 @@ import AuthorByline from '@/components/author/AuthorByline';
 import AuthorBox from '@/components/author/AuthorBox';
 import { authorDisplayName, danielAuthorJsonLd } from '@/lib/authors';
 import MorningNewsletter from '@/components/MorningNewsletter';
+import AffiliatePartnerBox from '@/components/AffiliatePartnerBox';
 import ArticleServiceCta from '@/components/services/ArticleServiceCta';
 import { mentionedAsset } from '@/lib/products/placement';
 import { splitArticleContent } from '@/lib/split-article-content';
@@ -34,18 +35,18 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = await getMarketPulseForPage(slug);
 
-  if (!article) return { title: 'Market Pulse Inexistent' };
+  if (!article) return { title: 'Puls inexistent' };
 
   const seoTitle = stripBrandSuffix(article.meta_title?.trim() || article.title);
   const seoDescription = article.meta_description?.trim() || article.excerpt;
   const canonicalUrl = `${SITE_URL}/market-pulse/${slug}`;
   const encodedTitle = encodeURIComponent(seoTitle);
-  const dynamicOgImage = `${SITE_URL}/api/og?title=${encodedTitle}&category=${encodeURIComponent('Market Pulse')}`;
+  const dynamicOgImage = `${SITE_URL}/api/og?title=${encodedTitle}&category=${encodeURIComponent('Pulsul Bitcoin')}`;
   const coverImage = toAbsoluteUrl(article.image_url);
   const ogImageUrl = coverImage ?? dynamicOgImage;
 
   return {
-    title: `${seoTitle} | Market Pulse`,
+    title: `${seoTitle} | Pulsul Bitcoin`,
     description: seoDescription,
     alternates: { canonical: canonicalUrl },
     openGraph: {
@@ -105,7 +106,7 @@ function MarketPulsePageContent({
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
-    { name: 'Market Pulse', path: '/market-pulse' },
+    { name: 'Pulsul Bitcoin', path: '/market-pulse' },
     { name: article.title, path: `/market-pulse/${slug}` },
   ]);
 
@@ -141,9 +142,9 @@ function MarketPulsePageContent({
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-400" />
                 </span>
-                Market Pulse
+                Pulsul Bitcoin
               </span>
-              <span className="text-amber-500/70">Analiză Tehnică Zilnică</span>
+              <span className="text-amber-500/70">luni și joi, ora 19</span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
                 <Calendar size={12} />
                 {published.dateTime ? (
@@ -169,7 +170,7 @@ function MarketPulsePageContent({
             <div className="flex items-center gap-2 mb-4 justify-center md:justify-start text-amber-400/80">
               <Activity size={16} aria-hidden />
               <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
-                Analiză tehnică zilnică
+                Pulsul Bitcoin, luni și joi, ora 19
               </span>
             </div>
 
@@ -211,9 +212,10 @@ function MarketPulsePageContent({
 
           {article.authorKey === 'daniel-mihai' ? <AuthorBox /> : null}
 
-          <MorningNewsletter location="market_pulse" />
+          <MorningNewsletter location="market_pulse" variant="compact" id="newsletter-pulse" />
 
           <ArticleServiceCta asset={mentionedAsset(article.title, article.excerpt, article.content)} />
+          <AffiliatePartnerBox />
 
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">

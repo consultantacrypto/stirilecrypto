@@ -1,0 +1,51 @@
+export type GlossaryEntry = {
+  slug: string;
+  term: string;
+  definition: string;
+};
+
+/** Plain-language glossary. No prices and no rates — those live in the fiscal guide. */
+export const GLOSSARY: GlossaryEntry[] = [
+  { slug: 'bitcoin', term: 'Bitcoin', definition: 'Prima criptomonedă. O rețea publică în care oamenii își trimit bani fără o bancă la mijloc.' },
+  { slug: 'ethereum', term: 'Ethereum', definition: 'O rețea pe care rulează aplicații și alte monede, nu doar transferuri simple.' },
+  { slug: 'blockchain', term: 'Blockchain', definition: 'Un registru public de tranzacții, copiat pe multe calculatoare, greu de modificat pe ascuns.' },
+  { slug: 'portofel', term: 'Portofel', definition: 'Programul sau dispozitivul cu care ții cheile monedelor tale. Portofelul nu „conține” monedele, ci dovedește că sunt ale tale.' },
+  { slug: 'fraza-de-recuperare', term: 'Frază de recuperare', definition: 'Cele 12 sau 24 de cuvinte cu care poți reface portofelul. Cine le are, are și banii. Nu le trimite nimănui.' },
+  { slug: 'cheie-privata', term: 'Cheie privată', definition: 'Secretul din care se controlează un portofel. Nu se arată și nu se pune într-un email.' },
+  { slug: 'exchange', term: 'Platformă de schimb', definition: 'Un site unde cumperi, vinzi sau ții crypto. Cât timp monedele sunt acolo, platforma deține cheile.' },
+  { slug: 'stablecoin', term: 'Monedă stabilă', definition: 'O criptomonedă legată de un leu, un dolar sau alt activ, ca să nu sară prețul ca la Bitcoin.' },
+  { slug: 'altcoin', term: 'Altcoin', definition: 'Orice criptomonedă care nu este Bitcoin.' },
+  { slug: 'capitalizare', term: 'Capitalizare', definition: 'Prețul unei monede înmulțit cu câte monede există. Arată cât de mare este proiectul, nu dacă e „ieftin”.' },
+  { slug: 'fdv', term: 'Valoare diluată', definition: 'Capitalizarea dacă ar intra în circulație toate monedele promise, nu doar cele de azi. Se mai numește FDV.' },
+  { slug: 'lichiditate', term: 'Lichiditate', definition: 'Cât de ușor vinzi o sumă fără să miști prețul. Puțină lichiditate înseamnă că ieșirea te costă.' },
+  { slug: 'slippage', term: 'Alunecare de preț', definition: 'Diferența dintre prețul pe care l-ai văzut și prețul la care s-a făcut schimbul.' },
+  { slug: 'volatilitate', term: 'Volatilitate', definition: 'Cât de tare se mișcă prețul. La crypto, mișcările mari într-o zi sunt obișnuite.' },
+  { slug: 'piata-crestere', term: 'Piață în creștere', definition: 'O perioadă în care prețurile urcă luni la rând și lumea cumpără cu entuziasm. Se mai numește bull market.' },
+  { slug: 'piata-scadere', term: 'Piață în scădere', definition: 'O perioadă lungă de prețuri în jos și de vânzări. Se mai numește bear market.' },
+  { slug: 'halving', term: 'Înjumătățire', definition: 'Momentul, cam la patru ani, în care Bitcoin nou emis se taie la jumătate. Se mai numește halving.' },
+  { slug: 'minare', term: 'Minare', definition: 'Calculatoarele care securizează rețeaua Bitcoin și primesc monede noi pentru asta.' },
+  { slug: 'staking', term: 'Staking', definition: 'Blochezi monede ca să ajuți rețeaua și, la unele proiecte, primești o recompensă. Nu e același lucru cu un depozit bancar.' },
+  { slug: 'defi', term: 'Finanțe descentralizate', definition: 'Schimburi și împrumuturi făcute de programe pe blockchain, fără o firmă care îți ține contul. Se mai numește DeFi.' },
+  { slug: 'nft', term: 'NFT', definition: 'Un obiect digital unic înregistrat pe blockchain, de exemplu o imagine sau un bilet. Nu toate NFT-urile au valoare.' },
+  { slug: 'taxa-retea', term: 'Taxă de rețea', definition: 'Suma mică sau mare pe care o plătești ca tranzacția să fie scrisă în rețea. Se mai numește gas.' },
+  { slug: 'mica', term: 'MiCA', definition: 'Regulamentul european pentru piețele de crypto. Spune cine are voie să ofere servicii și ce trebuie să îți explice.' },
+  { slug: 'd212', term: 'Declarația unică (D212)', definition: 'Formularul ANAF prin care declari și plătești, o dată pe an, impozitul pe câștigurile din crypto. Detaliile sunt în ghidul de taxe.' },
+  { slug: 'cass', term: 'CASS', definition: 'Contribuția de sănătate. La crypto se poate datora pe trepte, pe lângă impozit, dacă veniturile din afara salariului trec de praguri. Vezi ghidul de taxe.' },
+  { slug: 'castig-realizat', term: 'Câștig realizat', definition: 'Diferența pe plus dintre ce ai încasat la vânzare și ce te-a costat cumpărarea, după comisioane. Cât timp doar ții moneda, câștigul nu e realizat.' },
+  { slug: 'frica-si-lacomie', term: 'Frică și lăcomie', definition: 'Un scor public, de la 0 la 100, care rezumă cât de speriată sau de grăbită e piața. Nu e un sfat de cumpărare.' },
+  { slug: 'suport', term: 'Suport', definition: 'O zonă de preț unde, în trecut, cumpărătorii au oprit scăderea. Nu e o garanție că se oprește și data viitoare.' },
+  { slug: 'rezistenta', term: 'Rezistență', definition: 'O zonă de preț unde, în trecut, vânzătorii au oprit creșterea.' },
+  { slug: 'etf', term: 'ETF', definition: 'Un fond listat la bursă. Un ETF de Bitcoin îți dă expunere la preț fără să ții tu cheile.' },
+  { slug: 'balena', term: 'Balenă', definition: 'Un portofel sau un fond cu o sumă atât de mare încât o singură mișcare poate influența piața.' },
+  { slug: 'lichidare', term: 'Lichidare', definition: 'Închiderea forțată a unei poziții cu bani împrumutați, când prețul merge împotriva ta și garanția nu mai ajunge.' },
+  { slug: 'levier', term: 'Levier', definition: 'Tranzacție cu bani împrumutați, ca să câștigi sau să pierzi mai mult decât suma ta. Pierderea poate depăși garanția.' },
+  { slug: 'spot', term: 'Piață spot', definition: 'Cumperi moneda pe loc, cu banii tăi, fără împrumut.' },
+  { slug: 'futures', term: 'Contract la termen', definition: 'Un pariu pe prețul viitor, adesea cu levier. Nu deții moneda.' },
+  { slug: 'airdrop', term: 'Airdrop', definition: 'Monede primite gratuit de un proiect. Pot avea reguli fiscale și pot fi o momeală.' },
+  { slug: 'portofel-rece', term: 'Portofel rece', definition: 'Cheile stau offline, de exemplu pe un dispozitiv care nu e mereu pe internet.' },
+  { slug: 'portofel-cald', term: 'Portofel cald', definition: 'Cheile stau într-o aplicație conectată la internet. E comod și mai expus.' },
+  { slug: 'kyc', term: 'Verificarea identității', definition: 'Platforma îți cere actul de identitate înainte să depui sau să retragi. Se mai numește KYC.' },
+  { slug: 'on-chain', term: 'On-chain', definition: 'Date citite direct din rețea: cine a mutat monede, cât stă nemișcat, cât s-a mutat într-o zi.' },
+  { slug: 'satoshi', term: 'Satoshi', definition: 'Cea mai mică bucată de Bitcoin. Un Bitcoin are 100 de milioane de satoshi.' },
+  { slug: 'dominanta', term: 'Dominanța Bitcoin', definition: 'Cât la sută din capitalizarea tuturor criptomonedelor este Bitcoin.' },
+];

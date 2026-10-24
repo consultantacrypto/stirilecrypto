@@ -59,7 +59,6 @@ export default async function AnalizaTehnicaPage({
             Simbolul este obligatoriu. Câmpurile de risc sunt opționale și ajută la redactare.
           </p>
           <OrderForm
-            chargeable={catalog.chargeable}
             deliveryLabel={catalog.ta.deliveryLabel}
             initialAsset={initialAsset}
             source={source}

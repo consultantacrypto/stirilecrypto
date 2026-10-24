@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar';
+import PiataAziTabs from '@/components/PiataAziTabs';
 import Footer from '@/components/Footer';
 import CryptoHeatmap from '@/components/market/CryptoHeatmap';
 import AffiliateCta from '@/components/market/AffiliateCta';
@@ -23,6 +24,7 @@ export default function LiquidationsPage() {
       <Navbar />
 
       <div className="container mx-auto flex-grow px-4 py-10 md:py-12 max-w-7xl">
+        <PiataAziTabs />
         <header className="mb-8 md:mb-10 text-center md:text-left">
           <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-violet-500/25 bg-violet-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-violet-300">
             <LayoutGrid size={14} />

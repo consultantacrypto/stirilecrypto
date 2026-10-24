@@ -1,68 +1,24 @@
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import ArticleCoverImage from '@/components/ArticleCoverImage';
-import { getHomeFeedArticles } from '@/lib/articles-db';
-
-const FEED_PAGE_SIZE = 9;
+import HomeNewsGrid from '@/components/HomeNewsGrid';
+import { getPublishedFeedPage, HOME_FEED_FIRST_COUNT } from '@/lib/articles-db';
 
 export default async function NewsFeed() {
-  const latestNews = await getHomeFeedArticles(FEED_PAGE_SIZE);
+  const { items, hasMore } = await getPublishedFeedPage(0, HOME_FEED_FIRST_COUNT);
 
   return (
-    <section id="news-feed" className="pb-12 lg:pb-16 bg-black scroll-mt-20">
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
-        {latestNews.length === 0 ? (
-          <p className="mt-12 text-center text-slate-500 text-sm">
-            Nu există articole disponibile momentan.
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mt-12 pt-2">
-            {latestNews.map((item, index) => (
-              <article
-                key={item.id}
-                className="flex flex-col gap-5 border border-white/5 rounded-3xl bg-[#1c1c1e] p-4"
-              >
-                <Link
-                  href={`/stiri/${item.slug}`}
-                  className="group flex flex-col gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-2xl"
-                >
-                  <ArticleCoverImage
-                    src={item.image_url}
-                    alt={item.title}
-                    priority={index < 2}
-                    aspectRatio="16/10"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="rounded-2xl"
-                    imageClassName="transition-transform duration-500 group-hover:scale-[1.02]"
-                  />
-
-                  <div className="flex flex-col gap-3 px-1 pb-2">
-                    <span className="rounded-full px-3 py-1 text-[10px] font-semibold bg-blue-500/20 text-blue-400 backdrop-blur-md w-fit">
-                      {item.category}
-                    </span>
-                    <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wide">
-                      {item.dateLabel}
-                    </span>
-                    <h3 className="text-xl font-bold tracking-tight text-white line-clamp-2 group-hover:text-blue-400 transition-colors duration-300">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-slate-300 leading-relaxed line-clamp-3">{item.excerpt}</p>
-                  </div>
-                </Link>
-              </article>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-14 text-center">
-          <Link
-            href="/stiri"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold border border-white/10 transition-colors duration-300"
-          >
-            Toate Știrile
-            <ArrowRight size={18} />
-          </Link>
+    <section id="news-feed" className="scroll-mt-20 bg-black pb-12 lg:pb-16">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mx-auto max-w-3xl pt-5 text-center">
+          <h1 className="font-[family-name:var(--font-space)] text-xl font-bold tracking-tight text-white sm:text-2xl">
+            Zgomotul e gratuit.
+            <span className="text-gray-400"> Semnalul costă.</span>
+          </h1>
         </div>
+
+        {items.length === 0 ? (
+          <p className="mt-12 text-center text-sm text-slate-500">Nu există articole disponibile momentan.</p>
+        ) : (
+          <HomeNewsGrid initialItems={items} initialHasMore={hasMore} />
+        )}
       </div>
     </section>
   );

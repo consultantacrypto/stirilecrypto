@@ -16,13 +16,12 @@ const fieldClass =
   'w-full min-h-12 rounded-lg border border-white/10 bg-black/40 px-3 text-sm text-white outline-none focus:border-sky-400/70';
 
 interface OrderFormProps {
-  chargeable: boolean;
   deliveryLabel: string;
   initialAsset?: string;
   source?: string | null;
 }
 
-export default function OrderForm({ chargeable, deliveryLabel, initialAsset = '', source = null }: OrderFormProps) {
+export default function OrderForm({ deliveryLabel, initialAsset = '', source = null }: OrderFormProps) {
   const [asset, setAsset] = useState(initialAsset);
   const [tier, setTier] = useState<AnalysisTier>(() => defaultTier(initialAsset));
   const [holds, setHolds] = useState<boolean | null>(null);
@@ -53,7 +52,7 @@ export default function OrderForm({ chargeable, deliveryLabel, initialAsset = ''
 
     const form = new FormData(event.currentTarget);
     const payload = {
-      intent: chargeable ? 'pay' : 'waitlist',
+      intent: 'pay',
       product: 'ta_mtf',
       email: String(form.get('email') ?? ''),
       consent,
@@ -110,14 +109,7 @@ export default function OrderForm({ chargeable, deliveryLabel, initialAsset = ''
       <input type="text" name="company_website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
 
       <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-slate-300">
-        {chargeable ? (
-          <p>Plata se face pe pagina securizată Stripe. Analiza se pregătește manual după confirmarea plății.</p>
-        ) : (
-          <p>
-            <span className="font-semibold text-white">Disponibil în curând.</span> Plățile sunt oprite.
-            Poți lăsa cererea pe lista de așteptare, fără să plătești.
-          </p>
-        )}
+        <p>Plata se face pe pagina securizată Stripe. Analiza se pregătește manual după confirmarea plății.</p>
         <p className="mt-1 text-slate-500">
           Livrare orientativă: {deliveryLabel}, pe email de la contact@stirilecrypto.ro.
         </p>
@@ -301,7 +293,7 @@ export default function OrderForm({ chargeable, deliveryLabel, initialAsset = ''
         disabled={pending}
         className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-white px-5 text-sm font-bold text-black hover:bg-slate-100 disabled:opacity-60"
       >
-        {pending ? 'Se trimite…' : chargeable ? 'Continuă către plată' : 'Înscrie-te pe lista de așteptare'}
+        {pending ? 'Se trimite…' : 'Continuă către plată'}
       </button>
     </form>
   );

@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar';
+import PiataAziTabs from '@/components/PiataAziTabs';
 import Footer from '@/components/Footer';
 import AffiliateSection from '@/components/AffiliateSection';
 import CryptoScreener from '@/components/market/CryptoScreener';
@@ -13,7 +14,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
-const MARKET_TITLE = 'Date Piață Crypto';
+const MARKET_TITLE = 'Piața azi: prețuri';
 const MARKET_DESCRIPTION =
   'Informații instituționale, sentimentul pieței și fluxurile de bani în timp real.';
 
@@ -101,6 +102,7 @@ export default async function MarketPage() {
       <Navbar />
       
       <main className="pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto">
+        <PiataAziTabs />
         
         {/* HEADER */}
         <div className="mb-8">

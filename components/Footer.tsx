@@ -5,6 +5,7 @@ import { Mail, ShieldCheck, Globe, Clock } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
 import { SOCIAL_LINKS } from '@/lib/social';
+import MorningNewsletter from '@/components/MorningNewsletter';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -26,6 +27,7 @@ export default function Footer() {
               Știri crypto, analiză on-chain și intelligence de piață. Transformăm complexitatea
               pieței în context clar pentru investitori.
             </p>
+            <MorningNewsletter id="newsletter-footer" location="footer" variant="compact" />
             <ul className="flex flex-wrap gap-x-4 gap-y-2">
               {SOCIAL_LINKS.map((link) => (
                 <li key={link.href}>
@@ -59,13 +61,18 @@ export default function Footer() {
             </h3>
             <ul className="space-y-4 text-sm text-gray-400">
               <li>
+                <Link href="/incepe-aici" className="hover:text-blue-400 transition-colors">
+                  Începe aici
+                </Link>
+              </li>
+              <li>
                 <Link href="/market" className="hover:text-blue-400 transition-colors">
-                  Date de piață
+                  Piața azi
                 </Link>
               </li>
               <li>
                 <Link href="/stiri" className="hover:text-blue-400 transition-colors">
-                  Știri & Analize
+                  Știri care îți ating banii
                 </Link>
               </li>
               <li>
@@ -74,8 +81,28 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/interviuri" className="hover:text-blue-400 transition-colors">
+                  Interviuri
+                </Link>
+              </li>
+              <li>
+                <Link href="/glosar" className="hover:text-blue-400 transition-colors">
+                  Glosar
+                </Link>
+              </li>
+              <li>
                 <Link href="/lichidari" className="hover:text-blue-400 transition-colors">
                   Harta pieței
+                </Link>
+              </li>
+              <li>
+                <Link href="/taxe" className="hover:text-blue-400 transition-colors">
+                  Taxe crypto 2026
+                </Link>
+              </li>
+              <li>
+                <Link href="/raport-strategic" className="hover:text-blue-400 transition-colors">
+                  Ce cumpără balenele
                 </Link>
               </li>
               {NEWSLETTER_WAITLIST_VISIBLE ? (
