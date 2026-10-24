@@ -8,6 +8,8 @@ import MarketPulseSection from '@/components/MarketPulseSection';
 import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
 import MorningNewsletter from '@/components/MorningNewsletter';
+import HomeMarketBar from '@/components/HomeMarketBar';
+import HomeYoutube from '@/components/HomeYoutube';
 import HomeServiceStrip from '@/components/services/HomeServiceStrip';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
@@ -42,7 +44,9 @@ export default function Home() {
 
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full">
         <MarketPulseSection />
+        <HomeYoutube />
         <MorningNewsletter id="newsletter" location="homepage" />
+        <HomeMarketBar />
         <NewsFeed />
       </div>
 

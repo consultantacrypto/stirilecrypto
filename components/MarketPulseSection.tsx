@@ -3,6 +3,9 @@ import { ArrowRight, Activity } from 'lucide-react';
 import { getLatestMarketPulse } from '@/lib/articles-db';
 import { formatPulseTimestamp } from '@/lib/market-pulse-freshness';
 
+const PULSE_LABEL = 'Pulsul Bitcoin';
+const PULSE_SCHEDULE = 'luni și joi, ora 19';
+
 export default async function MarketPulseSection() {
   const pulse = await getLatestMarketPulse();
 
@@ -14,7 +17,7 @@ export default async function MarketPulseSection() {
 
   return (
     <section
-      aria-label="Market Pulse — analiză tehnică"
+      aria-label="Pulsul Bitcoin, luni și joi, ora 19"
       className="mt-10 mb-2"
     >
       <Link
@@ -29,7 +32,10 @@ export default async function MarketPulseSection() {
         <div className="relative z-10 flex min-w-0 flex-1 flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-amber-300">
-              Market Pulse
+              {PULSE_LABEL}
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+              {PULSE_SCHEDULE}
             </span>
             {published.dateTime ? (
               <time

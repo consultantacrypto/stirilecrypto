@@ -59,13 +59,18 @@ export default function Footer() {
             </h3>
             <ul className="space-y-4 text-sm text-gray-400">
               <li>
+                <Link href="/incepe-aici" className="hover:text-blue-400 transition-colors">
+                  Începe aici
+                </Link>
+              </li>
+              <li>
                 <Link href="/market" className="hover:text-blue-400 transition-colors">
-                  Date de piață
+                  Piața azi
                 </Link>
               </li>
               <li>
                 <Link href="/stiri" className="hover:text-blue-400 transition-colors">
-                  Știri & Analize
+                  Știri care îți ating banii
                 </Link>
               </li>
               <li>
@@ -74,8 +79,23 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/glosar" className="hover:text-blue-400 transition-colors">
+                  Glosar
+                </Link>
+              </li>
+              <li>
                 <Link href="/lichidari" className="hover:text-blue-400 transition-colors">
                   Harta pieței
+                </Link>
+              </li>
+              <li>
+                <Link href="/taxe" className="hover:text-blue-400 transition-colors">
+                  Taxe crypto 2026
+                </Link>
+              </li>
+              <li>
+                <Link href="/raport-strategic" className="hover:text-blue-400 transition-colors">
+                  Ce cumpără balenele
                 </Link>
               </li>
               {NEWSLETTER_WAITLIST_VISIBLE ? (

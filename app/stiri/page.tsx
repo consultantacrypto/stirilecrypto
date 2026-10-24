@@ -32,7 +32,7 @@ export async function generateMetadata({
   const title =
     page >= 2
       ? `Știri crypto explicate — pagina ${page}`
-      : 'Știri crypto explicate';
+      : 'Știri care îți ating banii';
 
   const canonical = stiriListCanonical(page, category);
   const description =
@@ -110,8 +110,7 @@ export default async function NewsPage({
                     </div>
 
                     <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white leading-[1.1]">
-                        Știri & <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Analize</span> <br/>
-                        <span className="text-gray-600">Strategice.</span>
+                        Știri care îți <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">ating banii</span>
                     </h1>
 
                     <div className="h-px w-24 bg-blue-500/30"></div>
