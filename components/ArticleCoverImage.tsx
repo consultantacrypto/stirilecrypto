@@ -36,9 +36,9 @@ export default function ArticleCoverImage({
 }: ArticleCoverImageProps) {
   return (
     <div
-      className={`relative w-full shrink-0 overflow-hidden bg-gray-900 ${ASPECT_CLASS[aspectRatio]} ${className}`}
+      className={`relative w-full shrink-0 overflow-hidden bg-[#12141a] ${ASPECT_CLASS[aspectRatio]} ${className}`}
     >
-      <div className="absolute inset-0 z-0 animate-pulse bg-gray-900" aria-hidden />
+      <div className="absolute inset-0 z-0 animate-pulse bg-[#16181f]" aria-hidden />
       {overlay}
       <Image
         src={displayCoverUrl(src)}

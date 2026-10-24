@@ -72,7 +72,7 @@ export default function Navbar() {
 
   return (
     <>
-    <header className="fixed inset-x-0 top-0 z-50 h-16 border-b border-white/10 bg-[#020617]/90 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-50 h-16 border-b border-white/[0.08] bg-[#07080b]/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-4 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="Știrile Crypto — Acasă">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-bold tracking-tighter text-black">
@@ -143,7 +143,7 @@ export default function Navbar() {
           </Link>
           <Link
             href={ANALYSIS_HREF}
-            className="hidden h-10 items-center whitespace-nowrap rounded-full bg-white px-4 text-sm font-bold text-black hover:bg-slate-100 xl:inline-flex"
+            className="btn-primary hidden whitespace-nowrap xl:inline-flex"
           >
             Analiză tehnică – de la {MAJOR_PRICE_RON} lei
           </Link>
@@ -160,11 +160,11 @@ export default function Navbar() {
       </div>
 
       {mobileOpen ? (
-        <div className="absolute left-0 top-16 z-40 max-h-[calc(100vh-4rem)] w-full overflow-y-auto border-b border-white/10 bg-[#020617] px-4 py-4 xl:hidden">
+        <div className="absolute left-0 top-16 z-40 max-h-[calc(100vh-4rem)] w-full overflow-y-auto border-b border-white/[0.08] bg-[#07080b] px-4 py-4 xl:hidden">
           <Link
             href={ANALYSIS_HREF}
             onClick={() => setMobileOpen(false)}
-            className="mb-3 flex h-12 items-center justify-center rounded-full bg-white text-sm font-bold text-black"
+            className="btn-primary mb-3 flex w-full"
           >
             Analiză tehnică – de la {MAJOR_PRICE_RON} lei
           </Link>

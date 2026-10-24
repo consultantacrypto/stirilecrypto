@@ -15,7 +15,7 @@ import {
 } from '@/lib/articles-db';
 import { normalizeImageUrl } from '@/lib/image-url';
 import { buildNewsArticleJsonLd, buildBreadcrumbJsonLd, SITE_URL, toAbsoluteUrl } from '@/lib/json-ld';
-import { Calendar, Clock, ArrowLeft, User, Eye } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
@@ -137,12 +137,12 @@ function ArticlePageContent({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <main className="min-h-screen flex flex-col bg-[#020617] text-white selection:bg-blue-500/30">
+      <main className="flex min-h-screen flex-col bg-[#07080b] text-white selection:bg-[#3e6ae1]/30">
         <Navbar />
 
         <ViewTracker slug={article.slug} />
 
-        <article className="flex-1 container mx-auto px-6 py-12 max-w-4xl">
+        <article className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
           <div className="mb-8">
             <Link
               href="/stiri"
@@ -152,34 +152,24 @@ function ArticlePageContent({
             </Link>
           </div>
 
-          <header className="mb-10 text-center md:text-left">
-            <div className="flex flex-wrap items-center gap-4 text-xs font-bold uppercase tracking-widest text-blue-400 mb-4 justify-center md:justify-start font-[var(--font-space)]">
-              <span className="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 flex items-center gap-2">
-                {article.category}
-              </span>
-              <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
-                <Calendar size={12} />
+          <header className="mb-8">
+            <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+              <span className="text-[#9eb4f0]">{article.category}</span>
+              <span>
                 {published.dateTime ? (
                   <time dateTime={published.dateTime}>{published.display}</time>
                 ) : (
                   published.display
                 )}
               </span>
-              <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
-                <Clock size={12} /> {article.readTime} citire
-              </span>
-              {article.views > 0 ? (
-                <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
-                  <Eye size={12} /> {article.views} vizualizări
-                </span>
-              ) : null}
-              <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)] normal-case">
-                <User size={12} />
+              <span>{article.readTime} citire</span>
+              {article.views > 0 ? <span>{article.views} vizualizări</span> : null}
+              <span className="normal-case tracking-normal text-slate-400">
                 <AuthorByline authorKey={article.authorKey} />
               </span>
             </div>
 
-            <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight mb-6 text-white font-[var(--font-space)]">
+            <h1 className="font-[family-name:var(--font-space)] text-3xl font-semibold leading-[1.12] tracking-[-0.03em] text-white md:text-5xl">
               {article.title}
             </h1>
           </header>
@@ -190,17 +180,17 @@ function ArticlePageContent({
             priority
             sizes="(max-width: 896px) 100vw, 896px"
             aspectRatio="video"
-            className="mb-8 rounded-2xl border border-white/10 shadow-2xl"
+            className="mb-8 border border-white/[0.08]"
             imageClassName="group-hover:scale-[1.02] transition-transform duration-700"
             overlay={
               <div
-                className="absolute inset-0 z-[2] bg-gradient-to-t from-[#020617]/80 via-transparent to-transparent pointer-events-none"
+                className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-[#07080b]/80 via-transparent to-transparent"
                 aria-hidden
               />
             }
           />
 
-          <p className="text-xl text-gray-300 leading-relaxed border-l-4 border-blue-500/50 pl-6 italic font-[var(--font-inter)] mb-12">
+          <p className="mb-10 border-l border-white/20 pl-5 font-[family-name:var(--font-inter)] text-lg leading-relaxed text-slate-300">
             {article.excerpt}
           </p>
 
@@ -210,7 +200,7 @@ function ArticlePageContent({
 
           <AffiliatePartnerBox />
 
-          <MorningNewsletter location="article" />
+          <MorningNewsletter location="article" variant="compact" id="newsletter-article" />
 
           {conclusion ? (
             <aside

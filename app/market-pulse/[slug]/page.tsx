@@ -212,7 +212,7 @@ function MarketPulsePageContent({
 
           {article.authorKey === 'daniel-mihai' ? <AuthorBox /> : null}
 
-          <MorningNewsletter location="market_pulse" />
+          <MorningNewsletter location="market_pulse" variant="compact" id="newsletter-pulse" />
 
           <ArticleServiceCta asset={mentionedAsset(article.title, article.excerpt, article.content)} />
           <AffiliatePartnerBox />

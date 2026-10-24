@@ -17,31 +17,29 @@ export default async function HomeMarketBar() {
   if (coins.length === 0 && !fearGreed) return null;
 
   return (
-    <section aria-label="Piața azi" className="mb-8">
+    <section aria-label="Piața azi" className="border-b border-white/[0.08] bg-[#07080b]">
       <Link
         href="/market"
-        className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition-colors hover:border-white/20 sm:flex-row sm:items-center sm:justify-between"
+        className="site-wrap flex h-9 items-center gap-5 overflow-x-auto whitespace-nowrap text-xs tabular-nums text-slate-300"
       >
-        <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Piața azi</span>
-        <span className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          {coins.map((coin) => (
-            <span key={coin.symbol} className="inline-flex items-baseline gap-2 text-sm">
-              <span className="font-bold text-white">{coin.symbol}</span>
-              <span className="text-slate-200">{formatScreenerPrice(coin.price)}</span>
-              <span className={coin.change24h >= 0 ? 'text-emerald-400' : 'text-red-400'}>
-                {formatHeatmapChange(coin.change24h)}
-              </span>
+        <span className="font-semibold uppercase tracking-[0.16em] text-[#9eb4f0]">Piața azi</span>
+        {coins.map((coin) => (
+          <span key={coin.symbol} className="inline-flex items-baseline gap-2">
+            <span className="font-semibold text-white">{coin.symbol}</span>
+            <span>{formatScreenerPrice(coin.price)}</span>
+            <span className={coin.change24h >= 0 ? 'text-emerald-400' : 'text-red-400'}>
+              {formatHeatmapChange(coin.change24h)}
             </span>
-          ))}
-          {fearGreed ? (
-            <span className="inline-flex items-baseline gap-2 text-sm">
-              <span className="text-slate-400">Frică și lăcomie</span>
-              <span className="font-bold text-white">
-                {fearGreed.value} · {fearGreed.label}
-              </span>
+          </span>
+        ))}
+        {fearGreed ? (
+          <span className="inline-flex items-baseline gap-2">
+            <span className="text-slate-500">Frică și lăcomie</span>
+            <span className="font-semibold text-white">
+              {fearGreed.value} {fearGreed.label}
             </span>
-          ) : null}
-        </span>
+          </span>
+        ) : null}
       </Link>
     </section>
   );
