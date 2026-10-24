@@ -26,7 +26,7 @@ export default async function InterviuriPage() {
       <main className="flex-1 container mx-auto px-4 sm:px-6 max-w-6xl w-full flex flex-col">
         <header className="pt-32 pb-12">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight font-[var(--font-space)]">
-            Interviuri Exclusive
+            Interviuri
           </h1>
           <p className="mt-4 max-w-2xl text-base md:text-lg text-gray-400 leading-relaxed font-[var(--font-inter)]">
             Zgomotul e gratuit. Semnalul îl găsești aici. Discuții 1-la-1 cu liderii
