@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { Youtube, Twitter, Linkedin, Mail, MapPin, ShieldCheck, Globe, Clock } from 'lucide-react';
+import { Youtube, Twitter, Linkedin, Mail, ShieldCheck, Globe, Clock } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
+import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -71,11 +72,13 @@ export default function Footer() {
                   Harta pieței
                 </Link>
               </li>
-              <li>
-                <Link href="/#newsletter" className="hover:text-blue-400 transition-colors">
-                  Lista de așteptare
-                </Link>
-              </li>
+              {NEWSLETTER_WAITLIST_VISIBLE ? (
+                <li>
+                  <Link href="/#newsletter" className="hover:text-blue-400 transition-colors">
+                    Lista de așteptare
+                  </Link>
+                </li>
+              ) : null}
               <li>
                 <Link href="/analiza-tehnica?src=footer" className="hover:text-blue-400 transition-colors">
                   Analiză tehnică
@@ -135,22 +138,19 @@ export default function Footer() {
                   Confidențialitate
                 </Link>
               </li>
+              <li>
+                <Link href="/cookies" className="hover:text-green-400 transition-colors">
+                  Cookies
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-bold mb-6 flex items-center gap-2">
-              <MapPin size={18} className="text-purple-500" /> Sediu
+              <Mail size={18} className="text-purple-500" /> Contact
             </h3>
             <ul className="space-y-4 text-sm text-gray-400">
-              <li className="flex items-start gap-3">
-                <MapPin className="mt-1 text-gray-600 shrink-0" size={16} />
-                <span>
-                  București, România
-                  <br />
-                  Piața Victoriei, Sector 1
-                </span>
-              </li>
               <li className="flex items-center gap-3">
                 <Mail className="text-gray-600 shrink-0" size={16} />
                 <a
@@ -168,16 +168,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/5 pt-8">
           <p className="text-xs text-gray-600">
             © {currentYear} Știrile Crypto. Toate drepturile rezervate.
           </p>
-          <div className="flex items-center gap-2 px-3 py-1 bg-green-500/5 rounded-full border border-green-500/10">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-[10px] text-green-400 font-mono font-bold">
-              SYSTEMS OPERATIONAL
-            </span>
-          </div>
         </div>
       </div>
     </footer>

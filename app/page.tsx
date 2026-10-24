@@ -9,6 +9,7 @@ import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
 import EmailCaptureBox from '@/components/EmailCaptureBox';
 import HomeServiceStrip from '@/components/services/HomeServiceStrip';
+import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 export const revalidate = 60;
@@ -49,9 +50,11 @@ export default function Home() {
         <InterviewsSection />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full mt-16 mb-16">
-        <EmailCaptureBox id="newsletter" location="homepage" />
-      </div>
+      {NEWSLETTER_WAITLIST_VISIBLE ? (
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full mt-16 mb-16">
+          <EmailCaptureBox id="newsletter" location="homepage" />
+        </div>
+      ) : null}
 
       <Footer />
     </main>
