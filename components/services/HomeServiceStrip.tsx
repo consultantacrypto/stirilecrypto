@@ -17,8 +17,8 @@ export default function HomeServiceStrip() {
           >
             Comandă analiza
           </Link>
-          <Link href="/verifica-adresa?src=home" className="text-sm font-medium text-slate-300 underline underline-offset-4 hover:text-white">
-            Verifică o adresă
+          <Link href="/verificare-portofel?src=home" className="text-sm font-medium text-slate-300 underline underline-offset-4 hover:text-white">
+            Anti-țeapă
           </Link>
         </div>
       </div>

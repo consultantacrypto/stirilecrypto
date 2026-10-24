@@ -82,8 +82,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/verifica-adresa?src=footer" className="hover:text-blue-400 transition-colors">
-                  Verifică adresa
+                <Link href="/verificare-portofel?src=footer" className="hover:text-blue-400 transition-colors">
+                  Anti-țeapă
                 </Link>
               </li>
             </ul>

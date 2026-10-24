@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, X } from 'lucide-react';
+import { Menu, Shield, X } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -98,13 +98,14 @@ export default function Navbar() {
           </span>
         </Link>
         <Link
-          href="/verifica-adresa?src=nav"
-          className={`inline-flex shrink-0 items-center rounded-full px-3 py-1.5 text-sm transition-colors hover:bg-white/10 hover:text-white ${
-            isPathActive(pathname, '/verifica-adresa') ? 'bg-white/10 font-semibold text-white' : 'font-medium text-slate-300'
+          href="/verificare-portofel?src=nav"
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors hover:bg-white/10 hover:text-white ${
+            isPathActive(pathname, '/verificare-portofel') ? 'bg-white/10 font-semibold text-white' : 'font-medium text-slate-300'
           }`}
         >
-        Verifică adresa
-      </Link>
+          <Shield size={14} aria-hidden />
+          Anti-țeapă
+        </Link>
       </div>
 
       {mobileMenuOpen ? (

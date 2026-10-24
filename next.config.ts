@@ -87,6 +87,11 @@ const nextConfig: NextConfig = {
         statusCode: 301,
       },
       {
+        source: '/verifica-adresa',
+        destination: '/verificare-portofel',
+        statusCode: 301,
+      },
+      {
         source: '/stiri/sezonul-celor-20-investitori-titani',
         destination: '/stiri/nu-asteptati-altcoin-season-vine-sezonul-celor-20',
         permanent: true,

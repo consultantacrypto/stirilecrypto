@@ -60,7 +60,7 @@ export default function AddressNotifyForm({ source }: { source: string | null })
           onChange={(event) => setConsent(event.target.checked)}
           required
         />
-        <span>Vreau să primesc un email când verificarea de adresă este disponibilă.</span>
+        <span>Vreau să primesc un email când verificarea de portofel este disponibilă.</span>
       </label>
       {error ? (
         <p role="alert" className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-100">

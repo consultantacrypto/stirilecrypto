@@ -45,7 +45,7 @@ interface FearGreedData {
 
 // --- UTILITARE ---
 const formatCurrency = (value: number | undefined | null) => {
-  if (value === undefined || value === null || isNaN(value)) return "$0.00";
+  if (value === undefined || value === null || isNaN(value)) return "—";
   const absValue = Math.abs(value);
   const sign = value < 0 ? "-" : "";
   if (absValue >= 1e12) return `${sign}$${(absValue / 1e12).toFixed(2)} T`;
@@ -83,11 +83,18 @@ export default async function MarketPage() {
   // 2. UI VARIABLES
   const marketCap = formatCurrency(globalData?.marketCap);
   const volume = formatCurrency(globalData?.volume);
-  const dominance = globalData?.btcDominance ? `${globalData.btcDominance.toFixed(1)}%` : "54.2%";
-  const change = globalData?.marketCapChange ? globalData.marketCapChange.toFixed(2) : "+0.00";
-  
-  const fgValue = fearGreedData?.value || 50;
-  const { color: fgColor, text: fgText } = getFearGreedStyles(fgValue);
+  const dominance =
+    globalData && Number.isFinite(globalData.btcDominance)
+      ? `${globalData.btcDominance.toFixed(1)}%`
+      : "—";
+  const change =
+    globalData && Number.isFinite(globalData.marketCapChange)
+      ? globalData.marketCapChange.toFixed(2)
+      : null;
+
+  const fgValue =
+    fearGreedData && Number.isFinite(fearGreedData.value) ? fearGreedData.value : null;
+  const fgStyles = fgValue == null ? null : getFearGreedStyles(fgValue);
 
   return (
     <div className="min-h-screen bg-[#02050a] text-white font-sans selection:bg-blue-500/30">
@@ -123,8 +130,8 @@ export default async function MarketPage() {
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><DollarSign size={12}/> Market Cap</div>
                         <div className="text-2xl font-black text-white font-[var(--font-space)]">{marketCap}</div>
-                        <div className={`text-xs font-bold ${Number(change) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            {Number(change) >= 0 ? '▲' : '▼'} {change}% (24h)
+                        <div className={`text-xs font-bold ${change == null ? 'text-gray-500' : Number(change) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {change == null ? 'Date indisponibile' : `${Number(change) >= 0 ? '▲' : '▼'} ${change}% (24h)`}
                         </div>
                     </div>
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
@@ -139,8 +146,8 @@ export default async function MarketPage() {
                     </div>
                     <div className="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 flex flex-col justify-center h-full">
                         <div className="text-gray-500 text-xs font-bold uppercase mb-1 flex items-center gap-1"><Zap size={12}/> Frică & Lăcomie</div>
-                        <div className={`text-2xl font-black font-[var(--font-space)] ${fgColor}`}>{fgValue}</div>
-                        <div className={`text-xs font-bold uppercase ${fgColor}`}>{fgText}</div>
+                        <div className={`text-2xl font-black font-[var(--font-space)] ${fgStyles?.color ?? 'text-gray-500'}`}>{fgValue ?? '—'}</div>
+                        <div className={`text-xs font-bold uppercase ${fgStyles?.color ?? 'text-gray-500'}`}>{fgStyles?.text ?? 'Indisponibil'}</div>
                     </div>
                 </div>
 

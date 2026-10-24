@@ -25,10 +25,10 @@ export default function ArticleServiceCta({ asset }: { asset: string | null }) {
           {asset ? `Comandă analiza pentru ${asset}` : 'Comandă analiza'}
         </Link>
         <Link
-          href={withSource('/verifica-adresa', 'article')}
+          href={withSource('/verificare-portofel', 'article')}
           className="text-sm text-slate-300 underline underline-offset-4 hover:text-white"
         >
-          Verifică adresa crypto înainte să trimiți banii
+          Verifică portofelul înainte să trimiți bani
         </Link>
       </div>
     </aside>
