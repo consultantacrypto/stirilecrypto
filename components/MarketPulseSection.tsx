@@ -1,45 +1,92 @@
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Activity } from 'lucide-react';
+import HomeYoutube from '@/components/HomeYoutube';
 import { getLatestMarketPulse } from '@/lib/articles-db';
 import { formatPulseTimestamp } from '@/lib/market-pulse-freshness';
-import HomeYoutube from '@/components/HomeYoutube';
-import SectionHeader from '@/components/SectionHeader';
 
 const PULSE_LABEL = 'Pulsul Bitcoin';
 const PULSE_SCHEDULE = 'luni și joi, ora 19';
 
 export default async function MarketPulseSection() {
   const pulse = await getLatestMarketPulse();
-  const published = pulse ? formatPulseTimestamp(pulse.published_at) : null;
+
+  if (!pulse) {
+    return (
+      <section aria-label="Video Daniel Mihai" className="mt-10">
+        <HomeYoutube />
+      </section>
+    );
+  }
+
+  const published = formatPulseTimestamp(pulse.published_at);
 
   return (
-    <section aria-label="Pulsul Bitcoin, luni și joi, ora 19" className="mt-12">
-      <SectionHeader eyebrow={PULSE_LABEL} title="Luni și joi, ora 19" href="/market-pulse" linkLabel="Arhivă →" />
+    <section
+      aria-label="Pulsul Bitcoin, luni și joi, ora 19"
+      className="mt-10 mb-2"
+    >
+      <Link
+        href={`/market-pulse/${pulse.slug}`}
+        className="group relative mx-auto flex max-w-7xl flex-col gap-5 overflow-hidden rounded-xl border border-amber-500/30 bg-zinc-950 px-5 py-6 transition-all hover:border-amber-500/50 hover:shadow-[0_0_40px_rgba(245,158,11,0.08)] sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-8 sm:py-7"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-amber-500/[0.04] via-transparent to-amber-600/[0.03]"
+        />
 
-      {pulse ? (
-        <Link
-          href={`/market-pulse/${pulse.slug}`}
-          className="group flex flex-col gap-3 border border-white/[0.08] bg-white/[0.02] px-5 py-5 transition-colors hover:border-white/20 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+        <div className="relative z-10 flex min-w-0 flex-1 flex-col gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-amber-300">
+              {PULSE_LABEL}
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
               {PULSE_SCHEDULE}
-              {published?.display ? ` · ${published.display}` : ''}
-            </p>
-            <h3 className="mt-1 font-[family-name:var(--font-space)] text-lg font-semibold leading-snug tracking-[-0.02em] text-white line-clamp-2">
-              {pulse.title}
-            </h3>
-            <p className="mt-1 text-sm leading-relaxed text-slate-400 line-clamp-2">{pulse.excerpt}</p>
+            </span>
+            {published.dateTime ? (
+              <time
+                dateTime={published.dateTime}
+                className="text-[10px] font-bold uppercase tracking-widest text-amber-500/80"
+              >
+                Articol {published.display}
+              </time>
+            ) : (
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                {published.display}
+              </span>
+            )}
           </div>
-          <span className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#9eb4f0]">
-            Citește
-            <ArrowRight size={16} aria-hidden />
-          </span>
-        </Link>
-      ) : (
-        <p className="text-sm text-slate-400">Nu e publicat încă un puls. Revino luni sau joi, ora 19.</p>
-      )}
 
+          <div className="flex items-start gap-2">
+            <Activity
+              size={18}
+              className="mt-1 shrink-0 text-amber-400/80"
+              aria-hidden
+            />
+            <div className="min-w-0">
+              <h2 className="text-lg font-bold leading-snug tracking-tight text-white sm:text-xl font-[var(--font-space)] group-hover:text-amber-50 transition-colors line-clamp-2">
+                {pulse.title}
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400 line-clamp-2 font-[var(--font-inter)]">
+                {pulse.excerpt}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <span className="relative z-10 inline-flex shrink-0 items-center gap-2 self-start text-sm font-bold text-amber-400 transition-all group-hover:gap-3 sm:self-center font-[var(--font-space)]">
+          Citește Analiza
+          <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </Link>
+
+      <div className="mt-3 flex justify-end max-w-7xl mx-auto">
+        <Link
+          href="/market-pulse"
+          className="text-[10px] font-bold uppercase tracking-widest text-amber-500/70 hover:text-amber-400 transition-colors font-[var(--font-space)]"
+        >
+          Arhivă analize →
+        </Link>
+      </div>
       <HomeYoutube />
     </section>
   );

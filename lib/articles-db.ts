@@ -2,79 +2,78 @@ import { cache } from 'react';
 import { authorKeyFromName, type AuthorKey } from '@/lib/authors';
 import { articles } from '@/lib/articles';
 import { resolveImageUrl } from '@/lib/image-url';
+import { HOME_FEED_FIRST_COUNT, HOME_FEED_PAGE_SIZE, type NewsFeedItem } from '@/lib/home-feed';
 import { getSupabase } from '@/lib/supabase';
 import type { ArticleContentType, Stire } from '@/lib/types/stiri';
+
+export { HOME_FEED_FIRST_COUNT, HOME_FEED_PAGE_SIZE };
+export type { NewsFeedItem };
 
 const PUBLISHED_STATUS = 'published';
 const MARKET_PULSE_CONTENT_TYPE: ArticleContentType = 'market_pulse';
 
-/** Matches legacy homepage slice: skip first N featured static articles */
-const FEATURED_ARTICLE_COUNT = 4;
-
 type StaticArticle = (typeof articles)[number];
 
-/** Unified card shape for homepage feed (Supabase + static fallback) */
-export interface NewsFeedItem {
+type FeedRow = {
   id: string;
   slug: string;
   title: string;
   excerpt: string;
   category: string;
-  image_url: string;
-  dateLabel: string;
-}
+  image_url: string | null;
+  published_at: string | null;
+  content_type: ArticleContentType;
+};
 
-function staticArticleToFeedItem(article: StaticArticle): NewsFeedItem {
+function rowToFeedItem(row: FeedRow): NewsFeedItem {
+  const pulse = row.content_type === MARKET_PULSE_CONTENT_TYPE;
   return {
-    id: article.id ?? article.slug ?? 'static-article',
-    slug: article.slug ?? '',
-    title: article.title ?? '',
-    excerpt: article.summary ?? '',
-    category: article.category ?? '',
-    image_url: resolveImageUrl({ image: article.image ?? '' }),
-    dateLabel: article.date ?? '',
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    excerpt: row.excerpt,
+    category: row.category,
+    image_url: resolveImageUrl(row),
+    dateLabel: formatArticleDate(row.published_at),
+    href: pulse ? `/market-pulse/${row.slug}` : `/stiri/${row.slug}`,
   };
-}
-
-function stireToFeedItem(stire: Stire): NewsFeedItem {
-  return {
-    id: stire.id,
-    slug: stire.slug,
-    title: stire.title,
-    excerpt: stire.excerpt,
-    category: stire.category,
-    image_url: resolveImageUrl(stire),
-    dateLabel: formatArticleDate(stire.published_at),
-  };
-}
-
-function getStaticFeedArticles(limit: number): NewsFeedItem[] {
-  return articles
-    .slice(FEATURED_ARTICLE_COUNT, FEATURED_ARTICLE_COUNT + limit)
-    .map(staticArticleToFeedItem);
 }
 
 /**
- * Homepage feed: Supabase published articles first; if empty, legacy static articles.
- * When Supabase has rows, appends non-duplicate static articles up to `limit`.
+ * One page of published stories, newest first.
+ * `range` is inclusive, so the query asks for limit + 1 and does not load the table.
+ * News and market pulse are both included. The old static file is not.
  */
-export async function getHomeFeedArticles(limit = 9): Promise<NewsFeedItem[]> {
-  const fromDb = await getPublishedArticles(limit);
+export async function getPublishedFeedPage(
+  offset: number,
+  limit: number,
+): Promise<{ items: NewsFeedItem[]; hasMore: boolean }> {
+  const safeOffset = Number.isFinite(offset) && offset > 0 ? Math.floor(offset) : 0;
+  const safeLimit = Math.min(18, Math.max(1, Math.floor(limit) || HOME_FEED_PAGE_SIZE));
+  const supabase = getSupabase();
+  if (!supabase) return { items: [], hasMore: false };
 
-  if (!fromDb || fromDb.length === 0) {
-    return getStaticFeedArticles(limit);
+  const { data, error } = await supabase
+    .from('stiri')
+    .select('id, slug, title, excerpt, category, image_url, published_at, content_type')
+    .eq('status', PUBLISHED_STATUS)
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .order('id', { ascending: false })
+    .range(safeOffset, safeOffset + safeLimit);
+
+  if (error) {
+    console.error('[getPublishedFeedPage]', error.message);
+    return { items: [], hasMore: false };
   }
 
-  const dbItems = fromDb.map(stireToFeedItem);
-  const dbSlugs = new Set(dbItems.map((item) => item.slug));
+  const rows = (data ?? []) as FeedRow[];
+  const hasMore = rows.length > safeLimit;
+  return { items: rows.slice(0, safeLimit).map(rowToFeedItem), hasMore };
+}
 
-  const staticFill = articles
-    .slice(FEATURED_ARTICLE_COUNT)
-    .filter((article) => !dbSlugs.has(article.slug))
-    .map(staticArticleToFeedItem)
-    .slice(0, Math.max(0, limit - dbItems.length));
-
-  return [...dbItems, ...staticFill];
+export async function getHomeFeedArticles(limit = HOME_FEED_FIRST_COUNT): Promise<NewsFeedItem[]> {
+  const page = await getPublishedFeedPage(0, limit);
+  return page.items;
 }
 
 /** Latest published Market Pulse (daily technical analysis). */

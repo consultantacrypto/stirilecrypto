@@ -18,7 +18,7 @@ export default function ArticleServiceCta({ asset }: { asset: string | null }) {
       </p>
       <Link
         href={analysisHref}
-        className="btn-primary mt-4"
+        className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full bg-white px-4 text-sm font-bold text-black hover:bg-slate-100"
       >
         {asset ? `Comandă analiza pentru ${asset}` : 'Comandă analiza'}
       </Link>

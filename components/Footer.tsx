@@ -1,93 +1,41 @@
 'use client';
 
 import Link from 'next/link';
+import { Mail, ShieldCheck, Globe, Clock } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
 import { SOCIAL_LINKS } from '@/lib/social';
-import { MAJOR_PRICE_RON } from '@/lib/products/tiers';
 import MorningNewsletter from '@/components/MorningNewsletter';
-
-const COL = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9eb4f0]';
-const LINK = 'text-sm text-slate-400 transition-colors hover:text-white';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto border-t border-white/[0.08] bg-[#07080b] font-[family-name:var(--font-inter)]">
-      <div className="site-wrap py-12">
-        <div className="grid gap-8 border-b border-white/[0.08] pb-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
-          <div>
-            <Link href="/" className="inline-flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-bold tracking-tighter text-black">
-                ȘC
-              </span>
-              <span className="font-[family-name:var(--font-space)] text-lg font-semibold tracking-[-0.02em] text-white">
+    <footer className="bg-[#020617] border-t border-white/5 pt-16 pb-8 font-[var(--font-inter)] mt-auto">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          <div className="space-y-6">
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:rotate-12 transition-transform">
+                SC
+              </div>
+              <span className="text-xl font-black text-white font-[var(--font-space)]">
                 Știrile Crypto
               </span>
             </Link>
-            <p className="mt-3 max-w-sm text-sm leading-relaxed text-slate-400">
-              Știri crypto, analiză on-chain și context de piață, în limba română.
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Știri crypto, analiză on-chain și intelligence de piață. Transformăm complexitatea
+              pieței în context clar pentru investitori.
             </p>
-          </div>
-          <MorningNewsletter id="newsletter-footer" location="footer" variant="compact" />
-        </div>
-
-        <div className="grid grid-cols-2 gap-8 pt-10 sm:grid-cols-3 lg:grid-cols-5">
-          <div>
-            <h2 className={COL}>Site</h2>
-            <ul className="mt-4 space-y-2.5">
-              <li><Link href="/incepe-aici" className={LINK}>Începe aici</Link></li>
-              <li><Link href="/market" className={LINK}>Piața azi</Link></li>
-              <li><Link href="/stiri" className={LINK}>Știri</Link></li>
-              <li><Link href="/market-pulse" className={LINK}>Pulsul Bitcoin</Link></li>
-              <li><Link href="/interviuri" className={LINK}>Față în față cu Dani</Link></li>
-              <li><Link href="/lichidari" className={LINK}>Harta pieței</Link></li>
-              <li><Link href="/dashboard" className={LINK}>Tablou</Link></li>
-              <li><Link href="/raport-strategic" className={LINK}>Ce cumpără balenele</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h2 className={COL}>Servicii</h2>
-            <ul className="mt-4 space-y-2.5">
-              <li>
-                <Link href="/analiza-tehnica?src=footer" className={LINK}>
-                  Analiză tehnică, de la {MAJOR_PRICE_RON} lei
-                </Link>
-              </li>
-              <li>
-                <Link href="/verificare-portofel?src=footer" className={LINK}>
-                  Verificare portofel crypto
-                </Link>
-              </li>
-              {NEWSLETTER_WAITLIST_VISIBLE ? (
-                <li>
-                  <Link href="/#newsletter" className={LINK}>Lista de așteptare</Link>
-                </li>
-              ) : null}
-            </ul>
-          </div>
-
-          <div>
-            <h2 className={COL}>Educație</h2>
-            <ul className="mt-4 space-y-2.5">
-              <li><Link href="/academie" className={LINK}>Academia Crypto</Link></li>
-              <li><Link href="/glosar" className={LINK}>Glosar</Link></li>
-              <li><Link href="/taxe" className={LINK}>Taxe crypto 2026</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h2 className={COL}>Social</h2>
-            <ul className="mt-4 space-y-2.5">
+            <MorningNewsletter id="newsletter-footer" location="footer" variant="compact" />
+            <ul className="flex flex-wrap gap-x-4 gap-y-2">
               {SOCIAL_LINKS.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={LINK}
+                    className="text-sm text-gray-300 underline decoration-white/20 underline-offset-4 hover:text-white"
                     onClick={() => trackEvent('social_share', { platform: link.shortLabel, location: 'footer' })}
                   >
                     {link.label}
@@ -99,7 +47,7 @@ export default function Footer() {
                   href="https://www.linkedin.com/in/mihaidanielmarius/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={LINK}
+                  className="text-sm text-gray-300 underline decoration-white/20 underline-offset-4 hover:text-white"
                 >
                   LinkedIn, Daniel Mihai
                 </a>
@@ -108,29 +56,151 @@ export default function Footer() {
           </div>
 
           <div>
-            <h2 className={COL}>Legal</h2>
-            <ul className="mt-4 space-y-2.5">
-              <li><Link href="/despre" className={LINK}>Despre noi</Link></li>
-              <li><Link href="/contact" className={LINK}>Contact</Link></li>
-              <li><Link href="/autori/daniel-mihai" className={LINK}>Daniel Mihai, analist</Link></li>
+            <h3 className="text-white font-bold mb-6 flex items-center gap-2">
+              <Globe size={18} className="text-blue-500" /> Platformă
+            </h3>
+            <ul className="space-y-4 text-sm text-gray-400">
               <li>
-                <a href="https://www.mihaidaniel.ro/" target="_blank" rel="noopener noreferrer" className={LINK}>
+                <Link href="/incepe-aici" className="hover:text-blue-400 transition-colors">
+                  Începe aici
+                </Link>
+              </li>
+              <li>
+                <Link href="/market" className="hover:text-blue-400 transition-colors">
+                  Piața azi
+                </Link>
+              </li>
+              <li>
+                <Link href="/stiri" className="hover:text-blue-400 transition-colors">
+                  Știri care îți ating banii
+                </Link>
+              </li>
+              <li>
+                <Link href="/academie" className="hover:text-blue-400 transition-colors">
+                  Academia Crypto
+                </Link>
+              </li>
+              <li>
+                <Link href="/glosar" className="hover:text-blue-400 transition-colors">
+                  Glosar
+                </Link>
+              </li>
+              <li>
+                <Link href="/lichidari" className="hover:text-blue-400 transition-colors">
+                  Harta pieței
+                </Link>
+              </li>
+              <li>
+                <Link href="/taxe" className="hover:text-blue-400 transition-colors">
+                  Taxe crypto 2026
+                </Link>
+              </li>
+              <li>
+                <Link href="/raport-strategic" className="hover:text-blue-400 transition-colors">
+                  Ce cumpără balenele
+                </Link>
+              </li>
+              {NEWSLETTER_WAITLIST_VISIBLE ? (
+                <li>
+                  <Link href="/#newsletter" className="hover:text-blue-400 transition-colors">
+                    Lista de așteptare
+                  </Link>
+                </li>
+              ) : null}
+              <li>
+                <Link href="/analiza-tehnica?src=footer" className="hover:text-blue-400 transition-colors">
+                  Analiză tehnică, de la 79 lei
+                </Link>
+              </li>
+              <li>
+                <Link href="/verificare-portofel?src=footer" className="hover:text-blue-400 transition-colors">
+                  Verificare portofel crypto
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-white font-bold mb-6 flex items-center gap-2">
+              <ShieldCheck size={18} className="text-green-500" /> Editorial
+            </h3>
+            <ul className="space-y-4 text-sm text-gray-400">
+              <li>
+                <Link
+                  href="/despre"
+                  className="hover:text-green-400 transition-colors flex items-center gap-2"
+                >
+                  Despre Noi{' '}
+                  <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-gray-300">
+                    Info
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-green-400 transition-colors">
+                  Contact & Suport
+                </Link>
+              </li>
+              <li>
+                <Link href="/autori/daniel-mihai" className="hover:text-green-400 transition-colors">
+                  Daniel Mihai, analist
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://www.mihaidaniel.ro/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-green-400 transition-colors"
+                >
                   Consultanță
                 </a>
               </li>
-              <li><Link href="/termeni" className={LINK}>Termeni și condiții</Link></li>
-              <li><Link href="/confidentialitate" className={LINK}>Confidențialitate</Link></li>
-              <li><Link href="/cookies" className={LINK}>Cookies</Link></li>
+              <li>
+                <Link href="/termeni" className="hover:text-green-400 transition-colors">
+                  Termeni & Condiții
+                </Link>
+              </li>
+              <li>
+                <Link href="/confidentialitate" className="hover:text-green-400 transition-colors">
+                  Confidențialitate
+                </Link>
+              </li>
+              <li>
+                <Link href="/cookies" className="hover:text-green-400 transition-colors">
+                  Cookies
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-white font-bold mb-6 flex items-center gap-2">
+              <Mail size={18} className="text-purple-500" /> Contact
+            </h3>
+            <ul className="space-y-4 text-sm text-gray-400">
+              <li className="flex items-center gap-3">
+                <Mail className="text-gray-600 shrink-0" size={16} />
+                <a
+                  href="mailto:contact@stirilecrypto.ro"
+                  className="hover:text-white transition-colors"
+                >
+                  contact@stirilecrypto.ro
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Clock className="text-gray-600 shrink-0" size={16} />
+                <span>Luni – Vineri, 09:00 – 18:00</span>
+              </li>
             </ul>
           </div>
         </div>
 
-        <p className="mt-10 text-xs text-slate-500">
-          © {currentYear} Știrile Crypto. Luni – vineri, 09:00 – 18:00.{' '}
-          <a href="mailto:contact@stirilecrypto.ro" className="hover:text-white">
-            contact@stirilecrypto.ro
-          </a>
-        </p>
+        <div className="border-t border-white/5 pt-8">
+          <p className="text-xs text-gray-600">
+            © {currentYear} Știrile Crypto. Toate drepturile rezervate.
+          </p>
+        </div>
       </div>
     </footer>
   );

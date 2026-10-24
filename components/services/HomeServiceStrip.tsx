@@ -1,22 +1,23 @@
 import Link from 'next/link';
-import { MAJOR_PRICE_RON } from '@/lib/products/tiers';
 
 export default function HomeServiceStrip() {
   return (
-    <aside className="mt-10 border border-white/[0.08] bg-white/[0.02] px-5 py-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9eb4f0]">Servicii</p>
-      <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-xl text-sm leading-relaxed text-slate-300">
-          <span className="font-medium text-white">
-            Analiză tehnică pe 7 timeframe-uri + risc token, de la {MAJOR_PRICE_RON} lei.
+    <aside className="border-y border-white/10 bg-white/[0.03]">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <p className="text-sm leading-relaxed text-slate-300">
+          <span className="font-semibold text-white">
+            Analiză tehnică pe 7 timeframe-uri + risc token, de la 79 lei.
           </span>{' '}
           Livrare în 24h.
         </p>
-        <div className="flex flex-wrap items-center gap-3">
-          <Link href="/analiza-tehnica?src=home" className="btn-primary">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <Link
+            href="/analiza-tehnica?src=home"
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-4 text-sm font-bold text-black hover:bg-slate-100"
+          >
             Comandă analiza
           </Link>
-          <Link href="/verificare-portofel?src=home" className="btn-secondary">
+          <Link href="/verificare-portofel?src=home" className="text-sm font-medium text-slate-300 underline underline-offset-4 hover:text-white">
             Verificare portofel crypto
           </Link>
         </div>

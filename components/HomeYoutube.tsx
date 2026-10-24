@@ -4,7 +4,7 @@ export default function HomeYoutube() {
   const videoId = homepageYoutubeEmbedId();
 
   return (
-    <section aria-label="Video Daniel Mihai" className="mt-4">
+    <section aria-label="Video Daniel Mihai" className="mt-6">
       {videoId ? (
         <div className="overflow-hidden rounded-2xl border border-white/10 bg-black">
           <iframe

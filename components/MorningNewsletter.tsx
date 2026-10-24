@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader2, Mail } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -62,8 +62,11 @@ export default function MorningNewsletter({
     }
   }
 
-  const field = (
-    <form onSubmit={handleSubmit} className={variant === 'band' ? 'flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center' : 'mt-3 flex flex-col gap-2 sm:flex-row'}>
+  const inputClass =
+    'rounded-xl border border-white/10 bg-black/40 text-white outline-none transition-colors placeholder:text-gray-500 focus:border-blue-500 disabled:opacity-60';
+
+  const form = (
+    <form onSubmit={handleSubmit} className={variant === 'compact' ? 'mt-3 flex flex-col gap-2 sm:flex-row' : 'flex w-full flex-col gap-3 sm:w-auto sm:flex-row'}>
       <label htmlFor={`${id}-email`} className="sr-only">
         Email
       </label>
@@ -80,12 +83,16 @@ export default function MorningNewsletter({
         autoComplete="email"
         placeholder="email@exemplu.ro"
         disabled={status === 'loading'}
-        className="h-10 w-full rounded-md border border-white/[0.08] bg-black/40 px-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-[#3e6ae1] disabled:opacity-60 sm:w-64"
+        className={`${inputClass} ${variant === 'compact' ? 'h-10 px-3 text-sm sm:w-56' : 'h-12 flex-1 px-4 sm:w-64'}`}
       />
-      <button type="submit" disabled={status === 'loading'} className="btn-primary whitespace-nowrap">
+      <button
+        type="submit"
+        disabled={status === 'loading'}
+        className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-bold text-white transition-all hover:bg-blue-500 disabled:bg-blue-600/60"
+      >
         {status === 'loading' ? (
           <>
-            <Loader2 size={16} className="mr-2 animate-spin" aria-hidden />
+            <Loader2 size={16} className="animate-spin" aria-hidden />
             Se înregistrează
           </>
         ) : (
@@ -95,14 +102,14 @@ export default function MorningNewsletter({
     </form>
   );
 
-  const statusBlock =
+  const body =
     status === 'success' ? (
-      <p role="status" className="flex items-center gap-2 text-sm text-slate-200">
-        <CheckCircle2 size={16} className="shrink-0 text-emerald-400" aria-hidden />
+      <p role="status" className="flex items-start gap-2 text-sm text-green-300">
+        <CheckCircle2 size={16} className="mt-0.5 shrink-0" aria-hidden />
         {message}
       </p>
     ) : (
-      field
+      form
     );
 
   const error =
@@ -116,25 +123,36 @@ export default function MorningNewsletter({
   if (variant === 'compact') {
     return (
       <section id={id} aria-label="Știrile Crypto de dimineață" className="scroll-mt-24">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9eb4f0]">Dimineața</p>
-        <p className="mt-1 text-sm leading-snug text-slate-300">Știrile Crypto de dimineață. Un email pe zi.</p>
-        {statusBlock}
+        <p className="font-[var(--font-space)] text-sm font-bold text-white">Știrile Crypto de dimineață</p>
+        <p className="mt-1 text-xs leading-relaxed text-gray-400">Un email pe zi. Îl poți opri oricând.</p>
+        {body}
         {error}
       </section>
     );
   }
 
   return (
-    <section id={id} aria-label="Știrile Crypto de dimineață" className="scroll-mt-24 border-y border-white/[0.08] bg-white/[0.02]">
-      <div className="site-wrap flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9eb4f0]">Dimineața</p>
-          <p className="mt-1 text-sm text-slate-200">
-            <span className="font-medium text-white">Știrile Crypto de dimineață.</span> Un email pe zi, cu ce contează în piață.
-          </p>
+    <section
+      id={id}
+      aria-label="Știrile Crypto de dimineață"
+      className="my-8 scroll-mt-24 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-md md:px-5"
+    >
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-blue-500/25 bg-blue-500/15">
+            <Mail size={16} className="text-blue-400" aria-hidden />
+          </div>
+          <div>
+            <h2 className="font-[var(--font-space)] text-base font-bold tracking-tight text-white">
+              Știrile Crypto de dimineață
+            </h2>
+            <p className="mt-1 text-sm leading-relaxed text-gray-400">
+              Un email pe zi, dimineața, cu ce contează în piață. Îl poți opri oricând.
+            </p>
+          </div>
         </div>
         <div className="shrink-0">
-          {statusBlock}
+          {body}
           {error}
         </div>
       </div>
