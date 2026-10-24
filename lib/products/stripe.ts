@@ -5,6 +5,7 @@ interface CheckoutInput {
   origin: string;
   inquiryId: string;
   product: string;
+  source?: string | null;
 }
 
 export async function createStripeCheckout(
@@ -24,6 +25,7 @@ export async function createStripeCheckout(
   body.set('line_items[0][price_data][product_data][name]', input.name.slice(0, 250));
   body.set('metadata[inquiry_id]', input.inquiryId);
   body.set('metadata[product]', input.product);
+  if (input.source) body.set('metadata[src]', input.source.slice(0, 32));
   body.set('payment_intent_data[metadata][inquiry_id]', input.inquiryId);
 
   try {

@@ -22,6 +22,8 @@ import ArticleCoverImage from '@/components/ArticleCoverImage';
 import ViewTracker from '@/components/ViewTracker';
 import AuthorByline from '@/components/author/AuthorByline';
 import AuthorBox from '@/components/author/AuthorBox';
+import ArticleServiceCta from '@/components/services/ArticleServiceCta';
+import { mentionedAsset } from '@/lib/products/placement';
 import { authorDisplayName, danielAuthorJsonLd } from '@/lib/authors';
 import { Metadata } from 'next';
 
@@ -229,6 +231,10 @@ function ArticlePageContent({
               <ShareButtons title={article.title} slug={article.slug} />
             </div>
           </div>
+
+          <ArticleServiceCta
+            asset={mentionedAsset(article.title, article.excerpt, article.content)}
+          />
 
           <RelatedArticles currentSlug={article.slug} category={article.category} />
         </article>

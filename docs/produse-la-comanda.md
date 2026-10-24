@@ -1,8 +1,18 @@
 # Analiză tehnică la comandă
 
-Payments are **off by default**. This change does not charge a card and does not set any Vercel variable.
+Production can already charge `/analiza-tehnica` when `PAYMENTS_ENABLED` and `STRIPE_SECRET_KEY` are set. This file’s later checkout notes describe that same flow. The promotion and address-check changes do not set Vercel variables and do not call Stripe.
 
-`/analiza-tehnica` is the only product. Price **49 RON** (`TA_PRICE_RON`). It covers one asset on 1h, 4h, 12h, 1D, 3D, 1W and 1M, plus a **Risc token** section: liquidity, major-exchange listings, holder distribution from Arkham and public on-chain data, token unlocks, dump risk, and pump-and-dump signals. The sample uses the fictitious asset Exemplum (XMPL). It is educational. It is not a buy or sell call.
+## Where the services appear
+
+`/analiza-tehnica` is linked from the header (`?src=nav`), a strip under the homepage hero (`?src=home`), the footer (`?src=footer`), and a box at the end of news, Market Pulse, and interview pages (`?src=article`). If the text mentions a known coin, the article link is `/analiza-tehnica?asset=BTC&src=article` and the order form starts with that symbol. The `source` field is stored in `product_inquiries.payload` and, on a paid checkout, as Stripe metadata `src`.
+
+`/verificare-portofel` is the public page (nav label „Anti-țeapă”). `/verifica-adresa` redirects with **301** to that slug, including the `src` query. The page explains, in plain language, how to check a wallet before sending money. Prices shown are 10 USD, 40 USD, and 140 USD. The page does not charge. It stores a notify email as `product = address_check` only after `supabase/product-inquiries-address-check.sql` is applied. Until then the insert fails and the form says so. Set `ADDRESS_CHECK_URL` to an `http(s)` URL when the MistTrack checker is live; the page button then links there and the waitlist form is hidden. This PR does not set that variable. The product id stays `address_check`; the rename does not need a new SQL migration.
+
+## Product
+
+The checkout code stays off unless `PAYMENTS_ENABLED=true` and `STRIPE_SECRET_KEY` are both set. This change does not set them.
+
+`/analiza-tehnica` is the paid product. Price **49 RON** (`TA_PRICE_RON`). It covers one asset on 1h, 4h, 12h, 1D, 3D, 1W and 1M, plus a **Risc token** section: liquidity, major-exchange listings, holder distribution from Arkham and public on-chain data, token unlocks, dump risk, and pump-and-dump signals. The sample uses the fictitious asset Exemplum (XMPL). It is educational. It is not a buy or sell call.
 
 `/raport-risc` redirects with **301** to `/analiza-tehnica`. It is not in the footer, the dashboard, or the sitemap. New orders are stored as `product = ta_mtf`. Older `risk_report` and `bundle` rows stay valid; the table check constraint is unchanged.
 

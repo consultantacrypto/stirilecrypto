@@ -1,3 +1,5 @@
+import { sanitizeSource } from './placement';
+
 export type Horizon = 'days' | 'weeks' | 'months';
 export type DeliveryPreference = 'email' | 'pdf';
 export type RiskConcern = 'dump' | 'unlocks' | 'liquidity' | 'scam' | 'team';
@@ -30,6 +32,7 @@ export interface NormalizedOrder {
   asset: string | null;
   question: string | null;
   risk: OptionalRisk | null;
+  source: string | null;
 }
 
 function clean(value: unknown, max: number): string {
@@ -102,6 +105,7 @@ export function validateOrder(input: unknown): { ok: true; value: NormalizedOrde
         asset: 'BOT',
         question: null,
         risk: null,
+        source: null,
       },
     };
   }
@@ -138,6 +142,7 @@ export function validateOrder(input: unknown): { ok: true; value: NormalizedOrde
       asset,
       question: rawQuestion || null,
       risk: optionalRisk(body),
+      source: sanitizeSource(typeof body.source === 'string' ? body.source : null),
     },
   };
 }

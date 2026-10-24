@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Loader2, Mail, CheckCircle2, AlertCircle } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
+import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -66,6 +67,8 @@ export default function EmailCaptureBox({
       setMessage('Conexiune eșuată. Verifică rețeaua și încearcă din nou.');
     }
   };
+
+  if (!NEWSLETTER_WAITLIST_VISIBLE) return null;
 
   return (
     <section

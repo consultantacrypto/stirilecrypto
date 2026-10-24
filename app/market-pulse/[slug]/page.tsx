@@ -6,6 +6,8 @@ import ViewTracker from '@/components/ViewTracker';
 import AuthorByline from '@/components/author/AuthorByline';
 import AuthorBox from '@/components/author/AuthorBox';
 import { authorDisplayName, danielAuthorJsonLd } from '@/lib/authors';
+import ArticleServiceCta from '@/components/services/ArticleServiceCta';
+import { mentionedAsset } from '@/lib/products/placement';
 import { splitArticleContent } from '@/lib/split-article-content';
 import { removeDuplicateLeadParagraph } from '@/lib/dedupe-lead';
 import { stripBrandSuffix } from '@/lib/seo-title';
@@ -211,13 +213,7 @@ function MarketPulsePageContent({
 
           {article.authorKey === 'daniel-mihai' ? <AuthorBox /> : null}
 
-          <p className="text-sm text-slate-500">
-            Pentru un activ anume:{' '}
-            <Link href="/analiza-tehnica" className="text-slate-300 underline decoration-white/20 underline-offset-2">
-              analiză tehnică multi-timeframe
-            </Link>
-            .
-          </p>
+          <ArticleServiceCta asset={mentionedAsset(article.title, article.excerpt, article.content)} />
 
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">

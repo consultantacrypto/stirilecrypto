@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Mail, MapPin, MessageSquare, Clock } from 'lucide-react';
+import { Mail, MessageSquare, Clock } from 'lucide-react';
 import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
@@ -56,16 +56,6 @@ export default function ContactPage() {
               >
                 mihaidaniel.ro
               </a>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <MapPin className="text-purple-500" /> Sediu Editorial
-              </h3>
-              <p className="text-gray-400">
-                București, România<br />
-                Sector 1, Piața Victoriei
-              </p>
             </div>
 
             <div>

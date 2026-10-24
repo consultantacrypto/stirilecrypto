@@ -7,7 +7,7 @@
 
 create table if not exists public.product_inquiries (
   id uuid primary key default gen_random_uuid(),
-  product text not null check (product in ('ta_mtf', 'risk_report', 'bundle')),
+  product text not null check (product in ('ta_mtf', 'risk_report', 'bundle', 'address_check')),
   email text not null,
   asset text,
   amount_ron numeric,

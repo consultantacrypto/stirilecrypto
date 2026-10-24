@@ -17,9 +17,12 @@ const fieldClass =
 interface OrderFormProps {
   chargeable: boolean;
   deliveryLabel: string;
+  initialAsset?: string;
+  source?: string | null;
 }
 
-export default function OrderForm({ chargeable, deliveryLabel }: OrderFormProps) {
+export default function OrderForm({ chargeable, deliveryLabel, initialAsset = '', source = null }: OrderFormProps) {
+  const [asset, setAsset] = useState(initialAsset);
   const [holds, setHolds] = useState<boolean | null>(null);
   const [concerns, setConcerns] = useState<RiskConcern[]>([]);
   const [nativeAsset, setNativeAsset] = useState(false);
@@ -45,7 +48,8 @@ export default function OrderForm({ chargeable, deliveryLabel }: OrderFormProps)
       product: 'ta_mtf',
       email: String(form.get('email') ?? ''),
       consent,
-      asset: String(form.get('asset') ?? ''),
+      asset,
+      source: source ?? '',
       question: String(form.get('question') ?? ''),
       coin: String(form.get('coin') ?? ''),
       network: String(form.get('network') ?? ''),
@@ -110,7 +114,16 @@ export default function OrderForm({ chargeable, deliveryLabel }: OrderFormProps)
       </div>
 
       <Field label="Simbolul activului" htmlFor="asset">
-        <input id="asset" name="asset" required maxLength={12} placeholder="BTC" className={fieldClass} />
+        <input
+          id="asset"
+          name="asset"
+          required
+          maxLength={12}
+          placeholder="BTC"
+          value={asset}
+          onChange={(event) => setAsset(event.target.value.toUpperCase())}
+          className={fieldClass}
+        />
       </Field>
       <Field label="Întrebare despre grafice (opțional)" htmlFor="question">
         <textarea id="question" name="question" maxLength={1000} rows={3} className={fieldClass} />
