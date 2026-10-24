@@ -50,6 +50,13 @@ export interface EtfApiError {
   error: string;
 }
 
+/** Server-rendered series for the default dashboard period. */
+export interface EtfInitialSeries {
+  period: EtfPeriod;
+  btc: EtfSnapshot[];
+  eth: EtfSnapshot[];
+}
+
 /** @deprecated chart point used by legacy EtfFlowsChart — keep for compatibility */
 export interface EtfFlowChartPoint {
   date: string;

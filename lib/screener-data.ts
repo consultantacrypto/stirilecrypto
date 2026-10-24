@@ -17,8 +17,65 @@ export type ScreenerFetchResult = {
   fetchedAt: string | null;
 };
 
-function coingeckoMarketsUrl(perPage: number) {
-  return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=1&sparkline=false`;
+/** CoinGecko category "Tokenized Assets": funds, treasuries, credit, not coins. */
+const TOKENIZED_ASSET_CATEGORY = 'tokenized-products';
+
+/**
+ * Gold tokens sit in that category but readers still expect them in a crypto list.
+ * Everything else in the category (FIGR_HELOC, BUIDL, USYC, …) is left out.
+ */
+const TOKENIZED_ALLOWLIST = new Set(['pax-gold', 'tether-gold']);
+
+const STATIC_EXCLUDED_IDS = new Set([
+  'figure-heloc',
+  'hashnote-usyc',
+  'ondo-us-dollar-yield',
+  'blackrock-usd-institutional-digital-liquidity-fund',
+  'spiko-amundi-overnight-swap-fund-eur',
+  'superstate-short-duration-us-government-securities-fund-ustb',
+]);
+
+export function isNonCryptoMarketCoin(
+  coin: { id: string; symbol: string; name: string },
+  tokenizedIds?: ReadonlySet<string>,
+): boolean {
+  const id = coin.id.trim().toLowerCase();
+  if (TOKENIZED_ALLOWLIST.has(id)) return false;
+  if (STATIC_EXCLUDED_IDS.has(id) || tokenizedIds?.has(id)) return true;
+  if (coin.symbol.includes('_')) return true;
+  const blob = `${id} ${coin.name}`.toLowerCase();
+  if (blob.includes('heloc')) return true;
+  if (/\btokenized\b/.test(blob)) return true;
+  if (/\b(liquidity fund|money market fund|treasury fund)\b/.test(blob)) return true;
+  return false;
+}
+
+function coingeckoMarketsUrl(perPage: number, category?: string) {
+  const params = new URLSearchParams({
+    vs_currency: 'usd',
+    order: 'market_cap_desc',
+    per_page: String(perPage),
+    page: '1',
+    sparkline: 'false',
+  });
+  if (category) params.set('category', category);
+  return `https://api.coingecko.com/api/v3/coins/markets?${params}`;
+}
+
+async function fetchTokenizedAssetIds(): Promise<Set<string>> {
+  try {
+    const res = await fetch(coingeckoMarketsUrl(250, TOKENIZED_ASSET_CATEGORY), {
+      next: { revalidate: 3600 },
+      headers: { Accept: 'application/json' },
+    });
+    if (!res.ok) return new Set();
+    const data = (await res.json()) as Array<{ id?: string }>;
+    if (!Array.isArray(data)) return new Set();
+    return new Set(data.map((row) => row.id).filter((id): id is string => Boolean(id)));
+  } catch (error) {
+    console.error('[fetchTokenizedAssetIds]', error);
+    return new Set();
+  }
 }
 
 type CoinGeckoMarketRow = {
@@ -68,12 +125,20 @@ function readLastGood(perPage: number): LastGoodPayload | null {
   return lastGoodStore().get(perPage) ?? null;
 }
 
+function selectCryptoCoins(rows: ScreenerCoin[], tokenizedIds: ReadonlySet<string>, perPage: number) {
+  return rows.filter((coin) => !isNonCryptoMarketCoin(coin, tokenizedIds)).slice(0, perPage);
+}
+
 export async function fetchScreenerData(perPage = 50): Promise<ScreenerFetchResult> {
   try {
-    const res = await fetch(coingeckoMarketsUrl(perPage), {
-      next: { revalidate: 60 },
-      headers: { Accept: 'application/json' },
-    });
+    const buffer = Math.min(perPage + 40, 250);
+    const [res, tokenizedIds] = await Promise.all([
+      fetch(coingeckoMarketsUrl(buffer), {
+        next: { revalidate: 60 },
+        headers: { Accept: 'application/json' },
+      }),
+      fetchTokenizedAssetIds(),
+    ]);
 
     if (!res.ok) {
       throw new Error(`CoinGecko responded with ${res.status}`);
@@ -85,7 +150,7 @@ export async function fetchScreenerData(perPage = 50): Promise<ScreenerFetchResu
       throw new Error('CoinGecko returned an empty list');
     }
 
-    const coins = data.map(mapRow);
+    const coins = selectCryptoCoins(data.map(mapRow), tokenizedIds, perPage);
     const fetchedAt = new Date().toISOString();
     rememberLastGood(perPage, { coins, fetchedAt });
     return { coins, source: 'coingecko', fetchedAt };

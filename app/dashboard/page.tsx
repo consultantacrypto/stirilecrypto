@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import Navbar from '@/components/Navbar';
 import PiataAziTabs from '@/components/PiataAziTabs';
 import Footer from '@/components/Footer';
@@ -6,14 +5,15 @@ import DashboardPageHeader from '@/components/dashboard/DashboardPageHeader';
 import MarketPulseTerminal from '@/components/dashboard/MarketPulseTerminal';
 import MicaSafetyRadar from '@/components/dashboard/MicaSafetyRadar';
 import EtfSection from '@/components/dashboard/etf/EtfSection';
-import { EtfLoadingSkeleton } from '@/components/dashboard/etf/EtfLoadingSkeleton';
 // Legacy (server) ETF section kept for rollback — do not remount without review:
 // import EtfFlowsSection from '@/components/dashboard/etf/EtfFlowsSection';
 // import EtfFlowsSkeleton from '@/components/dashboard/etf/EtfFlowsSkeleton';
 import PremiumTaSection from '@/components/dashboard/premium/PremiumTaSection';
 import { getActivePulseTerminal, getMicaComplianceItems } from '@/lib/dashboard-db';
 import { ETF_MAX_AGE_DAYS, isFreshEnough, MICA_MAX_AGE_DAYS } from '@/lib/data-freshness';
+import { fetchEtfSnapshots } from '@/lib/etf/fetchEtfData';
 import { getLatestEtfSnapshotDate } from '@/lib/etf-snapshots-db';
+import type { EtfAssetSymbol, EtfSnapshot } from '@/lib/etf/types';
 import { getPulseFreshnessStatus } from '@/lib/market-pulse-freshness';
 import { getMarketPulseBySlug } from '@/lib/articles-db';
 import { SITE_URL } from '@/lib/json-ld';
@@ -30,12 +30,23 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
+async function loadEtfSeries(asset: EtfAssetSymbol): Promise<EtfSnapshot[]> {
+  try {
+    return await fetchEtfSnapshots(asset, '5d');
+  } catch (error) {
+    console.error('[dashboard etf]', asset, error);
+    return [];
+  }
+}
+
 export default async function DashboardPage() {
-  const [pulseSnapshot, exchanges, stablecoins, latestEtfDate] = await Promise.all([
+  const [pulseSnapshot, exchanges, stablecoins, latestEtfDate, btcFlows, ethFlows] = await Promise.all([
     getActivePulseTerminal('BTC'),
     getMicaComplianceItems('exchange'),
     getMicaComplianceItems('stablecoin'),
     getLatestEtfSnapshotDate(),
+    loadEtfSeries('BTC'),
+    loadEtfSeries('ETH'),
   ]);
   const showPulse = getPulseFreshnessStatus(pulseSnapshot?.published_at) === 'fresh';
   const micaUpdatedAt = [...exchanges, ...stablecoins].reduce<string | null>((latest, item) => {
@@ -82,9 +93,7 @@ export default async function DashboardPage() {
             />
           ) : null}
           {showEtf ? (
-            <Suspense fallback={<EtfLoadingSkeleton height={420} />}>
-              <EtfSection />
-            </Suspense>
+            <EtfSection initial={{ period: '5d', btc: btcFlows, eth: ethFlows }} />
           ) : null}
           {showMica ? <MicaSafetyRadar exchanges={exchanges} stablecoins={stablecoins} /> : null}
           <PremiumTaSection />

@@ -10,7 +10,7 @@ interface EtfSparklineProps {
 
 export function EtfSparkline({ data, color }: EtfSparklineProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 320, height: 64 }}>
       <LineChart data={data}>
         <Line
           type="monotone"
@@ -18,8 +18,7 @@ export function EtfSparkline({ data, color }: EtfSparklineProps) {
           stroke={color}
           strokeWidth={2}
           dot={false}
-          isAnimationActive
-          animationDuration={800}
+          isAnimationActive={false}
         />
       </LineChart>
     </ResponsiveContainer>

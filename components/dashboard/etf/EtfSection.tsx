@@ -2,14 +2,14 @@
 
 import { Building2 } from 'lucide-react';
 import { useState } from 'react';
-import type { EtfPeriod } from '@/lib/etf/types';
+import type { EtfInitialSeries, EtfPeriod } from '@/lib/etf/types';
 import { EtfAssetCard } from './EtfAssetCard';
 import { EtfBarChart } from './EtfBarChart';
 import { EtfPeriodSelector } from './EtfPeriodSelector';
 import { EtfTotalBadge } from './EtfTotalBadge';
 
-export default function EtfSection() {
-  const [period, setPeriod] = useState<EtfPeriod>('5d');
+export default function EtfSection({ initial }: { initial?: EtfInitialSeries }) {
+  const [period, setPeriod] = useState<EtfPeriod>(initial?.period ?? '5d');
 
   return (
     <section aria-label="Fluxuri ETF instituționale" className="mb-12 min-w-0 space-y-6">
@@ -30,14 +30,14 @@ export default function EtfSection() {
         <EtfPeriodSelector period={period} onChange={setPeriod} />
       </div>
 
-      <EtfTotalBadge period={period} />
+      <EtfTotalBadge period={period} initial={initial} />
 
       <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-        <EtfAssetCard asset="BTC" period={period} />
-        <EtfAssetCard asset="ETH" period={period} />
+        <EtfAssetCard asset="BTC" period={period} initial={initial} />
+        <EtfAssetCard asset="ETH" period={period} initial={initial} />
       </div>
 
-      <EtfBarChart period={period} />
+      <EtfBarChart period={period} initial={initial} />
     </section>
   );
 }
