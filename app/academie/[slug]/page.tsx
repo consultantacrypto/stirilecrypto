@@ -28,6 +28,9 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
 
   // ✅ Transformăm textul simplu în text cu Link-uri Inteligente
   const processedContent = enhanceContent(term.fullContent || '');
+  // ~200 cuvinte/minut, calculat din textul ghidului (fără tag-uri HTML)
+  const wordCount = (term.fullContent || '').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+  const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 
   return (
     <main className="min-h-screen bg-[#020617] text-white selection:bg-cyan-500/30 flex flex-col">
@@ -60,7 +63,7 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
             </h1>
             <div className="flex items-center gap-2 text-gray-300 text-sm">
                 <Clock size={16}/> 
-                <span>Timp de citire: <strong>3 min</strong></span>
+                <span>Timp de citire: <strong>{readingMinutes} min</strong></span>
             </div>
           </div>
       </div>

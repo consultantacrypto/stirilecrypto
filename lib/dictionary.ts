@@ -702,7 +702,7 @@ export const dictionary: AcademyItem[] = [
     image: "/cryptoromanialege.jpg",  
     definition: "Raportul de cercetare integral privind cadrul legal și fiscal din România în 2026. Analiza exhaustivă a Legii 239/2025, MiCA, OUG 10/2025 și a impozitării de 16%.",
     analogy: "Harta Minată vs. Drumul Asfaltat. Până în 2025, mergeam prin 'junglă' - riscant, dar fără reguli. În 2026, avem un drum asfaltat (MiCA), dar cu taxe de autostradă scumpe (16%) și radare la fiecare pas (ANAF/DAC8). Raportul acesta este 'Codul Rutier' complet pe care trebuie să-l știi ca să nu rămâi fără permis (sau bani).",
-    mihaiTake: "Tati, acesta este cel mai important document din Academie pentru siguranța ta financiară. Nu l-am rezumat pentru că fiecare paragraf contează. Citește tot, în special secțiunea despre 'Grandfathering' (dacă ai afaceri vechi) și calculul CASS. 2026 nu iartă greșelile de conformitate.",
+    mihaiTake: "Ghidul ăsta e lung, dar merită citit cu calm. Dacă vrei doar partea practică, sari direct la secțiunea 4: cât plătești pe câștigurile din crypto în 2026 (16%), când apare CASS-ul și cum completezi Declarația Unică (D212) până pe 25 mai. Nu e consultanță fiscală, iar pentru situația ta concretă merită o discuție cu un contabil.",
     fullContent: `
       <div class="space-y-6 text-gray-300 text-justify">
         
@@ -848,36 +848,34 @@ export const dictionary: AcademyItem[] = [
 
         <h4 class="text-xl font-bold text-blue-400 mt-6">4.1. Impozitul pe Venit: Majorarea la 16%</h4>
         <p>Cea mai importantă modificare, aplicabilă veniturilor realizate începând cu 1 ianuarie 2026, este creșterea cotei de impozitare pentru veniturile din transferul de monedă virtuală de la 10% la 16%.</p>
-        <p><strong>Baza de Calcul:</strong> Impozitul se aplică asupra câștigului net anual. Acesta se calculează ca diferență pozitivă între prețul de vânzare și prețul de achiziție, din care se pot scădea costurile directe legate de tranzacție (comisioane de exchange, taxe de rețea/gas fees).</p>
-        <p class="bg-gray-800 p-2 rounded border border-gray-600 font-mono text-sm mt-2">Formula: (Preț Vânzare - Preț Achiziție - Costuri Directe) x 16%.</p>
+        <p><strong>Baza de Calcul:</strong> Impozitul se calculează pe fiecare tranzacție încheiată cu câștig, ca diferență pozitivă între prețul de vânzare și prețul de achiziție, inclusiv costurile directe aferente tranzacției (comisioane de exchange, taxe de rețea/gas fees). Câștigurile se adună la final de an. Nu este un „câștig net anual”: pierderile din alte tranzacții nu se scad (detalii în secțiunea 4.5).</p>
+        <p class="bg-gray-800 p-2 rounded border border-gray-600 font-mono text-sm mt-2">Formula (pe tranzacție): Câștig = Preț vânzare – (Preț achiziție + Costuri directe); Impozit = 16% x suma câștigurilor din an.</p>
         <p class="mt-2"><strong>Determinarea Câștigului:</strong> În lipsa unor norme specifice contrare, se aplică în general metoda FIFO (First-In, First-Out) sau metoda prețului mediu ponderat pentru determinarea costului de achiziție, responsabilitatea calculului revenind investitorului.</p>
-        <p><strong>Scutiri Minime:</strong> Se menține un prag de neimpozitare simbolic. Câștigurile sub 200 RON per tranzacție nu se impozitează, cu condiția ca totalul câștigurilor din anul fiscal să nu depășească 600 RON. Depășirea acestui plafon anual atrage impozitarea întregii sume (sau a diferenței, în funcție de interpretarea normelor metodologice actualizate ale ANAF).</p>
+        <p><strong>Pragul de 200 / 600 lei:</strong> Câștigul sub 200 lei pe tranzacție nu se impozitează, cu condiția ca totalul câștigurilor din anul fiscal să nu depășească 600 lei (regulă confirmată de ANAF și pentru 2026). Atenție, e o condiție, nu o sumă pe care o scazi: dacă totalul câștigurilor trece de 600 lei, se impozitează toate câștigurile, inclusiv cele mici. Un câștig de 200 lei sau mai mult dintr-o singură tranzacție se impozitează oricum.</p>
 
         <h4 class="text-xl font-bold text-blue-400 mt-6">4.2. Contribuția de Asigurări Sociale de Sănătate (CASS)</h4>
-        <p>Pe lângă impozitul de 16%, investitorii datorează CASS dacă veniturile lor extrasalariale cumulate (inclusiv crypto, dividende, dobânzi, chirii) depășesc plafoanele legale. În 2026, calculul CASS devine mai complex din cauza modificării salariului minim brut în timpul anului.</p>
-        <p class="font-bold mt-2">Salariul Minim în 2026:</p>
-        <ul class="list-disc pl-6">
-          <li>1 Ianuarie - 30 Iunie: 4.050 RON</li>
-          <li>1 Iulie - 31 Decembrie: 4.325 RON.</li>
-        </ul>
-        <p class="font-bold mt-2">Plafoanele CASS (pentru venituri din investiții):</p>
-        <p>Sistemul de plafoane (6, 12 și 24 de salarii) se raportează la salariul minim în vigoare la data depunerii Declarației Unice (25 mai), însă baza de calcul efectivă ține cont de valoarea salariului la momentul realizării sau declarării. Pentru simplificare, în 2026, plafoanele uzuale de referință sunt calculate la valoarea salariului minim de la începutul anului fiscal sau o medie, conform normelor ANAF. Presupunând menținerea structurii pe 3 trepte pentru venituri din investiții:</p>
+        <p>Pe lângă impozitul de 16%, poți datora CASS (10%) dacă veniturile tale din afara salariului, adunate la un loc (câștiguri crypto, dividende, dobânzi, chirii, alte venituri din investiții), ajung la cel puțin 6 salarii minime brute pe an. Salariul și CASS-ul reținut deja de angajator nu intră în calcul, deci și ca salariat poți datora CASS separat pe aceste venituri. Pe câștigurile din crypto nu se datorează CAS (pensie).</p>
+        <p class="font-bold mt-2">Ce salariu minim se folosește pentru 2026:</p>
+        <p>Salariul minim brut a crescut la 4.325 lei de la 1 iulie 2026, dar pentru contribuțiile pe veniturile din 2026 se folosește salariul minim în vigoare la 1 ianuarie al anului, adică <strong>4.050 lei</strong>, indiferent de modificarea din cursul anului (precizare ANAF).</p>
+        <p class="font-bold mt-2">Pragurile CASS pentru veniturile din 2026:</p>
         <ul class="list-disc pl-6 mt-1">
-          <li><strong>6 Salarii:</strong> Dacă veniturile sunt între 6 și 12 salarii minime.</li>
-          <li><strong>12 Salarii:</strong> Dacă veniturile sunt între 12 și 24 salarii minime.</li>
-          <li><strong>24 Salarii:</strong> Dacă veniturile depășesc 24 salarii minime.</li>
+          <li>sub 24.300 lei (sub 6 salarii minime): nu datorezi CASS pe aceste venituri;</li>
+          <li>între 24.300 și 48.599 lei (6–12 salarii): CASS = 10% x 24.300 = <strong>2.430 lei</strong>;</li>
+          <li>între 48.600 și 97.199 lei (12–24 salarii): CASS = 10% x 48.600 = <strong>4.860 lei</strong>;</li>
+          <li>de la 97.200 lei în sus (24 salarii): CASS = 10% x 97.200 = <strong>9.720 lei</strong>, plafonul maxim.</li>
         </ul>
+        <p class="mt-2">CASS-ul este o sumă fixă pe treaptă, nu 10% din tot câștigul. Se declară și se plătește tot prin Declarația Unică, până la 25 mai a anului următor.</p>
 
         <div class="bg-gray-800/80 p-4 rounded-lg border border-red-500/30 mt-4">
-          <p class="font-bold text-red-400">Exemplu de Impact:</p>
-          <p>Un investitor care realizează un câștig net din cripto de 100.000 RON în 2026 (peste plafonul de 24 salarii: 24 x 4.050 = 97.200 RON) va plăti:</p>
+          <p class="font-bold text-red-400">Exemplu de Impact (ipotetic):</p>
+          <p>Un investitor fără alte venituri în afara salariului are în 2026 câștiguri din crypto de 100.000 lei (peste pragul de 24 de salarii: 24 x 4.050 = 97.200 lei). Va plăti:</p>
           <ul class="list-decimal pl-6 mt-2">
-            <li>Impozit: 100.000 x 16% = 16.000 RON.</li>
-            <li>CASS (la nivelul a 24 salarii): 24 x 4.050 x 10% = 9.720 RON.</li>
-            <li><strong>Total Taxe: 25.720 RON</strong> (Rata efectivă de impozitare: 25,72%).</li>
+            <li>Impozit: 100.000 x 16% = 16.000 lei.</li>
+            <li>CASS (la nivelul a 24 de salarii): 97.200 x 10% = 9.720 lei.</li>
+            <li><strong>Total: 25.720 lei</strong> (aprox. 25,7% din câștig).</li>
           </ul>
         </div>
-        <p class="mt-2 text-sm text-gray-400">Pentru activitățile independente (PFA), plafoanele au fost extinse până la 60-72 de salarii, dar pentru veniturile din investiții "pure" (fără formă juridică de PFA), plafonul maxim rămâne de regulă la 24 de salarii, deși legislația este fluidă și trebuie monitorizată Declarația Unică.</p>
+        <p class="mt-2 text-sm text-gray-400">Pentru activitățile independente (PFA) plafonul maxim al bazei CASS a crescut de la 60 la 72 de salarii minime în 2026. Pentru câștigurile din crypto ale unei persoane fizice se aplică treptele de 6, 12 și 24 de salarii de mai sus.</p>
 
         <h4 class="text-xl font-bold text-blue-400 mt-6">4.3. Regimul NFT-urilor: Drepturi de Autor vs. Cripto</h4>
         <p>Tratamentul fiscal al NFT-urilor în 2026 depinde strict de natura activității:</p>
@@ -894,13 +892,45 @@ export const dictionary: AcademyItem[] = [
           <li><strong>ANAF:</strong> Primește automat date despre portofoliile și tranzacțiile rezidenților români. Capacitatea de a încrucișa aceste date cu Declarația Unică este acum automatizată. Riscul nedeclarării este critic, deoarece ANAF poate impozita din oficiu veniturile nedeclarate, aplicând și penalități de nedeclarare.</li>
         </ul>
 
+        <h4 class="text-xl font-bold text-blue-400 mt-6">4.5. Pas cu pas: Declarația Unică (formularul 212)</h4>
+        <p>Nimeni nu îți reține impozitul pe crypto în România, nici exchange-ul, nici banca. Îl calculezi tu, îl declari și îl plătești o singură dată pe an, prin Declarația Unică (D212), la capitolul I „Date privind veniturile realizate”, la veniturile din alte surse obținute din transferul de monedă virtuală. Contează câștigurile, indiferent dacă platforma e din România sau din străinătate.</p>
+        <ul class="list-disc pl-6 space-y-2 mt-2">
+          <li><strong>Cota:</strong> 16% pentru câștigurile realizate începând cu 1 ianuarie 2026 (până în 2025 a fost 10%). Modificarea vine din Legea nr. 239/2025.</li>
+          <li><strong>Termenul:</strong> declarația și plata, până la 25 mai inclusiv a anului următor. Pentru câștigurile din 2026, termenul este <strong>25 mai 2027</strong>. Pentru câștigurile din 2025 (cota de 10%) termenul a fost 25 mai 2026.</li>
+          <li><strong>Cum o depui:</strong> online prin Spațiul Privat Virtual (SPV) ANAF sau pe e-guvernare.ro, ori pe hârtie la ghișeu sau prin poștă.</li>
+          <li><strong>În lei:</strong> calculele se fac în lei. Păstrează istoricul tranzacțiilor (exporturi CSV/rapoarte din exchange) ca să poți dovedi prețul de achiziție.</li>
+        </ul>
+
+        <p class="font-bold mt-4">Cum se tratează pierderile</p>
+        <p>Codul fiscal definește câștigul ca „diferență pozitivă” pe tranzacție. În practică, inclusiv în exemplele din ghidurile ANAF, asta înseamnă că o tranzacție pe pierdere nu se scade din câștigul altei tranzacții, iar pierderile din crypto nu se reportează în anii următori (reportarea pierderilor e prevăzută pentru titluri de valoare, nu pentru moneda virtuală). Poți deci să închei anul pe minus și totuși să datorezi impozit, dacă ai avut și tranzacții pe plus. Dacă ai multe tranzacții sau situații speciale (staking, airdrop, schimb crypto-crypto), verifică tratamentul cu un contabil, pentru că acolo interpretările diferă.</p>
+
+        <div class="bg-gray-800/80 p-4 rounded-lg border border-cyan-500/30 mt-4">
+          <p class="font-bold text-cyan-400">Exemplu de calcul (cifre ipotetice, doar pentru ilustrare)</p>
+          <p>Andrei are salariu și, în afară de crypto, nu are alte venituri. În 2026 face patru vânzări, cu toate sumele deja transformate în lei:</p>
+          <ul class="list-disc pl-6 mt-2">
+            <li>Tranzacția 1: câștig de 150 lei;</li>
+            <li>Tranzacția 2: câștig de 4.850 lei;</li>
+            <li>Tranzacția 3: pierdere de 1.000 lei;</li>
+            <li>Tranzacția 4: câștig de 25.000 lei.</li>
+          </ul>
+          <ul class="list-decimal pl-6 mt-2">
+            <li>Suma câștigurilor: 150 + 4.850 + 25.000 = <strong>30.000 lei</strong>. Pierderea de 1.000 lei nu se scade.</li>
+            <li>Totalul trece de 600 lei, deci și câștigul de 150 lei se impozitează.</li>
+            <li>Impozit: 30.000 x 16% = <strong>4.800 lei</strong>.</li>
+            <li>CASS: 30.000 lei e între 24.300 și 48.599 lei, deci datorează 2.430 lei.</li>
+            <li><strong>Total de plată: 7.230 lei</strong>, cu declarație și plată până pe 25 mai 2027.</li>
+          </ul>
+          <p class="mt-2 text-sm text-gray-400">Contra-exemplu: dacă în tot anul ar fi avut doar două câștiguri, de 150 și 180 lei (total 330 lei), nu ar fi datorat impozit pe ele.</p>
+        </div>
+        <p class="mt-2 text-sm italic text-gray-400">Cifrele de mai sus sunt valabile pentru veniturile din 2026, conform informațiilor publicate de ANAF. Legislația fiscală se schimbă des, așa că verifică regulile în vigoare înainte să depui declarația și cere sfatul unui contabil pentru situația ta.</p>
+
         <h3 class="text-2xl font-bold text-white mt-10 border-b border-gray-700 pb-2">5. Comparații cu Alte Tipuri de Active</h3>
         <p>Politica fiscală a anului 2026 creează un peisaj investițional distorsionat, favorizând anumite clase de active în detrimentul altora. Următoarea analiză comparativă evidențiază poziția dezavantajoasă a criptoactivelor.</p>
 
         <h4 class="text-xl font-bold text-blue-400 mt-6">5.1. Criptoactive vs. Piața de Capital (BVB/Acțiuni)</h4>
         <p>Cea mai mare discrepanță se observă între investițiile în cripto și cele pe bursă.</p>
         <ul class="list-disc pl-6 mt-2">
-          <li><strong>Cripto:</strong> Impozit 16%. Pierderile nu se pot compensa cu alte tipuri de venituri.</li>
+          <li><strong>Cripto:</strong> Impozit 16%. Pierderile nu se compensează cu câștigurile din alte tranzacții și nu se reportează.</li>
           <li><strong>Acțiuni (BVB):</strong>
             <ul class="list-circle pl-6 mt-1">
               <li>Dețineri pe termen lung (> 365 zile): Impozit 3% (majorat de la 1%).</li>
