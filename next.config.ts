@@ -82,6 +82,11 @@ const nextConfig: NextConfig = {
         permanent: true, // 308 permanent (SEO-equivalent to 301)
       },
       {
+        source: '/raport-risc',
+        destination: '/analiza-tehnica',
+        statusCode: 301,
+      },
+      {
         source: '/stiri/sezonul-celor-20-investitori-titani',
         destination: '/stiri/nu-asteptati-altcoin-season-vine-sezonul-celor-20',
         permanent: true,

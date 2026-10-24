@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { SITE_URL } from '@/lib/json-ld';
-import { orderAmount, productCatalog } from '@/lib/products/config';
+import { orderQuote, productCatalog } from '@/lib/products/config';
 import { isHoneypot, validateOrder } from '@/lib/products/intake';
 import { createStripeCheckout } from '@/lib/products/stripe';
 import { attachStripeSession, cancelInquiry, notifyInquiry, storeInquiry } from '@/lib/products/store';
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
   }
 
   const catalog = productCatalog();
-  const quote = orderAmount(catalog, order.product, order.bundle);
+  const quote = orderQuote(catalog);
 
   if (order.intent === 'pay') {
     if (!quote.chargeable) {
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     const stored = await storeInquiry({
       product: quote.productId,
       email: order.email,
-      asset: order.asset ?? order.risk?.ticker ?? null,
+      asset: order.asset,
       amountRon: quote.amountRon,
       consent: true,
       payload: order,
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
   const stored = await storeInquiry({
     product: quote.productId,
     email: order.email,
-    asset: order.asset ?? order.risk?.ticker ?? null,
+    asset: order.asset,
     amountRon: null,
     consent: true,
     payload: order,

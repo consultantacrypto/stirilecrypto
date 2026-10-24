@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import type { ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -55,16 +54,5 @@ export default function ProductFrame({
       </main>
       <Footer />
     </div>
-  );
-}
-
-export function ProductCrosslink({ href, title, text }: { href: string; title: string; text: string }) {
-  return (
-    <p className="mt-8 text-sm text-slate-400">
-      <Link href={href} className="font-semibold text-white hover:text-blue-300">
-        {title}
-      </Link>
-      <span className="mt-1 block">{text}</span>
-    </p>
   );
 }

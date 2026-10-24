@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
+import { createHmac } from 'node:crypto';
 import { describe, it } from 'node:test';
 import { validateOrder } from './intake';
+import { paidCheckoutFromEvent, verifyStripeSignature } from './stripe-event';
 
 const consent = {
   email: 'cititor@example.com',
@@ -19,52 +21,75 @@ describe('validateOrder', () => {
     if (!result.ok) assert.match(result.error, /retragere/i);
   });
 
-  it('accepts a technical-analysis waitlist', () => {
+  it('accepts a technical-analysis waitlist without the optional risk fields', () => {
     const result = validateOrder({
       ...consent,
       intent: 'waitlist',
       product: 'ta_mtf',
       asset: 'eth',
       question: 'Ce structură vezi pe 1D?',
+      delivery: 'email',
     });
     assert.equal(result.ok, true);
     if (result.ok) {
+      assert.equal(result.value.product, 'ta_mtf');
       assert.equal(result.value.asset, 'ETH');
       assert.equal(result.value.risk, null);
-      assert.equal(result.value.intent, 'waitlist');
+      assert.equal(result.value.bundle, false);
     }
   });
 
-  it('requires the risk intake when the products are bundled', () => {
-    const result = validateOrder({
-      ...consent,
-      product: 'ta_mtf',
-      bundle: true,
-      asset: 'SOL',
-    });
-    assert.equal(result.ok, false);
-  });
-
-  it('accepts a full risk report with a native asset', () => {
+  it('stores optional risk details on the analysis product', () => {
     const result = validateOrder({
       ...consent,
       product: 'risk_report',
-      coin: 'Exemplum',
       ticker: 'xmpl',
+      coin: 'Exemplum',
       network: 'Exemplaris',
       nativeAsset: true,
-      why: 'Vreau să înțeleg concentrarea deținătorilor înainte să aloc timp research-ului.',
-      holds: false,
-      horizon: 'weeks',
-      concerns: ['liquidity', 'scam', 'liquidity'],
-      delivery: 'pdf',
-      questions: 'Ce s-ar urmări la următoarea deblocare?',
+      concerns: ['liquidity', 'dump'],
+      why: 'Doar context opțional.',
     });
     assert.equal(result.ok, true);
     if (result.ok && result.value.risk) {
-      assert.equal(result.value.risk.ticker, 'XMPL');
-      assert.deepEqual(result.value.risk.concerns, ['liquidity', 'scam']);
+      assert.equal(result.value.product, 'ta_mtf');
+      assert.equal(result.value.asset, 'XMPL');
+      assert.equal(result.value.risk.coin, 'Exemplum');
+      assert.deepEqual(result.value.risk.concerns, ['liquidity', 'dump']);
       assert.equal(result.value.risk.contractAddress, null);
     }
+  });
+});
+
+describe('stripe webhook', () => {
+  it('accepts a fresh signature and reads a paid session', () => {
+    const secret = 'whsec_test';
+    const now = 1_700_000_000;
+    const payload = JSON.stringify({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          id: 'cs_test_123',
+          payment_status: 'paid',
+          metadata: { inquiry_id: '11111111-1111-1111-1111-111111111111' },
+          customer_details: { email: 'cititor@example.com' },
+        },
+      },
+    });
+    const signature = createHmac('sha256', secret).update(`${now}.${payload}`).digest('hex');
+    assert.equal(verifyStripeSignature(payload, `t=${now},v1=${signature}`, secret, now), true);
+    assert.equal(verifyStripeSignature(payload, `t=${now},v1=deadbeef`, secret, now), false);
+
+    const paid = paidCheckoutFromEvent(JSON.parse(payload));
+    assert.equal(paid?.inquiryId, '11111111-1111-1111-1111-111111111111');
+    assert.equal(paid?.email, 'cititor@example.com');
+  });
+
+  it('ignores an unpaid session', () => {
+    const paid = paidCheckoutFromEvent({
+      type: 'checkout.session.completed',
+      data: { object: { id: 'cs_test_123', payment_status: 'unpaid', metadata: { inquiry_id: 'abcdefgh' } } },
+    });
+    assert.equal(paid, null);
   });
 });

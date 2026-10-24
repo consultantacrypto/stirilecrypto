@@ -81,11 +81,6 @@ export default function Footer() {
                   Analiză tehnică
                 </Link>
               </li>
-              <li>
-                <Link href="/raport-risc" className="hover:text-blue-400 transition-colors">
-                  Raport de risc
-                </Link>
-              </li>
             </ul>
           </div>
 

@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import OrderForm from '@/components/products/OrderForm';
-import ProductFrame, { ProductCrosslink } from '@/components/products/ProductFrame';
+import ProductFrame from '@/components/products/ProductFrame';
 import TaSample from '@/components/products/TaSample';
+import { ANALYSIS_DELIVERY_FROM, productCatalog } from '@/lib/products/config';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
-import { productCatalog } from '@/lib/products/config';
 
 const TITLE = 'Analiză tehnică multi-timeframe';
 const DESCRIPTION =
-  'Analiză tehnică educațională pentru un singur activ crypto, pe 1h, 4h, 12h, 1D, 3D, 1W și 1M. Fără apeluri de cumpărare sau de vânzare.';
+  'Analiză tehnică educațională pentru un activ crypto, pe 1h, 4h, 12h, 1D, 3D, 1W și 1M, plus secțiunea Risc token. 49 RON. Fără apeluri de cumpărare sau de vânzare.';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +24,14 @@ export const metadata: Metadata = {
 
 const FRAMES = ['1h', '4h', '12h', '1D', '3D', '1W', '1M'];
 
+const RISK_POINTS = [
+  'Lichiditate: volum, adâncimea ordinelor și lichiditatea de pe DEX, acolo unde există.',
+  'Listări pe burse majore, sau absența lor.',
+  'Distribuția deținătorilor, din Arkham și din date on-chain publice.',
+  'Deblocări de tokenuri și calendarul lor.',
+  'Risc de dump și semnale de pump-and-dump.',
+];
+
 export default function AnalizaTehnicaPage() {
   const catalog = productCatalog();
 
@@ -31,7 +39,7 @@ export default function AnalizaTehnicaPage() {
     <ProductFrame
       kicker="La comandă"
       title={TITLE}
-      lede="O analiză tehnică pentru un singur activ ales de tine. Descrie contextul pe șapte grafice. Este material educațional, nu o recomandare personalizată și nu îți spune să cumperi sau să vinzi."
+      lede="O analiză pentru un singur activ ales de tine: șapte grafice și o secțiune Risc token. Este material educațional, nu o recomandare personalizată și nu îți spune să cumperi sau să vinzi."
       priceRon={catalog.ta.priceRon}
       priceConfirmed={catalog.ta.priceConfirmed}
       deliveryLabel={catalog.ta.deliveryLabel}
@@ -39,31 +47,12 @@ export default function AnalizaTehnicaPage() {
         <>
           <h2 className="font-[var(--font-space)] text-lg font-bold">Comandă</h2>
           <p className="mt-2 mb-5 text-sm leading-relaxed text-slate-400">
-            Alegi simbolul și, dacă vrei, o întrebare. Poți adăuga și raportul de risc pentru aceeași monedă.
+            Simbolul este obligatoriu. Câmpurile de risc sunt opționale și ajută la redactare.
           </p>
-          <OrderForm
-            product="ta_mtf"
-            chargeTa={catalog.chargeTa}
-            chargeRisk={catalog.chargeRisk}
-            taPriceRon={catalog.ta.priceRon}
-            riskPriceRon={catalog.risk.priceRon}
-            riskPriceConfirmed={catalog.risk.priceConfirmed}
-            bundlePriceRon={catalog.bundlePriceRon}
-            bundlePriceConfirmed={catalog.bundlePriceConfirmed}
-            deliveryLabel={catalog.ta.deliveryLabel}
-          />
+          <OrderForm chargeable={catalog.chargeable} deliveryLabel={catalog.ta.deliveryLabel} />
         </>
       }
-      below={
-        <>
-          <TaSample />
-          <ProductCrosslink
-            href="/raport-risc"
-            title="Raport de risc pentru o monedă"
-            text="Lichiditate, deținători, deblocări și semnale de securitate, tot ca material educațional."
-          />
-        </>
-      }
+      below={<TaSample />}
     >
       <ul className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {FRAMES.map((frame) => (
@@ -75,14 +64,20 @@ export default function AnalizaTehnicaPage() {
           </li>
         ))}
       </ul>
-      <ul className="mt-6 space-y-2 text-sm leading-relaxed text-slate-300">
-        <li>Trendul și zonele observate pe fiecare timeframe, în același document.</li>
-        <li>Răspuns la întrebarea ta, dacă ai lăsat una, tot fără apel de tranzacționare.</li>
-        <li>Livrare pe email, în intervalul afișat. Intervalul este un reper configurabil, nu un termen contractual ferm.</li>
+      <h2 className="mt-8 font-[var(--font-space)] text-lg font-bold text-white">Risc token</h2>
+      <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-300">
+        {RISK_POINTS.map((point) => (
+          <li key={point}>{point}</li>
+        ))}
       </ul>
+      <p className="mt-6 text-sm leading-relaxed text-slate-300">
+        Un coleg pregătește materialul, Daniel Mihai îl revizuiește, apoi pleacă pe email de la{' '}
+        {ANALYSIS_DELIVERY_FROM}, de regulă în {catalog.ta.deliveryLabel.toLowerCase()}.
+      </p>
       <p className="mt-6 text-sm leading-relaxed text-slate-500">
-        Analiză tehnică generală, în scop educațional. Nu este o recomandare de investiții personalizată,
-        nu ține loc de consultanță financiară autorizată și nu conține apeluri de cumpărare sau de vânzare.
+        Analiză tehnică generală și o citire de risc, ambele în scop educațional. Nu este o
+        recomandare de investiții personalizată, nu ține loc de consultanță financiară autorizată și
+        nu conține apeluri de cumpărare sau de vânzare.
       </p>
     </ProductFrame>
   );
