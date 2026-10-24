@@ -80,7 +80,14 @@ export async function markInquiryPaid(
   id: string,
   sessionId: string,
 ): Promise<
-  | { ok: true; changed: boolean; email: string; asset: string | null; amountRon: number | null }
+  | {
+      ok: true;
+      changed: boolean;
+      email: string;
+      asset: string | null;
+      amountRon: number | null;
+      tier: 'major' | 'altcoin' | null;
+    }
   | { ok: false; reason: 'unconfigured' | 'missing' | 'failed' }
 > {
   if (!storageConfigured()) return { ok: false, reason: 'unconfigured' };
@@ -89,7 +96,7 @@ export async function markInquiryPaid(
     const supabase = createServiceClient();
     const { data, error } = await supabase
       .from('product_inquiries')
-      .select('id, email, asset, amount_ron, status')
+      .select('id, email, asset, amount_ron, status, payload')
       .eq('id', id)
       .maybeSingle();
 
@@ -98,14 +105,15 @@ export async function markInquiryPaid(
       return { ok: false, reason: 'missing' };
     }
 
+    const paidRow = {
+      email: String(data.email),
+      asset: data.asset ? String(data.asset) : null,
+      amountRon: data.amount_ron == null ? null : Number(data.amount_ron),
+      tier: tierFromPayload(data.payload),
+    };
+
     if (data.status === 'paid') {
-      return {
-        ok: true,
-        changed: false,
-        email: String(data.email),
-        asset: data.asset ? String(data.asset) : null,
-        amountRon: data.amount_ron == null ? null : Number(data.amount_ron),
-      };
+      return { ok: true, changed: false, ...paidRow };
     }
 
     const { error: updateError } = await supabase
@@ -119,17 +127,17 @@ export async function markInquiryPaid(
       return { ok: false, reason: 'failed' };
     }
 
-    return {
-      ok: true,
-      changed: true,
-      email: String(data.email),
-      asset: data.asset ? String(data.asset) : null,
-      amountRon: data.amount_ron == null ? null : Number(data.amount_ron),
-    };
+    return { ok: true, changed: true, ...paidRow };
   } catch (err) {
     console.error('[product_inquiries] paid', err instanceof Error ? err.message : 'unknown');
     return { ok: false, reason: 'failed' };
   }
+}
+
+function tierFromPayload(payload: unknown): 'major' | 'altcoin' | null {
+  if (!payload || typeof payload !== 'object') return null;
+  const tier = (payload as { tier?: unknown }).tier;
+  return tier === 'major' || tier === 'altcoin' ? tier : null;
 }
 
 export async function notifyInquiry(body: Record<string, unknown>): Promise<boolean> {

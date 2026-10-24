@@ -81,7 +81,7 @@ export default function Footer() {
               ) : null}
               <li>
                 <Link href="/analiza-tehnica?src=footer" className="hover:text-blue-400 transition-colors">
-                  Analiză tehnică
+                  Analiză tehnică, de la 79 lei
                 </Link>
               </li>
               <li>

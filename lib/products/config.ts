@@ -1,30 +1,22 @@
 import { paymentsEnabled } from '@/lib/flags';
-
-const MAX_PRICE_RON = 100_000;
+import { ALTCOIN_PRICE_RON, MAJOR_PRICE_RON } from './tiers';
 
 export const ANALYSIS_DELIVERY_FROM = 'contact@stirilecrypto.ro';
 export const ANALYSIS_DELIVERY_DEFAULT = '24 de ore în zilele lucrătoare';
-
-function readPrice(name: string, fallback: number): number {
-  const raw = process.env[name]?.trim();
-  if (!raw) return fallback;
-  const value = Number(raw);
-  if (!Number.isFinite(value) || value <= 0 || value > MAX_PRICE_RON) return fallback;
-  return Math.round(value);
-}
 
 function readLabel(name: string, fallback: string): string {
   const value = process.env[name]?.trim();
   return value || fallback;
 }
 
-/** ta_mtf is the paid analysis. address_check needs the SQL migration before inserts succeed. */
+/** ta_mtf is the paid analysis. The tier (major | altcoin) lives on the inquiry payload. */
 export type ProductId = 'ta_mtf' | 'risk_report' | 'bundle' | 'address_check';
 
 export interface ProductOffer {
   id: 'ta_mtf';
   name: string;
-  priceRon: number;
+  majorPriceRon: number;
+  altcoinPriceRon: number;
   priceConfirmed: true;
   deliveryLabel: string;
 }
@@ -41,25 +33,12 @@ export function productCatalog(): ProductCatalog {
     ta: {
       id: 'ta_mtf',
       name: 'Analiză tehnică multi-timeframe',
-      priceRon: readPrice('TA_PRICE_RON', 49),
+      majorPriceRon: MAJOR_PRICE_RON,
+      altcoinPriceRon: ALTCOIN_PRICE_RON,
       priceConfirmed: true,
       deliveryLabel: readLabel('TA_DELIVERY_LABEL', ANALYSIS_DELIVERY_DEFAULT),
     },
     paymentsEnabled: payments,
     chargeable: payments,
-  };
-}
-
-export function orderQuote(catalog: ProductCatalog): {
-  productId: 'ta_mtf';
-  amountRon: number;
-  chargeable: boolean;
-  name: string;
-} {
-  return {
-    productId: 'ta_mtf',
-    amountRon: catalog.ta.priceRon,
-    chargeable: catalog.chargeable,
-    name: 'Analiză tehnică multi-timeframe, cu secțiunea Risc token',
   };
 }

@@ -19,7 +19,7 @@ export default function PremiumTaSection() {
         className="glass-card block rounded-2xl border border-white/10 p-5 transition-colors hover:border-white/20"
       >
         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
-          {catalog.ta.priceRon} RON
+          de la {catalog.ta.majorPriceRon} RON
         </p>
         <h3 className="mt-2 font-[var(--font-space)] text-lg font-bold text-white">{catalog.ta.name}</h3>
         <p className="mt-2 text-sm leading-relaxed text-slate-400">

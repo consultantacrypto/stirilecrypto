@@ -6,7 +6,8 @@ export default function ProductFrame({
   kicker,
   title,
   lede,
-  priceRon,
+  fromRon,
+  altcoinRon,
   priceConfirmed,
   deliveryLabel,
   children,
@@ -16,7 +17,8 @@ export default function ProductFrame({
   kicker: string;
   title: string;
   lede: string;
-  priceRon: number;
+  fromRon: number;
+  altcoinRon: number;
   priceConfirmed: boolean;
   deliveryLabel: string;
   children: ReactNode;
@@ -35,7 +37,8 @@ export default function ProductFrame({
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">{lede}</p>
             <div className="mt-6 flex flex-wrap items-end gap-3">
-              <p className="font-[var(--font-space)] text-4xl font-black tabular-nums">{priceRon}</p>
+              <p className="mb-1 text-sm font-semibold text-slate-400">de la</p>
+              <p className="font-[var(--font-space)] text-4xl font-black tabular-nums">{fromRon}</p>
               <p className="mb-1 text-sm font-semibold text-slate-300">RON</p>
               {priceConfirmed ? null : (
                 <p className="mb-1.5 rounded-full border border-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
@@ -43,6 +46,9 @@ export default function ProductFrame({
                 </p>
               )}
             </div>
+            <p className="mt-2 text-sm text-slate-400">
+              Altcoin: {altcoinRon} RON. Ambele tarife includ cele șapte grafice și secțiunea Risc token. Fără livrare express.
+            </p>
             <p className="mt-2 text-sm text-slate-500">Livrare orientativă: {deliveryLabel}.</p>
             {children}
           </div>

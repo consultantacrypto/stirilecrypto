@@ -72,6 +72,27 @@ describe('validateOrder', () => {
       assert.equal(result.value.risk.contractAddress, null);
     }
   });
+
+  it('keeps a posted tier and ignores a posted price', () => {
+    const major = validateOrder({
+      ...consent,
+      product: 'ta_mtf',
+      asset: 'pepe',
+      tier: 'major',
+      amountRon: 49,
+      amountBani: 4900,
+    });
+    assert.equal(major.ok, true);
+    if (major.ok) {
+      assert.equal(major.value.requestedTier, 'major');
+      assert.equal('amountRon' in major.value, false);
+      assert.equal('amountBani' in major.value, false);
+    }
+
+    const unknown = validateOrder({ ...consent, product: 'ta_mtf', asset: 'BTC', tier: 49 });
+    assert.equal(unknown.ok, true);
+    if (unknown.ok) assert.equal(unknown.value.requestedTier, null);
+  });
 });
 
 describe('validateAddressWaitlist', () => {

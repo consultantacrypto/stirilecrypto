@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { SITE_URL } from '@/lib/json-ld';
-import { orderQuote, productCatalog } from '@/lib/products/config';
+import { productCatalog } from '@/lib/products/config';
 import { isHoneypot, validateOrder } from '@/lib/products/intake';
 import { createStripeCheckout } from '@/lib/products/stripe';
 import { attachStripeSession, cancelInquiry, notifyInquiry, storeInquiry } from '@/lib/products/store';
+import { analysisCheckoutCopy, resolveAnalysisTier } from '@/lib/products/tiers';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,10 +45,18 @@ export async function POST(request: Request) {
   }
 
   const catalog = productCatalog();
-  const quote = orderQuote(catalog);
+  const priced = resolveAnalysisTier(order.asset, order.requestedTier);
+  const copy = analysisCheckoutCopy(priced.tier);
+  const payload = {
+    ...order,
+    tier: priced.tier,
+    amountRon: priced.amountRon,
+    amountBani: priced.amountBani,
+    forcedAltcoin: priced.forcedAltcoin,
+  };
 
   if (order.intent === 'pay') {
-    if (!quote.chargeable) {
+    if (!catalog.chargeable) {
       return NextResponse.json(
         {
           error:
@@ -58,12 +67,12 @@ export async function POST(request: Request) {
     }
 
     const stored = await storeInquiry({
-      product: quote.productId,
+      product: 'ta_mtf',
       email: order.email,
       asset: order.asset,
-      amountRon: quote.amountRon,
+      amountRon: priced.amountRon,
       consent: true,
-      payload: order,
+      payload,
       status: 'pending_payment',
     });
 
@@ -72,12 +81,14 @@ export async function POST(request: Request) {
     }
 
     const session = await createStripeCheckout({
-      name: quote.name,
-      amountRon: quote.amountRon,
+      name: copy.name,
+      description: copy.description,
+      amountBani: priced.amountBani,
       email: order.email,
       origin: originFrom(request),
       inquiryId: stored.id,
-      product: quote.productId,
+      product: 'ta_mtf',
+      tier: priced.tier,
       source: order.source,
     });
 
@@ -91,23 +102,26 @@ export async function POST(request: Request) {
   }
 
   const stored = await storeInquiry({
-    product: quote.productId,
+    product: 'ta_mtf',
     email: order.email,
     asset: order.asset,
-    amountRon: null,
+    amountRon: priced.amountRon,
     consent: true,
-    payload: order,
+    payload,
     status: 'waitlist',
   });
 
   const notified = await notifyInquiry({
     type: 'product_inquiry',
     mode: 'waitlist',
-    product: quote.productId,
+    product: 'ta_mtf',
     email: order.email,
     asset: order.asset,
+    tier: priced.tier,
+    amountRon: priced.amountRon,
+    amountBani: priced.amountBani,
     inquiryId: stored.ok ? stored.id : null,
-    order,
+    order: payload,
   });
 
   if (!stored.ok && !notified) {

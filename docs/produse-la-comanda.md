@@ -12,7 +12,16 @@ Production can already charge `/analiza-tehnica` when `PAYMENTS_ENABLED` and `ST
 
 The checkout code stays off unless `PAYMENTS_ENABLED=true` and `STRIPE_SECRET_KEY` are both set. This change does not set them.
 
-`/analiza-tehnica` is the paid product. Price **49 RON** (`TA_PRICE_RON`). It covers one asset on 1h, 4h, 12h, 1D, 3D, 1W and 1M, plus a **Risc token** section: liquidity, major-exchange listings, holder distribution from Arkham and public on-chain data, token unlocks, dump risk, and pump-and-dump signals. The sample uses the fictitious asset Exemplum (XMPL). It is educational. It is not a buy or sell call.
+`/analiza-tehnica` is the paid product. There are two prices, both for the same delivery (seven timeframes plus **Risc token**, no express option):
+
+- **79 RON** (`major`) for a hardcoded top-30 coin. The list is the CoinMarketCap historical snapshot of 23 October 2026, ranks 1–30 (`https://coinmarketcap.com/historical/20261023/`). `TON` is accepted as `GRAM`.
+- **139 RON** (`altcoin`) for every other symbol.
+
+The buyer picks the tier in the form. `?asset=` preselects 79 when the symbol is in that list and 139 otherwise. The server calls `resolveAnalysisTier`. If the symbol is not in the list, the stored tier and the Stripe amount are the altcoin price even when the form posted `major`. A top-30 buyer may still post `altcoin` and pay 139. A posted amount is never read. `TA_PRICE_RON` is no longer read, so a leftover value of 49 cannot keep the old price.
+
+The product id stays `ta_mtf`. `amount_ron` is 79 or 139. The resolved tier, `amountBani` (7900 or 13900), and `forcedAltcoin` are stored on `payload` jsonb. No new column and no new check-constraint value, so this change does not add a SQL file.
+
+It covers one asset on 1h, 4h, 12h, 1D, 3D, 1W and 1M, plus a **Risc token** section: liquidity, major-exchange listings, holder distribution from Arkham and public on-chain data, token unlocks, dump risk, and pump-and-dump signals. The sample uses the fictitious asset Exemplum (XMPL). It is educational. It is not a buy or sell call.
 
 `/raport-risc` redirects with **301** to `/analiza-tehnica`. It is not in the footer, the dashboard, or the sitemap. New orders are stored as `product = ta_mtf`. Older `risk_report` and `bundle` rows stay valid; the table check constraint is unchanged.
 
@@ -28,12 +37,12 @@ This site does **not** send the buyer to mihaidaniel.ro. It already has its own 
 
 When both are set, a valid form with intent `pay`:
 
-1. Inserts `product_inquiries` with `status = pending_payment`, amount 49 RON (or `TA_PRICE_RON`), and the intake JSON.
-2. `lib/products/stripe.ts` POSTs `https://api.stripe.com/v1/checkout/sessions` with `Authorization: Bearer $STRIPE_SECRET_KEY`. Mode is `payment`, currency `ron`, one line item, `customer_email`, and metadata `inquiry_id`. There is no Stripe SDK and no `payment_method_types` list.
+1. Resolves the tier on the server from the asset and the posted tier. Inserts `product_inquiries` with `status = pending_payment`, `amount_ron` 79 or 139, and the intake JSON including `payload.tier`.
+2. `lib/products/stripe.ts` POSTs `https://api.stripe.com/v1/checkout/sessions` with `Authorization: Bearer $STRIPE_SECRET_KEY`. Mode is `payment`, currency `ron`, one line item whose `unit_amount` is the constant **7900** or **13900** bani (never a client number), `customer_email`, product name and description for that tier, and metadata `inquiry_id`, `product`, and `tier`. Checkout refuses any other unit amount. There is no Stripe SDK, no precreated Stripe Price, and no `payment_method_types` list. This does not change Stripe Dashboard settings.
 3. The browser is sent to the hosted Checkout URL. Cancel returns to `/comenzi/anulare`. Success returns to `/comenzi/succes?session_id=…`. That page is **not** proof of payment or of delivery.
 4. Stripe later POSTs `checkout.session.completed` (and, for delayed methods, `checkout.session.async_payment_succeeded`) to `/api/premium/webhook`. The route checks `Stripe-Signature` with `STRIPE_WEBHOOK_SECRET`. Only a session whose `payment_status` is `paid` marks the row `paid` and notifies.
 
-The Stripe **account** is whichever account owns `STRIPE_SECRET_KEY`. mihaidaniel.ro does the same thing for the course and consultancy: its own `STRIPE_SECRET_KEY` creates a Checkout Session. It does not expose a shared checkout URL for other sites. To land these 49 RON charges in QuickExit LLC’s Stripe (the account behind mihaidaniel.ro), put a restricted key from **that** Stripe account in this project’s `STRIPE_SECRET_KEY`. A key from a different Stripe account charges that other account instead. Do not paste the key into git.
+The Stripe **account** is whichever account owns `STRIPE_SECRET_KEY`. mihaidaniel.ro does the same thing for the course and consultancy: its own `STRIPE_SECRET_KEY` creates a Checkout Session. It does not expose a shared checkout URL for other sites. To land these charges in QuickExit LLC’s Stripe (the account behind mihaidaniel.ro), put a restricted key from **that** Stripe account in this project’s `STRIPE_SECRET_KEY`. A key from a different Stripe account charges that other account instead. Do not paste the key into git.
 
 There is no webhook on the success page. Fulfillment starts from `/api/premium/webhook`.
 
@@ -48,7 +57,7 @@ Do this in the Vercel project for stirilecrypto, Production (and Preview only if
    Events: `checkout.session.completed` and `checkout.session.async_payment_succeeded`.
    Set `STRIPE_WEBHOOK_SECRET` to that endpoint’s signing secret (`whsec_…`).
 4. Apply `supabase/product-inquiries.sql` in the Supabase SQL editor if the table is not there yet. It does not change `stiri`.
-5. Optional: `TA_PRICE_RON` (default 49) and `TA_DELIVERY_LABEL` (default `24 de ore în zilele lucrătoare`).
+5. Optional: `TA_DELIVERY_LABEL` (default `24 de ore în zilele lucrătoare`). `TA_PRICE_RON` is ignored.
 6. Optional: `PRODUCT_ORDER_WEBHOOK_URL` (https only) and `PRODUCT_ORDER_WEBHOOK_SECRET`. After a paid webhook, the same JSON is POSTed there (Slack, Make, or an email relay). Waitlist submits use it too.
 7. Redeploy so the server sees the variables. Then place a small live or test payment and confirm the row becomes `paid`.
 
@@ -63,12 +72,12 @@ Until step 2, nothing is charged.
 | `PAYMENTS_ENABLED` | off | Must be `true` together with the secret key. |
 | `STRIPE_SECRET_KEY` | unset | Server only. Chooses the Stripe account. |
 | `STRIPE_WEBHOOK_SECRET` | unset | Required for `/api/premium/webhook` to accept events. |
-| `TA_PRICE_RON` | `49` | Price in RON. |
+| `TA_PRICE_RON` | ignored | No longer read. Prices are 79 and 139 RON in code. |
 | `TA_DELIVERY_LABEL` | `24 de ore în zilele lucrătoare` | Shown on the page. |
 | `PRODUCT_ORDER_WEBHOOK_URL` | unset | Optional https notification after waitlist or paid. |
 | `PRODUCT_ORDER_WEBHOOK_SECRET` | unset | Sent as `Authorization: Bearer …` when the URL is set. |
 | `AI_CHAT_ENABLED` | off | `POST /api/chat` stays 404 unless this is `true`. |
 
-`RISK_REPORT_PRICE_RON`, `RISK_REPORT_PRICE_CONFIRMED`, and `BUNDLE_PRICE_RON` are no longer read. Leave them unset.
+`TA_PRICE_RON`, `RISK_REPORT_PRICE_RON`, `RISK_REPORT_PRICE_CONFIRMED`, and `BUNDLE_PRICE_RON` are no longer read. Leave them unset. Do not change them in Vercel for this price change.
 
 `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are the existing server credentials used to insert and update orders.

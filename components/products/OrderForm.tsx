@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { validateOrder, type RiskConcern } from '@/lib/products/intake';
+import { defaultTier, isMajorAsset, type AnalysisTier } from '@/lib/products/tiers';
 
 const CONCERNS: { id: RiskConcern; label: string }[] = [
   { id: 'dump', label: 'Dump / vânzare bruscă' },
@@ -23,6 +24,7 @@ interface OrderFormProps {
 
 export default function OrderForm({ chargeable, deliveryLabel, initialAsset = '', source = null }: OrderFormProps) {
   const [asset, setAsset] = useState(initialAsset);
+  const [tier, setTier] = useState<AnalysisTier>(() => defaultTier(initialAsset));
   const [holds, setHolds] = useState<boolean | null>(null);
   const [concerns, setConcerns] = useState<RiskConcern[]>([]);
   const [nativeAsset, setNativeAsset] = useState(false);
@@ -30,6 +32,13 @@ export default function OrderForm({ chargeable, deliveryLabel, initialAsset = ''
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const majorAllowed = isMajorAsset(asset);
+
+  function onAssetChange(value: string) {
+    const next = value.toUpperCase();
+    setAsset(next);
+    setTier(defaultTier(next));
+  }
 
   function toggleConcern(id: RiskConcern) {
     setConcerns((current) =>
@@ -49,6 +58,7 @@ export default function OrderForm({ chargeable, deliveryLabel, initialAsset = ''
       email: String(form.get('email') ?? ''),
       consent,
       asset,
+      tier,
       source: source ?? '',
       question: String(form.get('question') ?? ''),
       coin: String(form.get('coin') ?? ''),
@@ -121,10 +131,49 @@ export default function OrderForm({ chargeable, deliveryLabel, initialAsset = ''
           maxLength={12}
           placeholder="BTC"
           value={asset}
-          onChange={(event) => setAsset(event.target.value.toUpperCase())}
+          onChange={(event) => onAssetChange(event.target.value)}
           className={fieldClass}
         />
       </Field>
+      <fieldset>
+        <legend className="mb-2 text-sm font-medium text-slate-300">Tarif</legend>
+        <div className="space-y-2">
+          <label className={`flex items-start gap-3 text-sm ${majorAllowed ? 'text-slate-200' : 'text-slate-500'}`}>
+            <input
+              type="radio"
+              name="tier"
+              value="major"
+              className="mt-1"
+              checked={tier === 'major'}
+              disabled={!majorAllowed}
+              onChange={() => setTier('major')}
+            />
+            <span>Monedă mare (top 30) – 79 lei</span>
+          </label>
+          <label className="flex items-start gap-3 text-sm text-slate-200">
+            <input
+              type="radio"
+              name="tier"
+              value="altcoin"
+              className="mt-1"
+              checked={tier === 'altcoin'}
+              onChange={() => setTier('altcoin')}
+            />
+            <span>Altcoin – 139 lei</span>
+          </label>
+        </div>
+        {majorAllowed ? (
+          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+            Poți alege oricare tarif. Suma plătită este calculată pe server, nu din formular.
+          </p>
+        ) : (
+          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+            {asset.trim().length >= 2
+              ? 'Acest simbol nu este în top 30. Serverul încasează 139 lei chiar dacă se trimite tariful de 79.'
+              : 'Monedele din afara top 30 se taxează la 139 lei.'}
+          </p>
+        )}
+      </fieldset>
       <Field label="Întrebare despre grafice (opțional)" htmlFor="question">
         <textarea id="question" name="question" maxLength={1000} rows={3} className={fieldClass} />
       </Field>

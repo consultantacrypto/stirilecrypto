@@ -25,7 +25,13 @@ interface InquiryRow {
   status: string;
   stripe_session_id: string | null;
   created_at: string;
-  payload: { source?: unknown } | null;
+  payload: { source?: unknown; tier?: unknown } | null;
+}
+
+function tierLabel(tier: unknown): string {
+  if (tier === 'major') return 'Monedă mare, 79 lei';
+  if (tier === 'altcoin') return 'Altcoin, 139 lei';
+  return '—';
 }
 
 export default async function AdminOrdersPage() {
@@ -63,6 +69,7 @@ export default async function AdminOrdersPage() {
                 <th className="px-4 py-3 font-semibold">Activ</th>
                 <th className="px-4 py-3 font-semibold">Email</th>
                 <th className="px-4 py-3 font-semibold">Sumă</th>
+                <th className="px-4 py-3 font-semibold">Tarif</th>
                 <th className="px-4 py-3 font-semibold">Sursă</th>
               </tr>
             </thead>
@@ -77,6 +84,7 @@ export default async function AdminOrdersPage() {
                   <td className="px-4 py-3">{row.asset || '—'}</td>
                   <td className="px-4 py-3">{row.email}</td>
                   <td className="px-4 py-3 tabular-nums">{row.amount_ron == null ? '—' : `${row.amount_ron} RON`}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">{tierLabel(row.payload?.tier)}</td>
                   <td className="px-4 py-3">{typeof row.payload?.source === 'string' ? row.payload.source : '—'}</td>
                 </tr>
               ))}

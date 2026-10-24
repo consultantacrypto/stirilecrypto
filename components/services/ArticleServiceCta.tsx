@@ -10,7 +10,7 @@ export default function ArticleServiceCta({ asset }: { asset: string | null }) {
     <aside className="my-10 rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">La comandă</p>
       <p className="mt-2 text-base font-semibold leading-relaxed text-white">
-        Analiză tehnică pe 7 timeframe-uri + risc token, 49 lei. Livrare în 24h.
+        Analiză tehnică pe 7 timeframe-uri + risc token, de la 79 lei. Livrare în 24h.
       </p>
       <p className="mt-2 text-sm leading-relaxed text-slate-400">
         {asset

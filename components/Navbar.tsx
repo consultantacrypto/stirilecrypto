@@ -93,8 +93,8 @@ export default function Navbar() {
           }`}
         >
           Analiză tehnică
-          <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold tracking-wide text-black">
-            49 lei
+          <span className="whitespace-nowrap rounded-full bg-white px-2 py-0.5 text-[10px] font-bold tracking-wide text-black">
+            de la 79 lei
           </span>
         </Link>
         <Link

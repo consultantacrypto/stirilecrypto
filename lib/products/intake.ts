@@ -1,4 +1,5 @@
 import { sanitizeSource } from './placement';
+import type { AnalysisTier } from './tiers';
 
 export type Horizon = 'days' | 'weeks' | 'months';
 export type DeliveryPreference = 'email' | 'pdf';
@@ -33,6 +34,8 @@ export interface NormalizedOrder {
   question: string | null;
   risk: OptionalRisk | null;
   source: string | null;
+  /** What the form posted. Checkout ignores this when the asset is outside the top 30. */
+  requestedTier: AnalysisTier | null;
 }
 
 function clean(value: unknown, max: number): string {
@@ -106,6 +109,7 @@ export function validateOrder(input: unknown): { ok: true; value: NormalizedOrde
         question: null,
         risk: null,
         source: null,
+        requestedTier: null,
       },
     };
   }
@@ -143,6 +147,7 @@ export function validateOrder(input: unknown): { ok: true; value: NormalizedOrde
       question: rawQuestion || null,
       risk: optionalRisk(body),
       source: sanitizeSource(typeof body.source === 'string' ? body.source : null),
+      requestedTier: body.tier === 'major' || body.tier === 'altcoin' ? body.tier : null,
     },
   };
 }

@@ -8,7 +8,7 @@ import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 const TITLE = 'Analiză tehnică multi-timeframe';
 const DESCRIPTION =
-  'Analiză tehnică educațională pentru un activ crypto, pe 1h, 4h, 12h, 1D, 3D, 1W și 1M, plus secțiunea Risc token. 49 RON. Fără apeluri de cumpărare sau de vânzare.';
+  'Analiză tehnică educațională pentru un activ crypto, pe 1h, 4h, 12h, 1D, 3D, 1W și 1M, plus secțiunea Risc token. De la 79 RON pentru o monedă din top 30, 139 RON pentru un altcoin. Fără apeluri de cumpărare sau de vânzare.';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,7 +48,8 @@ export default async function AnalizaTehnicaPage({
       kicker="La comandă"
       title={TITLE}
       lede="O analiză pentru un singur activ ales de tine: șapte grafice și o secțiune Risc token. Este material educațional, nu o recomandare personalizată și nu îți spune să cumperi sau să vinzi."
-      priceRon={catalog.ta.priceRon}
+      fromRon={catalog.ta.majorPriceRon}
+      altcoinRon={catalog.ta.altcoinPriceRon}
       priceConfirmed={catalog.ta.priceConfirmed}
       deliveryLabel={catalog.ta.deliveryLabel}
       aside={

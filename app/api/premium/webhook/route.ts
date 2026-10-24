@@ -48,6 +48,7 @@ export async function POST(request: Request) {
       email: marked.email,
       asset: marked.asset,
       amountRon: marked.amountRon,
+      tier: marked.tier,
       deliverFrom: ANALYSIS_DELIVERY_FROM,
       deliveryLabel: process.env.TA_DELIVERY_LABEL?.trim() || ANALYSIS_DELIVERY_DEFAULT,
       note: 'Pregătire manuală: un coleg redactează analiza, Daniel Mihai o revizuiește, apoi pleacă pe email.',

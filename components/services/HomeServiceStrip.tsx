@@ -6,7 +6,7 @@ export default function HomeServiceStrip() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p className="text-sm leading-relaxed text-slate-300">
           <span className="font-semibold text-white">
-            Analiză tehnică pe 7 timeframe-uri + risc token, 49 lei.
+            Analiză tehnică pe 7 timeframe-uri + risc token, de la 79 lei.
           </span>{' '}
           Livrare în 24h.
         </p>
