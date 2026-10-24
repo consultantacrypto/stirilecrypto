@@ -10,7 +10,7 @@ export default function HomeServiceStrip() {
           </span>{' '}
           Livrare în 24h.
         </p>
-        <div className="flex shrink-0 items-center gap-4">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <Link
             href="/analiza-tehnica?src=home"
             className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-4 text-sm font-bold text-black hover:bg-slate-100"
@@ -18,7 +18,7 @@ export default function HomeServiceStrip() {
             Comandă analiza
           </Link>
           <Link href="/verificare-portofel?src=home" className="text-sm font-medium text-slate-300 underline underline-offset-4 hover:text-white">
-            Anti-țeapă
+            Verificare portofel crypto
           </Link>
         </div>
       </div>

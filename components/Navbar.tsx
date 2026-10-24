@@ -85,10 +85,10 @@ export default function Navbar() {
 
       </nav>
 
-      <div className="flex items-center gap-1 overflow-x-auto border-t border-white/10 px-4 py-2 sm:px-6">
+      <div className="flex flex-wrap items-center gap-1 border-t border-white/10 px-4 py-2 sm:px-6">
         <Link
           href="/analiza-tehnica?src=nav"
-          className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold transition-colors hover:bg-white/10 hover:text-white ${
+          className={`inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold transition-colors hover:bg-white/10 hover:text-white ${
             isPathActive(pathname, '/analiza-tehnica') ? 'bg-white/10 text-white' : 'text-slate-200'
           }`}
         >
@@ -99,12 +99,12 @@ export default function Navbar() {
         </Link>
         <Link
           href="/verificare-portofel?src=nav"
-          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors hover:bg-white/10 hover:text-white ${
+          className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors hover:bg-white/10 hover:text-white ${
             isPathActive(pathname, '/verificare-portofel') ? 'bg-white/10 font-semibold text-white' : 'font-medium text-slate-300'
           }`}
         >
           <Shield size={14} aria-hidden />
-          Anti-țeapă
+          Verificare portofel crypto
         </Link>
       </div>
 
@@ -120,6 +120,18 @@ export default function Navbar() {
               {label}
             </Link>
           ))}
+          <Link
+            href="/verificare-portofel?src=nav"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`flex w-full items-center gap-2 rounded-2xl px-5 py-4 text-base ${
+              isPathActive(pathname, '/verificare-portofel')
+                ? 'bg-white/10 font-semibold text-white'
+                : 'font-medium text-slate-300 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            <Shield size={16} aria-hidden />
+            Verificare portofel crypto
+          </Link>
           <Link
             href="/raport-strategic"
             onClick={() => setMobileMenuOpen(false)}

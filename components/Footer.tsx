@@ -86,7 +86,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/verificare-portofel?src=footer" className="hover:text-blue-400 transition-colors">
-                  Anti-țeapă
+                  Verificare portofel crypto
                 </Link>
               </li>
             </ul>

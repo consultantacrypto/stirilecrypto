@@ -61,7 +61,7 @@ export default async function VerificarePortofelPage({
       <Navbar />
       <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
         <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
-          Anti-țeapă · QuickExit LLC
+          Verificare portofel crypto · QuickExit LLC
         </p>
         <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">

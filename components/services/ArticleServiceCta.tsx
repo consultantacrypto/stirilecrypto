@@ -28,7 +28,7 @@ export default function ArticleServiceCta({ asset }: { asset: string | null }) {
           href={withSource('/verificare-portofel', 'article')}
           className="text-sm text-slate-300 underline underline-offset-4 hover:text-white"
         >
-          Verifică portofelul înainte să trimiți bani
+          Verificare portofel crypto
         </Link>
       </div>
     </aside>

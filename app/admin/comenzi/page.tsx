@@ -13,7 +13,7 @@ const PRODUCT_LABEL: Record<string, string> = {
   ta_mtf: 'Analiză tehnică',
   risk_report: 'Raport de risc (comandă veche)',
   bundle: 'Pachet (comandă veche)',
-  address_check: 'Anti-țeapă (portofel)',
+  address_check: 'Verificare portofel crypto',
 };
 
 interface InquiryRow {
