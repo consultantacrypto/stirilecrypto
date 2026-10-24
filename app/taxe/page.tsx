@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TaxCalculator from '@/components/TaxCalculator';
+import TaxServicePromos from '@/components/services/TaxServicePromos';
 import { FISCAL_GUIDE_D212_HREF, FISCAL_GUIDE_PATH } from '@/lib/fiscal-2026';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
@@ -39,6 +40,7 @@ export default function TaxePage() {
             Cum completezi Declarația unică (D212)
           </Link>
         </p>
+        <TaxServicePromos />
       </div>
       <Footer />
     </main>

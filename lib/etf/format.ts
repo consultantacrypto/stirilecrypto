@@ -24,6 +24,23 @@ export function periodToFromDate(period: EtfPeriod, now = new Date()): string {
   return from.toISOString().slice(0, 10);
 }
 
+export function flowsFromDbRow(row: Record<string, unknown>): {
+  inflow_usd: number;
+  outflow_usd: number;
+  aum_usd: number | null;
+} {
+  const inflow = row.inflow ?? row.inflow_usd;
+  const outflow = row.outflow ?? row.outflow_usd;
+  const aumRaw = row.aum !== undefined ? row.aum : row.aum_usd;
+  const aumMissing = aumRaw == null || aumRaw === '';
+  const aum = aumMissing ? null : toFiniteNumber(aumRaw, NaN);
+  return {
+    inflow_usd: toFiniteNumber(inflow),
+    outflow_usd: toFiniteNumber(outflow),
+    aum_usd: aum !== null && Number.isFinite(aum) ? aum : null,
+  };
+}
+
 export function toFiniteNumber(value: unknown, fallback = 0): number {
   const n = typeof value === 'number' ? value : Number(value);
   return Number.isFinite(n) ? n : fallback;
@@ -58,7 +75,8 @@ export function formatAumBillions(usd: number | null, digits = 1): string {
 
 export function rowToSnapshot(row: EtfSnapshotRow): EtfSnapshot {
   const net = toFiniteNumber(row.net_flow_usd);
-  const aum = row.aum_usd == null ? null : toFiniteNumber(row.aum_usd, NaN);
+  const flows = flowsFromDbRow(row as unknown as Record<string, unknown>);
+  const aum = flows.aum_usd;
   return {
     id: row.id,
     asset: row.asset_symbol,
@@ -66,9 +84,9 @@ export function rowToSnapshot(row: EtfSnapshotRow): EtfSnapshot {
     snapshot_date: row.snapshot_date,
     net_flow_usd: net,
     net_flow_m: usdToMillions(net),
-    inflow_usd: toFiniteNumber(row.inflow_usd),
-    outflow_usd: toFiniteNumber(row.outflow_usd),
-    aum_usd: aum !== null && Number.isFinite(aum) ? aum : null,
+    inflow_usd: flows.inflow_usd,
+    outflow_usd: flows.outflow_usd,
+    aum_usd: aum,
     aum_b: aum !== null && Number.isFinite(aum) ? usdToBillions(aum) : null,
     source: row.source,
     updated_at: row.updated_at ?? row.created_at ?? null,
