@@ -169,17 +169,8 @@ export default function Navbar() {
           >
             Analiză tehnică – de la {MAJOR_PRICE_RON} lei
           </Link>
-          <Link
-            href={WALLET_LINK.href}
-            onClick={() => setMobileOpen(false)}
-            className={`mb-2 rounded-xl px-3 py-3 text-base hover:bg-white/10 ${
-              isPathActive(pathname, WALLET_LINK.href) ? 'bg-white/10 font-semibold text-white' : 'text-slate-200'
-            }`}
-          >
-            {WALLET_LINK.label}
-          </Link>
           <div className="flex flex-col gap-1">
-            {[...MAIN_LINKS.filter((item) => item.href !== WALLET_LINK.href), ...MORE_LINKS].map((item) => (
+            {[...MAIN_LINKS, ...MORE_LINKS].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

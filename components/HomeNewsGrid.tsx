@@ -8,7 +8,7 @@ import MorningNewsletter from '@/components/MorningNewsletter';
 import type { NewsFeedItem } from '@/lib/home-feed';
 import { HOME_FEED_FIRST_COUNT, HOME_FEED_PAGE_SIZE } from '@/lib/home-feed';
 
-function NewsCard({ item, priority }: { item: NewsFeedItem; priority: boolean }) {
+function NewsCard({ item, priority, eager = false }: { item: NewsFeedItem; priority: boolean; eager?: boolean }) {
   return (
     <article className="flex flex-col gap-5 rounded-3xl border border-white/5 bg-[#1c1c1e] p-4">
       <Link
@@ -19,8 +19,10 @@ function NewsCard({ item, priority }: { item: NewsFeedItem; priority: boolean })
           src={item.image_url}
           alt={item.title}
           priority={priority}
+          eager={eager}
+          coverWidth={720}
           aspectRatio="16/10"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 768px) 92vw, (max-width: 1200px) 46vw, 380px"
           className="rounded-2xl"
           imageClassName="transition-transform duration-500 group-hover:scale-[1.02]"
         />
@@ -29,7 +31,7 @@ function NewsCard({ item, priority }: { item: NewsFeedItem; priority: boolean })
             {item.category}
           </span>
           <span className="text-[11px] font-medium uppercase tracking-wide text-slate-500">{item.dateLabel}</span>
-          <h3 className="line-clamp-2 text-xl font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-blue-400">
+          <h3 className="line-clamp-3 text-xl font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-blue-400">
             {item.title}
           </h3>
           <p className="line-clamp-3 text-sm leading-relaxed text-slate-300">{item.excerpt}</p>
@@ -112,7 +114,7 @@ export default function HomeNewsGrid({
       {rest.length > 0 ? (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
           {rest.map((item) => (
-            <NewsCard key={item.id} item={item} priority={false} />
+            <NewsCard key={item.id} item={item} priority={false} eager />
           ))}
         </div>
       ) : null}

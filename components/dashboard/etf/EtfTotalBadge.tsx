@@ -2,18 +2,19 @@
 
 import { TrendingDown, TrendingUp } from 'lucide-react';
 import { formatFlowMillions } from '@/lib/etf/format';
-import type { EtfPeriod } from '@/lib/etf/types';
+import type { EtfInitialSeries, EtfPeriod } from '@/lib/etf/types';
 import { EtfErrorState } from './EtfErrorState';
 import { EtfUnavailableState } from './EtfUnavailableState';
 import { useEtfData } from './useEtfData';
 
 interface EtfTotalBadgeProps {
   period: EtfPeriod;
+  initial?: EtfInitialSeries;
 }
 
-export function EtfTotalBadge({ period }: EtfTotalBadgeProps) {
-  const btc = useEtfData('BTC', period);
-  const eth = useEtfData('ETH', period);
+export function EtfTotalBadge({ period, initial }: EtfTotalBadgeProps) {
+  const btc = useEtfData('BTC', period, initial);
+  const eth = useEtfData('ETH', period, initial);
 
   if (btc.loading || eth.loading) {
     return <div className="glass-card h-20 animate-pulse rounded-xl border border-white/10" />;

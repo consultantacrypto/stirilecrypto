@@ -30,6 +30,16 @@ body::before {
   z-index: -1;
 }
 
+@keyframes cover-shimmer {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+
+.cover-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+  animation: cover-shimmer 1.35s ease-in-out infinite;
+}
+
 /* CARD DE STICLĂ "FROSTED" */
 .glass-card {
   background: rgba(255, 255, 255, 0.02);

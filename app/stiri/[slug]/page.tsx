@@ -208,6 +208,10 @@ function ArticlePageContent({
 
           {article.authorKey === 'daniel-mihai' ? <AuthorBox /> : null}
 
+          <ArticleServiceCta
+            asset={mentionedAsset(article.title, article.excerpt, article.content)}
+          />
+
           <AffiliatePartnerBox />
 
           <MorningNewsletter location="article" variant="compact" id="newsletter-article" />
@@ -233,10 +237,6 @@ function ArticlePageContent({
               <ShareButtons title={article.title} slug={article.slug} />
             </div>
           </div>
-
-          <ArticleServiceCta
-            asset={mentionedAsset(article.title, article.excerpt, article.content)}
-          />
 
           <RelatedArticles currentSlug={article.slug} category={article.category} />
         </article>

@@ -15,6 +15,10 @@ export type ArticleCoverImageProps = {
   alt: string;
   sizes: string;
   priority?: boolean;
+  /** Load immediately when the card is already in view, such as a freshly appended row. */
+  eager?: boolean;
+  /** Pixel width requested from the storage render endpoint. */
+  coverWidth?: number;
   aspectRatio?: ArticleCoverAspect;
   className?: string;
   imageClassName?: string;
@@ -29,24 +33,29 @@ export default function ArticleCoverImage({
   alt,
   sizes,
   priority = false,
+  eager = false,
+  coverWidth = 960,
   aspectRatio = 'video',
   className = '',
   imageClassName = '',
   overlay,
 }: ArticleCoverImageProps) {
+  const fast = priority || eager;
   return (
     <div
-      className={`relative w-full shrink-0 overflow-hidden bg-gray-900 ${ASPECT_CLASS[aspectRatio]} ${className}`}
+      className={`relative w-full shrink-0 overflow-hidden bg-[#1c1c1e] ${ASPECT_CLASS[aspectRatio]} ${className}`}
     >
-      <div className="absolute inset-0 z-0 animate-pulse bg-gray-900" aria-hidden />
+      <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden>
+        <div className="cover-shimmer absolute inset-y-0 w-1/2" />
+      </div>
       {overlay}
       <Image
-        src={displayCoverUrl(src)}
+        src={displayCoverUrl(src, coverWidth)}
         alt={alt}
         fill
         priority={priority}
-        fetchPriority={priority ? 'high' : 'low'}
-        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : fast ? 'auto' : 'low'}
+        loading={fast ? 'eager' : 'lazy'}
         decoding={priority ? 'sync' : 'async'}
         sizes={sizes}
         className={`relative z-[1] object-cover ${imageClassName}`}

@@ -2,7 +2,7 @@
 
 import { AlertTriangle, TrendingDown, TrendingUp } from 'lucide-react';
 import { formatAumBillions, formatFlowMillions } from '@/lib/etf/format';
-import type { EtfAssetSymbol, EtfPeriod } from '@/lib/etf/types';
+import type { EtfAssetSymbol, EtfInitialSeries, EtfPeriod } from '@/lib/etf/types';
 import { EtfErrorState } from './EtfErrorState';
 import { EtfLoadingSkeleton } from './EtfLoadingSkeleton';
 import { EtfSparkline } from './EtfSparkline';
@@ -12,10 +12,11 @@ import { useEtfData } from './useEtfData';
 interface EtfAssetCardProps {
   asset: EtfAssetSymbol;
   period: EtfPeriod;
+  initial?: EtfInitialSeries;
 }
 
-export function EtfAssetCard({ asset, period }: EtfAssetCardProps) {
-  const { data, loading, error, refetch, lastUpdated, isStale } = useEtfData(asset, period);
+export function EtfAssetCard({ asset, period, initial }: EtfAssetCardProps) {
+  const { data, loading, error, refetch, lastUpdated, isStale } = useEtfData(asset, period, initial);
 
   if (loading) return <EtfLoadingSkeleton />;
   if (error) return <EtfErrorState error={error} onRetry={refetch} />;
@@ -81,9 +82,9 @@ export function EtfAssetCard({ asset, period }: EtfAssetCardProps) {
         <EtfSparkline data={data} color={sparkColor} />
       </div>
 
-      <div className="flex items-center justify-between border-t border-white/10 pt-3 text-xs text-slate-500">
-        <span>AUM: {formatAumBillions(latest.aum_usd)}</span>
-        <span>Actualizat: {updatedLabel}</span>
+      <div className="flex items-center justify-between gap-3 border-t border-white/10 pt-3 text-xs text-slate-500">
+        {latest.aum_usd != null ? <span>AUM: {formatAumBillions(latest.aum_usd)}</span> : null}
+        <span className="ml-auto">Actualizat: {updatedLabel}</span>
       </div>
     </article>
   );

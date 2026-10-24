@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import type { EtfPeriod } from '@/lib/etf/types';
+import type { EtfInitialSeries, EtfPeriod } from '@/lib/etf/types';
 import { EtfErrorState } from './EtfErrorState';
 import { EtfLoadingSkeleton } from './EtfLoadingSkeleton';
 import { EtfUnavailableState } from './EtfUnavailableState';
@@ -18,6 +18,7 @@ import { useEtfData } from './useEtfData';
 
 interface EtfBarChartProps {
   period: EtfPeriod;
+  initial?: EtfInitialSeries;
 }
 
 interface CombinedPoint {
@@ -37,9 +38,9 @@ function formatLabel(iso: string): string {
   });
 }
 
-export function EtfBarChart({ period }: EtfBarChartProps) {
-  const btc = useEtfData('BTC', period);
-  const eth = useEtfData('ETH', period);
+export function EtfBarChart({ period, initial }: EtfBarChartProps) {
+  const btc = useEtfData('BTC', period, initial);
+  const eth = useEtfData('ETH', period, initial);
 
   const combined: CombinedPoint[] = useMemo(() => {
     const dates = [
@@ -86,7 +87,12 @@ export function EtfBarChart({ period }: EtfBarChartProps) {
         Flux comparativ ({period})
       </h3>
       <div className="h-72 w-full min-w-0">
-        <ResponsiveContainer width="100%" height="100%" minWidth={280}>
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          minWidth={280}
+          initialDimension={{ width: 720, height: 288 }}
+        >
           <BarChart data={combined} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#ffffff12" vertical={false} />
             <XAxis dataKey="label" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
@@ -113,8 +119,8 @@ export function EtfBarChart({ period }: EtfBarChartProps) {
                 return [`${sign}${n.toFixed(1)}M`, ''];
               }}
             />
-            <Bar dataKey="BTC" fill="#f97316" radius={[4, 4, 0, 0]} name="BTC" maxBarSize={36} />
-            <Bar dataKey="ETH" fill="#3b82f6" radius={[4, 4, 0, 0]} name="ETH" maxBarSize={36} />
+            <Bar dataKey="BTC" fill="#f97316" radius={[4, 4, 0, 0]} name="BTC" maxBarSize={36} isAnimationActive={false} />
+            <Bar dataKey="ETH" fill="#3b82f6" radius={[4, 4, 0, 0]} name="ETH" maxBarSize={36} isAnimationActive={false} />
           </BarChart>
         </ResponsiveContainer>
       </div>
