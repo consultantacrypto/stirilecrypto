@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
 import { describe, it } from 'node:test';
+import { validateAddressWaitlist } from './address-intake';
 import { validateOrder } from './intake';
 import { paidCheckoutFromEvent, verifyStripeSignature } from './stripe-event';
 
@@ -36,7 +37,19 @@ describe('validateOrder', () => {
       assert.equal(result.value.asset, 'ETH');
       assert.equal(result.value.risk, null);
       assert.equal(result.value.bundle, false);
+      assert.equal(result.value.source, null);
     }
+  });
+
+  it('keeps a placement source on the analysis order', () => {
+    const result = validateOrder({
+      ...consent,
+      product: 'ta_mtf',
+      asset: 'BTC',
+      source: 'article',
+    });
+    assert.equal(result.ok, true);
+    if (result.ok) assert.equal(result.value.source, 'article');
   });
 
   it('stores optional risk details on the analysis product', () => {
@@ -57,6 +70,19 @@ describe('validateOrder', () => {
       assert.equal(result.value.risk.coin, 'Exemplum');
       assert.deepEqual(result.value.risk.concerns, ['liquidity', 'dump']);
       assert.equal(result.value.risk.contractAddress, null);
+    }
+  });
+});
+
+describe('validateAddressWaitlist', () => {
+  it('requires the notify consent and keeps the placement', () => {
+    const missing = validateAddressWaitlist({ email: 'cititor@example.com', consent: false });
+    assert.equal(missing.ok, false);
+    const saved = validateAddressWaitlist({ email: 'cititor@example.com', consent: true, source: 'nav' });
+    assert.equal(saved.ok, true);
+    if (saved.ok) {
+      assert.equal(saved.value.source, 'nav');
+      assert.equal(saved.honeypot, false);
     }
   });
 });

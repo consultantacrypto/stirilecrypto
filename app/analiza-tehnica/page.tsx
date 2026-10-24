@@ -3,6 +3,7 @@ import OrderForm from '@/components/products/OrderForm';
 import ProductFrame from '@/components/products/ProductFrame';
 import TaSample from '@/components/products/TaSample';
 import { ANALYSIS_DELIVERY_FROM, productCatalog } from '@/lib/products/config';
+import { sanitizeAssetParam, sanitizeSource } from '@/lib/products/placement';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 const TITLE = 'Analiză tehnică multi-timeframe';
@@ -32,8 +33,15 @@ const RISK_POINTS = [
   'Risc de dump și semnale de pump-and-dump.',
 ];
 
-export default function AnalizaTehnicaPage() {
+export default async function AnalizaTehnicaPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ asset?: string; src?: string }>;
+}) {
+  const query = await searchParams;
   const catalog = productCatalog();
+  const initialAsset = sanitizeAssetParam(query.asset);
+  const source = sanitizeSource(query.src);
 
   return (
     <ProductFrame
@@ -49,7 +57,12 @@ export default function AnalizaTehnicaPage() {
           <p className="mt-2 mb-5 text-sm leading-relaxed text-slate-400">
             Simbolul este obligatoriu. Câmpurile de risc sunt opționale și ajută la redactare.
           </p>
-          <OrderForm chargeable={catalog.chargeable} deliveryLabel={catalog.ta.deliveryLabel} />
+          <OrderForm
+            chargeable={catalog.chargeable}
+            deliveryLabel={catalog.ta.deliveryLabel}
+            initialAsset={initialAsset}
+            source={source}
+          />
         </>
       }
       below={<TaSample />}

@@ -77,8 +77,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/analiza-tehnica" className="hover:text-blue-400 transition-colors">
+                <Link href="/analiza-tehnica?src=footer" className="hover:text-blue-400 transition-colors">
                   Analiză tehnică
+                </Link>
+              </li>
+              <li>
+                <Link href="/verifica-adresa?src=footer" className="hover:text-blue-400 transition-colors">
+                  Verifică adresa
                 </Link>
               </li>
             </ul>

@@ -13,6 +13,7 @@ const PRODUCT_LABEL: Record<string, string> = {
   ta_mtf: 'Analiză tehnică',
   risk_report: 'Raport de risc (comandă veche)',
   bundle: 'Pachet (comandă veche)',
+  address_check: 'Verificare adresă',
 };
 
 interface InquiryRow {
@@ -24,13 +25,14 @@ interface InquiryRow {
   status: string;
   stripe_session_id: string | null;
   created_at: string;
+  payload: { source?: unknown } | null;
 }
 
 export default async function AdminOrdersPage() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('product_inquiries')
-    .select('id, product, email, asset, amount_ron, status, stripe_session_id, created_at')
+    .select('id, product, email, asset, amount_ron, status, stripe_session_id, created_at, payload')
     .order('created_at', { ascending: false })
     .limit(100);
 
@@ -61,6 +63,7 @@ export default async function AdminOrdersPage() {
                 <th className="px-4 py-3 font-semibold">Activ</th>
                 <th className="px-4 py-3 font-semibold">Email</th>
                 <th className="px-4 py-3 font-semibold">Sumă</th>
+                <th className="px-4 py-3 font-semibold">Sursă</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10 text-slate-300">
@@ -74,6 +77,7 @@ export default async function AdminOrdersPage() {
                   <td className="px-4 py-3">{row.asset || '—'}</td>
                   <td className="px-4 py-3">{row.email}</td>
                   <td className="px-4 py-3 tabular-nums">{row.amount_ron == null ? '—' : `${row.amount_ron} RON`}</td>
+                  <td className="px-4 py-3">{typeof row.payload?.source === 'string' ? row.payload.source : '—'}</td>
                 </tr>
               ))}
             </tbody>

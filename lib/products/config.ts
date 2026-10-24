@@ -18,8 +18,8 @@ function readLabel(name: string, fallback: string): string {
   return value || fallback;
 }
 
-/** Values already allowed by product_inquiries. New orders use ta_mtf only. */
-export type ProductId = 'ta_mtf' | 'risk_report' | 'bundle';
+/** ta_mtf is the paid analysis. address_check needs the SQL migration before inserts succeed. */
+export type ProductId = 'ta_mtf' | 'risk_report' | 'bundle' | 'address_check';
 
 export interface ProductOffer {
   id: 'ta_mtf';

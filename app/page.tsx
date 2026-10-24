@@ -8,6 +8,7 @@ import MarketPulseSection from '@/components/MarketPulseSection';
 import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
 import EmailCaptureBox from '@/components/EmailCaptureBox';
+import HomeServiceStrip from '@/components/services/HomeServiceStrip';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 export const revalidate = 60;
@@ -37,6 +38,7 @@ export default function Home() {
       <ScrollProgress />
       <Navbar />
       <HeroNewsPortal />
+      <HomeServiceStrip />
 
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full">
         <MarketPulseSection />

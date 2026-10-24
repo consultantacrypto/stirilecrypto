@@ -7,8 +7,8 @@ export interface InquiryInsert {
   email: string;
   asset: string | null;
   amountRon: number | null;
-  consent: true;
-  payload: NormalizedOrder;
+  consent: boolean;
+  payload: NormalizedOrder | Record<string, unknown>;
   status: 'waitlist' | 'pending_payment' | 'cancelled';
 }
 

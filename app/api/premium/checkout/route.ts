@@ -78,6 +78,7 @@ export async function POST(request: Request) {
       origin: originFrom(request),
       inquiryId: stored.id,
       product: quote.productId,
+      source: order.source,
     });
 
     if (!session.ok) {

@@ -6,6 +6,8 @@ import { ArrowLeft, Calendar, User } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ArticleContent from '@/components/ArticleContent';
+import ArticleServiceCta from '@/components/services/ArticleServiceCta';
+import { mentionedAsset } from '@/lib/products/placement';
 import ShareButtons from '@/components/ShareButtons';
 import { getBadgeStyle } from '@/lib/interviews';
 import {
@@ -184,6 +186,10 @@ export default async function InterviewPage({
             </p>
 
             <ArticleContent content={bodyWithoutLead} />
+
+            <ArticleServiceCta
+              asset={mentionedAsset(interview.title, interview.excerpt, interview.content)}
+            />
 
             <footer className="mt-14 pt-8 border-t border-white/10">
               <p className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-3 font-[var(--font-space)]">
