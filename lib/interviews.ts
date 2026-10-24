@@ -4,6 +4,7 @@ import { normalizeImageUrl } from '@/lib/image-url';
 export interface InterviewCardItem {
   slug: string;
   title: string;
+  guest_name: string;
   excerpt: string;
   cover_image: string;
   badge: string;
@@ -28,6 +29,7 @@ export function getBadgeStyle(badge: string): string {
 export function interviewRowToCardItem(row: {
   slug: string;
   title: string;
+  guest_name?: string | null;
   excerpt: string;
   cover_image: string | null;
   badge: string;
@@ -36,6 +38,7 @@ export function interviewRowToCardItem(row: {
   return {
     slug: row.slug,
     title: row.title,
+    guest_name: row.guest_name?.trim() || '',
     excerpt: row.excerpt,
     cover_image: normalizeImageUrl(row.cover_image),
     badge: row.badge.trim().toUpperCase() || 'EXCLUSIV',

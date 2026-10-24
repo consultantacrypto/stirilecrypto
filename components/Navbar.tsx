@@ -21,9 +21,8 @@ const MAIN_LINKS: NavItem[] = [
 const MORE_LINKS: NavItem[] = [
   { href: '/raport-strategic', label: 'Ce cumpără balenele' },
   { href: '/incepe-aici', label: 'Începe aici' },
-  { href: '/interviuri', label: 'Față în față cu Dani' },
+  { href: '/interviuri', label: 'Interviuri' },
   { href: '/lichidari', label: 'Harta pieței' },
-  { href: '/dashboard', label: 'Tablou' },
   { href: '/glosar', label: 'Glosar' },
   { href: '/taxe', label: 'Taxe crypto 2026' },
 ];

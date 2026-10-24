@@ -6,9 +6,8 @@ import { getPublishedInterviews } from '@/lib/interviews-db';
 import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Față în față cu Dani',
-  description:
-    'Conversații gratuite cu fondatori și oameni din crypto și tech. Față în față cu Dani.',
+  title: 'Interviuri',
+  description: 'Interviuri publicate cu invitați din crypto și tech: nume, copertă și rezumat.',
   alternates: {
     canonical: `${SITE_URL}/interviuri`,
   },
@@ -24,13 +23,12 @@ export default async function InterviuriPage() {
       <Navbar />
 
       <main className="flex-1 container mx-auto px-4 sm:px-6 max-w-6xl w-full flex flex-col">
-        <header className="pt-32 pb-12">
+        <header className="pb-12 pt-10">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight font-[var(--font-space)]">
-            Față în față cu Dani
+            Interviuri
           </h1>
           <p className="mt-4 max-w-2xl text-base md:text-lg text-gray-400 leading-relaxed font-[var(--font-inter)]">
-            Zgomotul e gratuit. Semnalul îl găsești aici. Discuții 1-la-1 cu liderii
-            pieței.
+            Conversațiile publicate, cele mai noi primele. Pe fiecare card sunt invitatul, coperta și un rezumat.
           </p>
         </header>
 

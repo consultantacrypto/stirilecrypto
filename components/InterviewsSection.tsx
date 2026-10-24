@@ -13,12 +13,12 @@ export default async function InterviewsSection() {
   }
 
   return (
-    <section aria-label="Față în față cu Dani">
+    <section aria-label="Interviuri">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
         <div className="flex items-center gap-2">
           <Mic2 size={20} className="text-violet-400 shrink-0" aria-hidden />
           <h2 className="text-xl md:text-2xl font-bold text-white font-[var(--font-space)] tracking-tight">
-            Față în față cu Dani
+            Interviuri
           </h2>
         </div>
         <Link

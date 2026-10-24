@@ -53,7 +53,7 @@ export default async function DashboardPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Dashboard Instituțional — Știrile Crypto',
+    name: 'Tablou de bord — Știrile Crypto',
     url: `${SITE_URL}/dashboard`,
     description: metadata.description,
     isPartOf: {

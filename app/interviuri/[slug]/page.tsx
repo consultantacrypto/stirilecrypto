@@ -46,12 +46,12 @@ export async function generateMetadata({
   const canonicalUrl = `${SITE_URL}/interviuri/${slug}`;
   const pageTitle = stripBrandSuffix(interview.title);
   const encodedTitle = encodeURIComponent(pageTitle);
-  const dynamicOgImage = `${SITE_URL}/api/og?title=${encodedTitle}&category=${encodeURIComponent('Față în față cu Dani')}`;
+  const dynamicOgImage = `${SITE_URL}/api/og?title=${encodedTitle}&category=${encodeURIComponent('Interviuri')}`;
   const coverImage = toAbsoluteUrl(interview.cover_image);
   const ogImageUrl = coverImage ?? dynamicOgImage;
 
   return {
-    title: `${pageTitle} | Față în față cu Dani`,
+    title: `${pageTitle} | Interviuri`,
     description: interview.excerpt,
     alternates: { canonical: canonicalUrl },
     openGraph: {
@@ -126,7 +126,7 @@ export default async function InterviewPage({
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-medium font-[var(--font-inter)] mb-10"
           >
             <ArrowLeft size={16} />
-            Înapoi la Față în față cu Dani
+            Înapoi la Interviuri
           </Link>
 
           <article>
