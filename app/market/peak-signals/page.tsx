@@ -27,7 +27,7 @@ export default function PeakSignalsPage() {
         <div className="mb-8">
             <Link href="/market" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm group">
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform"/> 
-                Înapoi la Market Dashboard
+                Înapoi la datele de piață
             </Link>
         </div>
 

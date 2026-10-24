@@ -67,6 +67,26 @@ export function resolveImageUrl(source: {
   return normalizeImageUrl(source.image_url ?? source.image);
 }
 
+const SUPABASE_OBJECT_PATH = '/storage/v1/object/public/';
+
+/**
+ * Supabase image transform. The site leaves next/image unoptimized because the
+ * Vercel image optimizer is not enabled, so card covers request a smaller file directly.
+ */
+export function displayCoverUrl(src: string, width = 960): string {
+  const marker = src.indexOf(SUPABASE_OBJECT_PATH);
+  if (marker < 0) return src;
+  const origin = src.slice(0, marker);
+  const objectPath = src.slice(marker + SUPABASE_OBJECT_PATH.length).split('?')[0];
+  if (!objectPath) return src;
+  const params = new URLSearchParams({
+    width: String(width),
+    quality: '60',
+    resize: 'cover',
+  });
+  return `${origin}/storage/v1/render/image/public/${objectPath}?${params.toString()}`;
+}
+
 /** Persist only real URLs — never blob previews or the placeholder. */
 export function prepareImageUrlForStorage(raw: string | null | undefined): string | null {
   const trimmed = raw?.trim();

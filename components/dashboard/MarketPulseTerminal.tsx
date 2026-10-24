@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Activity, ArrowRight, TrendingDown, TrendingUp, Minus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { withAffiliateTags } from '@/lib/affiliates';
 import type { PulseTerminalSnapshot, PulseTrend } from '@/lib/types/dashboard';
 import {
   formatPulseTimestamp,
@@ -14,10 +15,10 @@ const TREND_CONFIG: Record<
   PulseTrend,
   { label: string; icon: typeof TrendingUp; className: string }
 > = {
-  bullish: { label: 'Bullish', icon: TrendingUp, className: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' },
-  bearish: { label: 'Bearish', icon: TrendingDown, className: 'text-red-400 border-red-500/30 bg-red-500/10' },
-  neutral: { label: 'Neutral', icon: Minus, className: 'text-slate-300 border-white/10 bg-white/5' },
-  range: { label: 'Range', icon: Activity, className: 'text-amber-300 border-amber-500/30 bg-amber-500/10' },
+  bullish: { label: 'Creștere', icon: TrendingUp, className: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' },
+  bearish: { label: 'Scădere', icon: TrendingDown, className: 'text-red-400 border-red-500/30 bg-red-500/10' },
+  neutral: { label: 'Neutru', icon: Minus, className: 'text-slate-300 border-white/10 bg-white/5' },
+  range: { label: 'Interval', icon: Activity, className: 'text-amber-300 border-amber-500/30 bg-amber-500/10' },
 };
 
 function formatPrice(value: number): string {
@@ -41,7 +42,7 @@ function LevelList({
   return (
     <div className={cn('rounded-xl border p-4', toneClass)}>
       <h3 className="mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 font-[var(--font-space)]">
-        {title}
+        {title === 'Support' ? 'Suport' : title === 'Resistance' ? 'Rezistență' : title}
       </h3>
       {levels.length === 0 ? (
         <p className="text-sm text-slate-500">—</p>
@@ -215,7 +216,7 @@ export default function MarketPulseTerminal({
           </div>
           {isCurrentSignal ? (
             <a
-              href={snapshot.affiliate_url}
+              href={withAffiliateTags(snapshot.affiliate_url, 'dashboard-terminal')}
               target="_blank"
               rel="noopener noreferrer sponsored"
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#f7a600]/30 bg-[#f7a600]/10 px-5 py-3 text-sm font-bold text-white transition-all hover:border-[#f7a600]/50 hover:bg-[#f7a600]/20 hover:shadow-[0_0_24px_rgba(247,166,0,0.2)]"

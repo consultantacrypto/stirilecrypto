@@ -4,6 +4,7 @@ import "./globals.css";
 import Script from "next/script";
 import { SITE_URL } from "@/lib/json-ld";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
+import { Analytics } from "@vercel/analytics/next";
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"],
@@ -109,6 +110,7 @@ export default function RootLayout({
           `}
         </Script>
         <AnalyticsTracker />
+        <Analytics />
         {children}
       </body>
     </html>

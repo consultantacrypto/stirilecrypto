@@ -28,9 +28,13 @@ interface CombinedPoint {
 }
 
 function formatLabel(iso: string): string {
-  const d = new Date(`${iso}T12:00:00`);
+  const d = new Date(`${iso}T12:00:00Z`);
   if (Number.isNaN(d.getTime())) return iso.slice(5);
-  return d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'short' });
+  return d.toLocaleDateString('ro-RO', {
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'Europe/Bucharest',
+  });
 }
 
 export function EtfBarChart({ period }: EtfBarChartProps) {

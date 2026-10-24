@@ -15,7 +15,6 @@ const PRIVATE_PATHS = [
   '/admin/',
   '/admin',
   '/api/',
-  '/dashboard',
   '/login',
   '/editeaza',
   '/articol-nou',

@@ -9,12 +9,14 @@ export default function StructuredData() {
     "logo": PUBLISHER_LOGO_URL,
     "description": "Portal media dedicat știrilor crypto, analizei on-chain și piețelor financiare digitale",
     "sameAs": [
+      "https://x.com/StirilecryptoRo",
       "https://www.youtube.com/@DanielMihaiCrypto",
-      "https://x.com/MIhaiDanielWeb3"
+      "https://x.com/MIhaiDanielWeb3",
+      "https://www.tiktok.com/@mihaidanielmarius"
     ],
     "contactPoint": {
       "@type": "ContactPoint",
-      "email": "consultantacrypto.ro@gmail.com",
+      "email": "contact@stirilecrypto.ro",
       "contactType": "Editorial",
       "areaServed": "RO",
       "availableLanguage": ["Romanian", "English"]

@@ -1,7 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Activity, Zap } from 'lucide-react';
+import { Activity } from 'lucide-react';
+import { fearGreedLabel } from '@/lib/fear-greed';
+
+function labelFor(score: number, classification: string): string {
+  return fearGreedLabel(score, classification);
+}
 
 export default function FearGreed() {
   const [data, setData] = useState<{ value: string; value_classification: string } | null>(null);
@@ -27,16 +32,16 @@ export default function FearGreed() {
   if (loading) return <div className="animate-pulse h-32 w-full bg-white/5 rounded-2xl" />;
   if (!data) return null;
 
-  const score = parseInt(data.value);
+  const score = parseInt(data.value, 10);
+  if (!Number.isFinite(score)) return null;
   
   // Logică de culori High-Tech (Gradient Neon)
   // 0-25: Red (Fear), 26-50: Orange, 51-75: Green, 76+: Cyan (Greed)
-  let colorClass = "from-orange-500 to-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)]";
   let textGlow = "text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]";
-  
-  if (score > 25) { colorClass = "from-yellow-500 to-orange-500 shadow-[0_0_20px_rgba(234,179,8,0.4)]"; textGlow = "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]"; }
-  if (score > 50) { colorClass = "from-emerald-500 to-green-500 shadow-[0_0_20px_rgba(34,197,94,0.4)]"; textGlow = "text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]"; }
-  if (score > 75) { colorClass = "from-cyan-400 to-blue-500 shadow-[0_0_20px_rgba(6,182,212,0.4)]"; textGlow = "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]"; }
+
+  if (score > 25) textGlow = "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]";
+  if (score > 50) textGlow = "text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]";
+  if (score > 75) textGlow = "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]";
 
   // Calculăm circumferința pentru cercul SVG
   const radius = 40;
@@ -87,11 +92,11 @@ export default function FearGreed() {
         <div className="flex flex-col z-10">
             <div className="flex items-center gap-2 mb-1">
                 <div className="h-2 w-2 rounded-full bg-red-500 animate-ping"></div>
-                <span className="text-[10px] font-mono text-gray-400 uppercase tracking-[0.2em]">Live Sentinel</span>
+                <span className="text-[10px] font-mono text-gray-400 uppercase tracking-[0.2em]">Sentiment live</span>
             </div>
 
-            <h3 className="text-white font-bold text-xl tracking-wide uppercase mb-1">
-                {data.value_classification}
+            <h3 className="text-white font-bold text-xl tracking-wide mb-1">
+                {labelFor(score, data.value_classification)}
             </h3>
 
             <p className="text-xs text-blue-200/70 font-mono leading-relaxed max-w-[160px]">
@@ -100,7 +105,7 @@ export default function FearGreed() {
             
             <div className="mt-3 flex items-center gap-2 text-[10px] text-gray-500 font-mono border-t border-white/5 pt-2">
                 <Activity size={12} className="text-blue-500"/> 
-                <span>Updated: Just now</span>
+                <span>Actualizat acum</span>
             </div>
         </div>
       </div>

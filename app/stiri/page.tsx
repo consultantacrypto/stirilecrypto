@@ -1,4 +1,5 @@
 import { getMergedNewsListingArticles } from '@/lib/articles-db';
+import { matchesStiriFilter } from '@/lib/stiri-filters';
 import {
   parseStiriListParams,
   stiriListCanonical,
@@ -13,7 +14,7 @@ import CategoryFilter from '@/components/CategoryFilter';
 import FearGreed from '@/components/FearGreed';
 import Link from 'next/link';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
-import { Calendar, ArrowRight, TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, Terminal } from 'lucide-react';
+import { Calendar, ArrowRight, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Terminal } from 'lucide-react';
 import { permanentRedirect } from 'next/navigation';
 import type { Metadata } from 'next';
 
@@ -30,8 +31,8 @@ export async function generateMetadata({
   const { page, category } = parseStiriListParams(params);
   const title =
     page >= 2
-      ? `Market Intelligence | Știri Crypto Explicate — pagina ${page}`
-      : 'Market Intelligence | Știri Crypto Explicate';
+      ? `Știri crypto explicate — pagina ${page}`
+      : 'Știri crypto explicate';
 
   const canonical = stiriListCanonical(page, category);
   const description =
@@ -73,17 +74,12 @@ export default async function NewsPage({
   const allArticles = await getMergedNewsListingArticles();
 
   // --- FILTRARE ---
-  const filteredArticles = allArticles.filter((article) => {
-    const text = (article.title + article.summary + article.category).toLowerCase();
-    switch (categoryFilter) {
-      case 'btc': return text.includes('bitcoin') || text.includes('btc') || text.includes('satoshi') || text.includes('halving');
-      case 'eth': return text.includes('ethereum') || text.includes('eth') || text.includes('vitalik') || text.includes('blackrock');
-      case 'macro': return text.includes('fomc') || text.includes('fed') || text.includes('inflatie') || text.includes('banca') || text.includes('cpi') || text.includes('trezorerie') || article.category.includes('MACRO') || article.category.includes('INSTITUȚIONAL');
-      case 'alts': return text.includes('solana') || text.includes('altcoin') || text.includes('altseason') || text.includes('token') || article.category.includes('ADOPȚIE');
-      case 'edu': return article.category.includes('EDUCAȚIE') || article.category.includes('PSIHOLOGIE') || article.category.includes('SECURITATE');
-      default: return true;
-    }
-  });
+  const filteredArticles = allArticles.filter((article) =>
+    matchesStiriFilter(
+      { title: article.title, summary: article.summary, category: article.category },
+      categoryFilter,
+    ),
+  );
 
   const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -110,7 +106,7 @@ export default async function NewsPage({
                 {/* COL 1: TEXTUL */}
                 <div className="lg:col-span-7 flex flex-col gap-6 relative z-10">
                     <div className="inline-flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-[0.2em] bg-blue-500/10 px-3 py-1 rounded border border-blue-500/20 w-fit">
-                        <Terminal size={12}/> Market Intelligence Unit
+                        <Terminal size={12}/> Redacția Știrile Crypto
                     </div>
 
                     <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white leading-[1.1]">
@@ -156,9 +152,8 @@ export default async function NewsPage({
                               <>
                             <div className="absolute inset-0 z-[2] bg-gradient-to-t from-[#0a0f1e]/70 to-transparent pointer-events-none" aria-hidden />
                             <div className="absolute top-4 left-4 z-20 backdrop-blur-md bg-black/50 rounded-lg p-1">
-                                {item.impact === 'bullish' && <span className="text-[10px] font-bold bg-green-500 text-black px-2 py-1 rounded flex items-center gap-1 shadow-lg"><TrendingUp size={12}/> BULLISH</span>}
-                                {item.impact === 'bearish' && <span className="text-[10px] font-bold bg-red-500 text-white px-2 py-1 rounded flex items-center gap-1 shadow-lg"><TrendingDown size={12}/> BEARISH</span>}
-                                {item.impact === 'neutral' && <span className="text-[10px] font-bold bg-gray-500 text-white px-2 py-1 rounded flex items-center gap-1 shadow-lg"><Minus size={12}/> NEUTRAL</span>}
+                                {item.impact === 'bullish' && <span className="text-[10px] font-bold bg-green-500 text-black px-2 py-1 rounded flex items-center gap-1 shadow-lg"><TrendingUp size={12}/> Creștere</span>}
+                                {item.impact === 'bearish' && <span className="text-[10px] font-bold bg-red-500 text-white px-2 py-1 rounded flex items-center gap-1 shadow-lg"><TrendingDown size={12}/> Scădere</span>}
                             </div>
                               </>
                             }

@@ -18,12 +18,4 @@ export async function getGlobalData() {
   }
 }
 
-export async function getFearGreed() {
-  try {
-    const res = await fetch('https://api.alternative.me/fng/');
-    const data = await res.json();
-    return data.data[0]; // Returnează { value: "75", value_classification: "Greed" }
-  } catch (error) {
-    return { value: "50", value_classification: "Neutral" };
-  }
-}
+export { fetchFearGreed as getFearGreed } from './fear-greed';

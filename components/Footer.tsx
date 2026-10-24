@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { Youtube, Twitter, Linkedin, Mail, ShieldCheck, Globe, Clock } from 'lucide-react';
+import { Mail, ShieldCheck, Globe, Clock } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
+import { SOCIAL_LINKS } from '@/lib/social';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -25,26 +26,31 @@ export default function Footer() {
               Știri crypto, analiză on-chain și intelligence de piață. Transformăm complexitatea
               pieței în context clar pentru investitori.
             </p>
-            <div className="flex gap-4">
-              <SocialLink
-                href="https://www.youtube.com/@DanielMihaiCrypto"
-                icon={<Youtube size={20} />}
-                label="YouTube"
-                platform="youtube"
-              />
-              <SocialLink
-                href="https://x.com/MIhaiDanielWeb3"
-                icon={<Twitter size={20} />}
-                label="Twitter/X"
-                platform="twitter"
-              />
-              <SocialLink
-                href="https://www.linkedin.com/in/mihaidanielmarius/"
-                icon={<Linkedin size={20} />}
-                label="LinkedIn"
-                platform="linkedin"
-              />
-            </div>
+            <ul className="flex flex-wrap gap-x-4 gap-y-2">
+              {SOCIAL_LINKS.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-gray-300 underline decoration-white/20 underline-offset-4 hover:text-white"
+                    onClick={() => trackEvent('social_share', { platform: link.shortLabel, location: 'footer' })}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/mihaidanielmarius/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-gray-300 underline decoration-white/20 underline-offset-4 hover:text-white"
+                >
+                  LinkedIn, Daniel Mihai
+                </a>
+              </li>
+            </ul>
           </div>
 
           <div>
@@ -54,7 +60,7 @@ export default function Footer() {
             <ul className="space-y-4 text-sm text-gray-400">
               <li>
                 <Link href="/market" className="hover:text-blue-400 transition-colors">
-                  Market Data (Live)
+                  Date de piață
                 </Link>
               </li>
               <li>
@@ -154,10 +160,10 @@ export default function Footer() {
               <li className="flex items-center gap-3">
                 <Mail className="text-gray-600 shrink-0" size={16} />
                 <a
-                  href="mailto:consultantacrypto.ro@gmail.com"
+                  href="mailto:contact@stirilecrypto.ro"
                   className="hover:text-white transition-colors"
                 >
-                  consultantacrypto.ro@gmail.com
+                  contact@stirilecrypto.ro
                 </a>
               </li>
               <li className="flex items-center gap-3">
@@ -175,36 +181,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  );
-}
-
-function SocialLink({
-  href,
-  icon,
-  label,
-  platform,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  label: string;
-  platform: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
-      onClick={() =>
-        trackEvent('social_share', {
-          platform,
-          page: typeof window !== 'undefined' ? window.location.pathname : '/',
-          location: 'footer',
-        })
-      }
-      className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all transform hover:-translate-y-1"
-    >
-      {icon}
-    </a>
   );
 }

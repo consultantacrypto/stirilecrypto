@@ -29,7 +29,13 @@ export default function PeakSignalsContainer() {
       
       // Actualizăm ora
       const now = new Date();
-      setLastUpdate(now.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' }));
+      setLastUpdate(
+        now.toLocaleTimeString('ro-RO', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Europe/Bucharest',
+        }),
+      );
       
       setError(false);
     } catch (err) {
@@ -107,7 +113,11 @@ function processData(rawData: any[]) {
   const w350d = 50; 
 
   for (let i = 0; i < prices.length; i++) {
-    const date = new Date(dates[i]).toLocaleDateString('ro-RO', { year: '2-digit', month: 'short' });
+    const date = new Date(dates[i]).toLocaleDateString('ro-RO', {
+      year: '2-digit',
+      month: 'short',
+      timeZone: 'Europe/Bucharest',
+    });
     const price = prices[i];
     
     let ma2yr = null;

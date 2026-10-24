@@ -13,7 +13,7 @@ const WAITLIST_SAVED =
 const WAITLIST_NOTIFIED =
   'Cererea a fost trimisă echipei. Nu s-a încasat nimic. Te contactăm când comanda poate fi onorată.';
 const SAVE_FAILED =
-  'Nu am putut înregistra cererea. Nu s-a încasat nimic. Scrie-ne la consultantacrypto.ro@gmail.com și include simbolul activului.';
+  'Nu am putut înregistra cererea. Nu s-a încasat nimic. Scrie-ne la contact@stirilecrypto.ro și include simbolul activului.';
 
 function originFrom(request: Request): string {
   const origin = request.headers.get('origin')?.trim();

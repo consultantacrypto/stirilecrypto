@@ -863,6 +863,7 @@ export default function AdminArticleForm({
                 {lastSavedTime.toLocaleTimeString('ro-RO', {
                   hour: '2-digit',
                   minute: '2-digit',
+                  timeZone: 'Europe/Bucharest',
                 })}
               </span>
             </>

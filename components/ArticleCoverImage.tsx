@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
+import { displayCoverUrl } from '@/lib/image-url';
 
 export type ArticleCoverAspect = 'video' | '16/10' | '4/3';
 
@@ -40,7 +41,7 @@ export default function ArticleCoverImage({
       <div className="absolute inset-0 z-0 animate-pulse bg-gray-900" aria-hidden />
       {overlay}
       <Image
-        src={src}
+        src={displayCoverUrl(src)}
         alt={alt}
         fill
         priority={priority}

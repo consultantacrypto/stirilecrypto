@@ -7,19 +7,19 @@ const STATUS_CONFIG: Record<
   { label: string; className: string }
 > = {
   safe: {
-    label: 'Safe',
+    label: 'Sigur',
     className: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
   },
   risky: {
-    label: 'Risky',
+    label: 'Riscant',
     className: 'border-orange-500/30 bg-orange-500/10 text-orange-300',
   },
   banned: {
-    label: 'Banned',
+    label: 'Interzis',
     className: 'border-red-500/30 bg-red-500/10 text-red-300',
   },
   transitional: {
-    label: 'Transitional',
+    label: 'În tranziție',
     className: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
   },
 };

@@ -1,7 +1,8 @@
 import { ArrowRight, TrendingUp } from 'lucide-react';
+import { withAffiliateTags } from '@/lib/affiliates';
 
-const BYBIT_AFFILIATE_URL = 'https://partner.bybit.eu/b/STIRICRYPTO';
-const BINANCE_AFFILIATE_URL = 'https://www.binance.com/join?ref=35329648';
+const BYBIT_AFFILIATE_URL = withAffiliateTags('https://partner.bybit.eu/b/STIRICRYPTO', 'cta-bybit');
+const BINANCE_AFFILIATE_URL = withAffiliateTags('https://www.binance.com/join?ref=35329648', 'cta-binance');
 
 export default function AffiliateCta() {
   return (

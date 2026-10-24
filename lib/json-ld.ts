@@ -188,13 +188,15 @@ export function buildOrganizationJsonLd() {
       'Financial markets',
     ],
     sameAs: [
+      'https://x.com/StirilecryptoRo',
       'https://www.youtube.com/@DanielMihaiCrypto',
       'https://x.com/MIhaiDanielWeb3',
+      'https://www.tiktok.com/@mihaidanielmarius',
     ],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'editorial',
-      email: 'consultantacrypto.ro@gmail.com',
+      email: 'contact@stirilecrypto.ro',
       availableLanguage: ['Romanian'],
     },
   };

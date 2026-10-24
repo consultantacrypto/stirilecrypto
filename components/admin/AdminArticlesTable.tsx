@@ -13,6 +13,7 @@ function formatRowDate(iso: string | null | undefined): string {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
+    timeZone: 'Europe/Bucharest',
   });
 }
 
