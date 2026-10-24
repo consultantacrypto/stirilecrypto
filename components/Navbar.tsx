@@ -15,7 +15,7 @@ const MAIN_LINKS: NavItem[] = [
   { href: '/market', label: 'Piața azi' },
   { href: '/market-pulse', label: 'Pulsul Bitcoin' },
   WALLET_LINK,
-  { href: '/academie', label: 'Educație' },
+  { href: '/taxe', label: 'Taxe crypto 2026' },
 ];
 
 const MORE_LINKS: NavItem[] = [
@@ -24,7 +24,7 @@ const MORE_LINKS: NavItem[] = [
   { href: '/interviuri', label: 'Interviuri' },
   { href: '/lichidari', label: 'Harta pieței' },
   { href: '/glosar', label: 'Glosar' },
-  { href: '/taxe', label: 'Taxe crypto 2026' },
+  { href: '/academie', label: 'Educație' },
 ];
 
 const ANALYSIS_HREF = '/analiza-tehnica?src=nav';

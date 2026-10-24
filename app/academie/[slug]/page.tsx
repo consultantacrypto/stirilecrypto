@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { ArrowLeft, Lightbulb, Zap, Clock } from 'lucide-react';
 import type { Metadata } from 'next';
 import { SITE_URL } from '@/lib/json-ld';
+import TaxServicePromos from '@/components/services/TaxServicePromos';
+import { FISCAL_GUIDE_PATH } from '@/lib/fiscal-2026';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -31,6 +33,7 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
   // ~200 cuvinte/minut, calculat din textul ghidului (fără tag-uri HTML)
   const wordCount = (term.fullContent || '').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
   const readingMinutes = Math.max(1, Math.round(wordCount / 200));
+  const isFiscalGuide = `/academie/${slug}` === FISCAL_GUIDE_PATH;
 
   return (
     <main className="min-h-screen bg-[#020617] text-white selection:bg-cyan-500/30 flex flex-col">
@@ -95,15 +98,18 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
             dangerouslySetInnerHTML={{ __html: processedContent }}
         />
 
-        {/* CTA FINAL */}
-        <div className="mt-16 bg-[#0a0f1e] border border-yellow-500/20 rounded-2xl p-8 text-center relative overflow-hidden">
+        {isFiscalGuide ? (
+          <TaxServicePromos id="newsletter-ghid" location="ghid-fiscal" />
+        ) : (
+          <div className="mt-16 bg-[#0a0f1e] border border-yellow-500/20 rounded-2xl p-8 text-center relative overflow-hidden">
              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
              <h4 className="text-2xl font-bold text-white mb-2">Vrei să treci de la teorie la profit?</h4>
              <p className="text-gray-400 mb-6 max-w-lg mx-auto">Învață cum să tranzacționezi {term.term} corect, fără să pierzi bani din greșeli de începător.</p>
              <Link href="/academie" className="inline-block bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 px-10 rounded-xl transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:scale-105">
                 Accesează Cursul Complet
              </Link>
-        </div>
+          </div>
+        )}
 
       </div>
       <Footer />

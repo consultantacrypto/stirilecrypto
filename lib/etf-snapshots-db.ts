@@ -59,6 +59,7 @@ async function fetchEtfSnapshotsLast5Days(
     .from('etf_snapshots')
     .select('asset_symbol, snapshot_date, net_flow_usd')
     .in('asset_symbol', uniqueAssets)
+    .neq('source', 'legacy_seed')
     .order('snapshot_date', { ascending: false });
 
   if (error) {
@@ -111,6 +112,7 @@ export async function getLatestEtfSnapshotDate(): Promise<string | null> {
   const { data, error } = await supabase
     .from('etf_snapshots')
     .select('snapshot_date')
+    .neq('source', 'legacy_seed')
     .order('snapshot_date', { ascending: false })
     .limit(1)
     .maybeSingle();
