@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { addressCheckUrl, walletCheckIsLive, withSource } from '@/lib/products/placement';
 import { MAJOR_PRICE_RON } from '@/lib/products/tiers';
 
 const cardClass = 'flex h-full flex-col gap-4 rounded-3xl border border-white/5 bg-[#1c1c1e] p-5 sm:p-6';
@@ -7,10 +6,6 @@ const buttonClass =
   'mt-auto inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-bold text-black hover:bg-slate-100';
 
 export default function HomeServiceStrip() {
-  const live = walletCheckIsLive();
-  const external = addressCheckUrl();
-  const walletHref = external ? withSource(external, 'home') : '/verificare-portofel?src=home';
-
   return (
     <section aria-label="Serviciile noastre" className="py-10">
       <h2 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white md:text-2xl">
@@ -30,21 +25,14 @@ export default function HomeServiceStrip() {
         </article>
 
         <article className={cardClass}>
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white">
-              Verificare portofel crypto
-            </h3>
-            {live ? null : (
-              <span className="rounded-full bg-blue-500/20 px-3 py-1 text-[10px] font-semibold text-blue-400">
-                Disponibil în curând
-              </span>
-            )}
-          </div>
+          <h3 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white">
+            Verificare portofel crypto
+          </h3>
           <p className="text-sm leading-relaxed text-slate-300">
             Află înainte să trimiți bani dacă o adresă e legată de țepe, hack-uri sau fonduri furate.
           </p>
-          <Link href={walletHref} className={buttonClass}>
-            {live ? 'Verifică o adresă' : 'Înscrie-te pe lista de așteptare'}
+          <Link href="/verificare-portofel?src=home" className={buttonClass}>
+            Verifică o adresă
           </Link>
         </article>
       </div>

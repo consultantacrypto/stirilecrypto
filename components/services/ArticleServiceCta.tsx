@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { addressCheckUrl, walletCheckIsLive, withSource } from '@/lib/products/placement';
+import { withSource } from '@/lib/products/placement';
 import { ALTCOIN_PRICE_RON, MAJOR_PRICE_RON } from '@/lib/products/tiers';
 
 const pillClass =
@@ -9,10 +9,6 @@ export default function ArticleServiceCta({ asset }: { asset: string | null }) {
   const analysisHref = asset
     ? withSource(`/analiza-tehnica?asset=${encodeURIComponent(asset)}`, 'article')
     : withSource('/analiza-tehnica', 'article');
-  const live = walletCheckIsLive();
-  const external = addressCheckUrl();
-  const walletHref = external ? withSource(external, 'articol') : '/verificare-portofel?src=articol';
-
   return (
     <div className="my-10 flex flex-col gap-4">
       <aside className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
@@ -29,20 +25,11 @@ export default function ArticleServiceCta({ asset }: { asset: string | null }) {
       </aside>
 
       <aside className="flex flex-col gap-4 rounded-2xl border border-white/5 bg-[#1c1c1e] p-5 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm font-semibold leading-relaxed text-white">
-              Ai de trimis sau ai primit crypto de la cineva? Verifică portofelul înainte.
-            </p>
-            {live ? null : (
-              <span className="rounded-full bg-blue-500/20 px-3 py-1 text-[10px] font-semibold text-blue-400">
-                Disponibil în curând
-              </span>
-            )}
-          </div>
-        </div>
-        <Link href={walletHref} className={pillClass}>
-          {live ? 'Verifică o adresă' : 'Înscrie-te pe lista de așteptare'}
+        <p className="text-sm font-semibold leading-relaxed text-white">
+          Ai de trimis sau ai primit crypto de la cineva? Verifică portofelul înainte.
+        </p>
+        <Link href="/verificare-portofel?src=articol" className={pillClass}>
+          Verifică o adresă
         </Link>
       </aside>
     </div>

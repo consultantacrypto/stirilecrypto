@@ -6,7 +6,12 @@ Production can already charge `/analiza-tehnica` when `PAYMENTS_ENABLED` and `ST
 
 `/analiza-tehnica` is linked from the header (`?src=nav`), a strip under the homepage hero (`?src=home`), the footer (`?src=footer`), and a box at the end of news, Market Pulse, and interview pages (`?src=article`). If the text mentions a known coin, the article link is `/analiza-tehnica?asset=BTC&src=article` and the order form starts with that symbol. The `source` field is stored in `product_inquiries.payload` and, on a paid checkout, as Stripe metadata `src`.
 
-`/verificare-portofel` is the public page (nav label „Verificare portofel crypto”, with the shield icon). The page H1 stays „Verifică portofelul înainte să trimiți bani”. `/verifica-adresa` redirects with **301** to that slug, including the `src` query. The page explains, in plain language, how to check a wallet before sending money. Prices shown are 10 USD, 40 USD, and 140 USD. The page does not charge. It stores a notify email as `product = address_check` only after `supabase/product-inquiries-address-check.sql` is applied. Until then the insert fails and the form says so. Set `ADDRESS_CHECK_URL` to an `http(s)` URL when the MistTrack checker is live; the page button then links there and the waitlist form is hidden. This PR does not set that variable. The product id stays `address_check`; the rename does not need a new SQL migration.
+`/verificare-portofel` is the public page. The H1 stays „Verifică portofelul înainte să trimiți bani”. The page embeds the paid checker from mihaidaniel.ro: `https://www.mihaidaniel.ro/verifica-adresa?embed=1&source=stirilecrypto.ro`. `/verifica-adresa` still redirects with **301** to that slug, including the `src` query. Stripe on mihaidaniel.ro returns here, and those paths are not redirected:
+
+- success: `/verifica-adresa/plata/succes?session_id={CHECKOUT_SESSION_ID}` embeds `https://www.mihaidaniel.ro/verifica-adresa/plata/succes?embed=1&session_id=…`
+- cancel: `/verifica-adresa/plata/anulata` embeds `https://www.mihaidaniel.ro/verifica-adresa/plata/anulata?embed=1&source=stirilecrypto.ro`
+
+The iframe has no `sandbox` attribute. Middleware still matches only `/admin`, so these routes stay public. This site does not charge for the report and does not collect a waitlist email for it. `ADDRESS_CHECK_URL`, when set to an `http(s)` URL, replaces the iframe origin. Otherwise the origin is `https://www.mihaidaniel.ro`. `WALLET_CHECK_LIVE` is no longer read.
 
 ## Product
 

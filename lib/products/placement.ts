@@ -67,6 +67,8 @@ export function mentionedAsset(...parts: Array<string | null | undefined>): stri
   return bestAsset;
 }
 
+const DEFAULT_CHECKER_ORIGIN = 'https://www.mihaidaniel.ro';
+
 export function addressCheckUrl(): string | null {
   const raw = process.env.ADDRESS_CHECK_URL?.trim();
   if (!raw) return null;
@@ -79,11 +81,23 @@ export function addressCheckUrl(): string | null {
   }
 }
 
-/** True when the address checker is open. Either flag is enough; neither is set in this repo. */
-export function walletCheckIsLive(): boolean {
-  const flag = process.env.WALLET_CHECK_LIVE?.trim().toLowerCase();
-  if (flag === '1' || flag === 'true' || flag === 'yes') return true;
-  return addressCheckUrl() !== null;
+/** Origin of the embedded checker. `ADDRESS_CHECK_URL` overrides the host; the path stays on the contract. */
+export function checkerEmbedOrigin(): string {
+  const configured = addressCheckUrl();
+  if (!configured) return DEFAULT_CHECKER_ORIGIN;
+  return new URL(configured).origin;
+}
+
+export function checkerFormEmbedSrc(): string {
+  return `${checkerEmbedOrigin()}/verifica-adresa?embed=1&source=stirilecrypto.ro`;
+}
+
+export function checkerSuccessEmbedSrc(sessionId: string): string {
+  return `${checkerEmbedOrigin()}/verifica-adresa/plata/succes?embed=1&session_id=${encodeURIComponent(sessionId)}`;
+}
+
+export function checkerCancelEmbedSrc(): string {
+  return `${checkerEmbedOrigin()}/verifica-adresa/plata/anulata?embed=1&source=stirilecrypto.ro`;
 }
 
 export function withSource(href: string, source: string): string {
