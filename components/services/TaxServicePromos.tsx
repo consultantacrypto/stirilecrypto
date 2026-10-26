@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import MorningNewsletter from '@/components/MorningNewsletter';
 import { DANIEL_MIHAI } from '@/lib/authors';
-import { addressCheckUrl, walletCheckIsLive, withSource } from '@/lib/products/placement';
 import { MAJOR_PRICE_RON } from '@/lib/products/tiers';
 
 const cardClass = 'flex h-full flex-col gap-4 rounded-3xl border border-white/5 bg-[#1c1c1e] p-5 sm:p-6';
@@ -15,9 +14,6 @@ export default function TaxServicePromos({
   id?: string;
   location?: string;
 }) {
-  const live = walletCheckIsLive();
-  const external = addressCheckUrl();
-  const walletHref = external ? withSource(external, 'taxe') : '/verificare-portofel?src=taxe';
   const consultancyUrl = DANIEL_MIHAI.consultancyUrl?.trim() ?? '';
 
   return (
@@ -36,21 +32,14 @@ export default function TaxServicePromos({
         </article>
 
         <article className={cardClass}>
-          <div className="flex flex-wrap items-center gap-2">
-            <h2 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white">
-              Înainte să muți crypto, verifică portofelul
-            </h2>
-            {live ? null : (
-              <span className="rounded-full bg-blue-500/20 px-3 py-1 text-[10px] font-semibold text-blue-400">
-                Disponibil în curând
-              </span>
-            )}
-          </div>
+          <h2 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white">
+            Înainte să muți crypto, verifică portofelul
+          </h2>
           <p className="text-sm leading-relaxed text-slate-300">
             Află înainte să trimiți bani dacă o adresă e legată de țepe, hack-uri sau fonduri furate.
           </p>
-          <Link href={walletHref} className={buttonClass}>
-            {live ? 'Verifică o adresă' : 'Înscrie-te pe lista de așteptare'}
+          <Link href="/verificare-portofel?src=taxe" className={buttonClass}>
+            Verifică o adresă
           </Link>
         </article>
       </div>
