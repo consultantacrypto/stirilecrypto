@@ -21,7 +21,7 @@ function NewsCard({ item, priority, eager = false }: { item: NewsFeedItem; prior
           priority={priority}
           eager={eager}
           coverWidth={720}
-          aspectRatio="16/10"
+          aspectRatio="video"
           sizes="(max-width: 768px) 92vw, (max-width: 1200px) 46vw, 380px"
           className="rounded-2xl"
           imageClassName="transition-transform duration-500 group-hover:scale-[1.02]"
@@ -123,7 +123,7 @@ export default function HomeNewsGrid({
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10" aria-hidden>
           {Array.from({ length: 3 }).map((_, index) => (
             <div key={index} className="rounded-3xl border border-white/5 bg-[#1c1c1e] p-4">
-              <div className="aspect-[16/10] animate-pulse rounded-2xl bg-white/5" />
+              <div className="aspect-video animate-pulse rounded-2xl bg-white/5" />
               <div className="mt-4 h-3 w-24 animate-pulse rounded-full bg-white/5" />
               <div className="mt-3 h-5 w-full animate-pulse rounded bg-white/5" />
             </div>
