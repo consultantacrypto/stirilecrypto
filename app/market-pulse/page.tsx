@@ -58,7 +58,7 @@ export default async function MarketPulseArchivePage() {
                     <ArticleCoverImage
                       src={item.image_url}
                       alt=""
-                      aspectRatio="16/10"
+                      aspectRatio="video"
                       sizes="(max-width: 640px) 100vw, 176px"
                       className="rounded-lg border border-white/5"
                       imageClassName="transition-transform duration-500 group-hover:scale-[1.02]"

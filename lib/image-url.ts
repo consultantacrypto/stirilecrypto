@@ -72,6 +72,10 @@ const SUPABASE_OBJECT_PATH = '/storage/v1/object/public/';
 /**
  * Supabase image transform. The site leaves next/image unoptimized because the
  * Vercel image optimizer is not enabled, so card covers request a smaller file directly.
+ *
+ * `resize=contain` scales to `width` and keeps the source aspect ratio.
+ * `resize=cover` (the render default) with no height keeps the source height
+ * and center-crops, which turned 1140×650 covers into 720×650 on the homepage.
  */
 export function displayCoverUrl(src: string, width = 960): string {
   const marker = src.indexOf(SUPABASE_OBJECT_PATH);
@@ -82,7 +86,7 @@ export function displayCoverUrl(src: string, width = 960): string {
   const params = new URLSearchParams({
     width: String(width),
     quality: '60',
-    resize: 'cover',
+    resize: 'contain',
   });
   return `${origin}/storage/v1/render/image/public/${objectPath}?${params.toString()}`;
 }

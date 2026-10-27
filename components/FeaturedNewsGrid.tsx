@@ -75,7 +75,7 @@ export default function FeaturedNewsGrid() {
                     src={normalizeImageUrl(hero.image)}
                     alt={hero.title}
                     priority
-                    aspectRatio="16/10"
+                    aspectRatio="video"
                     sizes="(max-width: 1024px) 100vw, 66vw"
                     className="rounded-3xl"
                     imageClassName="transition-transform duration-500 ease-out group-hover:scale-[1.02]"
@@ -122,7 +122,7 @@ export default function FeaturedNewsGrid() {
                   <ArticleCoverImage
                     src={normalizeImageUrl(item.image)}
                     alt={item.title}
-                    aspectRatio="4/3"
+                    aspectRatio="video"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="rounded-2xl"
                     imageClassName="transition-transform duration-500 group-hover:scale-[1.02]"

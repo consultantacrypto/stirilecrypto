@@ -52,6 +52,7 @@ describe('cover images', () => {
     assert.equal(next.pathname, '/storage/v1/render/image/public/imagini-stiri/cover.webp');
     assert.equal(next.searchParams.get('width'), '800');
     assert.equal(next.searchParams.get('quality'), '60');
+    assert.equal(next.searchParams.get('resize'), 'contain');
   });
 });
 
