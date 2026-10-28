@@ -164,9 +164,8 @@ export default function Navbar() {
     <>
     <header className="fixed inset-x-0 top-0 z-50 h-16 border-b border-white/10 bg-[#020617]/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-4 sm:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="Știrile Crypto — Acasă">
+        <Link href="/" className="flex shrink-0 items-center" aria-label="Știrile Crypto — Acasă">
           <BrandMark />
-          <span className="hidden text-base font-semibold tracking-tight text-white sm:inline">Știrile Crypto</span>
         </Link>
 
         <nav aria-label="Principal" className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex">
