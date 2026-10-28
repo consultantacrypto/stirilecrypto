@@ -2,7 +2,12 @@ import type { MetadataRoute } from 'next';
 import { getAllPublishedArticles, getAllPublishedMarketPulseArticles } from '@/lib/articles-db';
 import { getPublishedInterviews } from '@/lib/interviews-db';
 import { dictionary } from '@/lib/dictionary';
-import { SITE_URL } from '@/lib/json-ld';
+import {
+  ADVERTISING_POLICY_PATH,
+  CORRECTIONS_POLICY_PATH,
+  EDITORIAL_POLICY_PATH,
+  SITE_URL,
+} from '@/lib/json-ld';
 
 /** Runtime generation — avoids blocking build when Supabase is unavailable */
 export const dynamic = 'force-dynamic';
@@ -28,6 +33,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/academie`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/lichidari`, lastModified: now, changeFrequency: 'hourly', priority: 0.75 },
     { url: `${SITE_URL}/redactie`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${SITE_URL}${EDITORIAL_POLICY_PATH}`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${SITE_URL}${CORRECTIONS_POLICY_PATH}`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${SITE_URL}${ADVERTISING_POLICY_PATH}`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${SITE_URL}/autori/daniel-mihai`, lastModified: now, changeFrequency: 'weekly', priority: 0.5 },
     { url: `${SITE_URL}/analiza-tehnica`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/verificare-portofel`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },

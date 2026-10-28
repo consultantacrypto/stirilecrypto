@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google"; 
 import "./globals.css";
 import Script from "next/script";
+import { DANIEL_MIHAI } from "@/lib/authors";
 import { SITE_URL } from "@/lib/json-ld";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import { Analytics } from "@vercel/analytics/next";
@@ -38,8 +39,8 @@ export const metadata: Metadata = {
     'ethereum stiri',
     'educatie financiara crypto',
   ],
-  authors: [{ name: 'Redacția Știrile Crypto', url: `${SITE_URL}/redactie` }],
-  creator: 'Știrile Crypto',
+  authors: [{ name: DANIEL_MIHAI.name, url: `${SITE_URL}${DANIEL_MIHAI.path}` }],
+  creator: DANIEL_MIHAI.name,
   publisher: 'Știrile Crypto',
   verification: {
     google: 'vHIFda0TK5EKXwxKHpAN_eJr2vG6fbPR6uIGvFOZn6o',

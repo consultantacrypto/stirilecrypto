@@ -1,39 +1,8 @@
-import { PUBLISHER_LOGO_URL, SITE_URL } from '@/lib/json-ld';
+import { buildOrganizationJsonLd, buildWebSiteJsonLd } from '@/lib/json-ld';
 
 export default function StructuredData() {
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "NewsMediaOrganization",
-    "name": "Știrile Crypto",
-    "url": SITE_URL,
-    "logo": PUBLISHER_LOGO_URL,
-    "description": "Portal media dedicat știrilor crypto, analizei on-chain și piețelor financiare digitale",
-    "sameAs": [
-      "https://x.com/StirilecryptoRo",
-      "https://www.youtube.com/@DanielMihaiCrypto",
-      "https://x.com/MIhaiDanielWeb3",
-      "https://www.tiktok.com/@mihaidanielmarius"
-    ],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "email": "contact@stirilecrypto.ro",
-      "contactType": "Editorial",
-      "areaServed": "RO",
-      "availableLanguage": ["Romanian", "English"]
-    }
-  };
-
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Știrile Crypto",
-    "url": SITE_URL,
-    "description": "Știri crypto, analize de piață și date live pentru investitori",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Știrile Crypto"
-    }
-  };
+  const organizationSchema = buildOrganizationJsonLd();
+  const websiteSchema = buildWebSiteJsonLd();
 
   return (
     <>

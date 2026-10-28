@@ -5,14 +5,22 @@ export type AuthorKey = 'daniel-mihai' | 'desk';
 export const DANIEL_MIHAI = {
   key: 'daniel-mihai' as const,
   name: 'Daniel Mihai',
-  role: 'Analist',
+  role: 'Redactor și analist',
   path: '/autori/daniel-mihai',
   photo: '/mihai-daniel-consultanta.jpg',
-  photoAlt: 'Daniel Mihai, analist la Știrile Crypto',
+  photoAlt: 'Daniel Mihai, redactor la Știrile Crypto',
   consultancyUrl: 'https://www.mihaidaniel.ro/',
+  /** Profiles already linked from the site. Do not add accounts that are not published. */
+  sameAs: [
+    'https://x.com/MIhaiDanielWeb3',
+    'https://www.youtube.com/@DanielMihaiCrypto',
+    'https://www.tiktok.com/@mihaidanielmarius',
+    'https://www.linkedin.com/in/mihaidanielmarius/',
+    'https://www.mihaidaniel.ro/',
+  ],
   shortBio:
-    'Semnează analizele de piață ale publicației. Materialele sunt educative și nu sunt recomandări personalizate de investiții.',
-  bio: 'Daniel Mihai este analistul publicației Știrile Crypto. Semnează analizele de piață și contextul tehnic publicat pe site. Textele sale explică structura pieței; nu sunt consultanță financiară autorizată și nu conțin apeluri de cumpărare sau de vânzare.',
+    'Redactorul publicației. Semnează știrile și analizele de piață. Materialele sunt educative și nu sunt recomandări personalizate de investiții.',
+  bio: 'Daniel Mihai este redactorul publicației Știrile Crypto. Semnează știrile și analizele de piață publicate pe site. Textele explică contextul de piață pornind de la surse publice; nu sunt consultanță financiară autorizată și nu conțin apeluri de cumpărare sau de vânzare.',
 };
 
 export function authorKeyFromName(name: string | null | undefined): AuthorKey {
@@ -31,12 +39,29 @@ export function authorDisplayName(key: AuthorKey): string {
   return key === 'daniel-mihai' ? DANIEL_MIHAI.name : EDITORIAL_DESK_NAME;
 }
 
+/**
+ * Byline for a published story.
+ * A stored name that is not Daniel stays with the newsroom.
+ * Missing bylines are Daniel Mihai — the editor — not the newsroom Organization.
+ */
+export function authorKeyForArticle(input: {
+  authorName?: string | null;
+}): AuthorKey {
+  if (authorKeyFromName(input.authorName) === 'daniel-mihai') return 'daniel-mihai';
+  if (input.authorName?.trim()) return 'desk';
+  return 'daniel-mihai';
+}
+
 export function danielAuthorJsonLd() {
+  const url = `${SITE_URL}${DANIEL_MIHAI.path}`;
   return {
     '@type': 'Person',
+    '@id': `${url}#person`,
     name: DANIEL_MIHAI.name,
     jobTitle: DANIEL_MIHAI.role,
-    url: `${SITE_URL}${DANIEL_MIHAI.path}`,
+    url,
+    image: `${SITE_URL}${DANIEL_MIHAI.photo}`,
+    sameAs: [...DANIEL_MIHAI.sameAs],
     worksFor: {
       '@type': 'NewsMediaOrganization',
       name: SITE_NAME,

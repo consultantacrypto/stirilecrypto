@@ -23,7 +23,8 @@ import {
   SITE_URL,
   toAbsoluteUrl,
 } from '@/lib/json-ld';
-import EditorialByline from '@/components/EditorialByline';
+import AuthorByline from '@/components/author/AuthorByline';
+import { DANIEL_MIHAI, danielAuthorJsonLd } from '@/lib/authors';
 
 export const revalidate = 60;
 
@@ -63,6 +64,7 @@ export async function generateMetadata({
       locale: 'ro_RO',
       publishedTime: interview.created_at,
       modifiedTime: interview.created_at,
+      authors: [DANIEL_MIHAI.name],
       images: [
         {
           url: ogImageUrl,
@@ -101,14 +103,17 @@ export default async function InterviewPage({
     interview.content,
   );
   const published = formatPublishedDisplay(interview.created_at, interview.dateLabel);
-  const interviewJsonLd = buildInterviewArticleJsonLd({
-    title: interview.title,
-    excerpt: interview.excerpt,
-    guest_name: interview.guest_name,
-    cover_image: interview.cover_image,
-    created_at: interview.created_at,
-    slug: interview.slug,
-  });
+  const interviewJsonLd = buildInterviewArticleJsonLd(
+    {
+      title: interview.title,
+      excerpt: interview.excerpt,
+      guest_name: interview.guest_name,
+      cover_image: interview.cover_image,
+      created_at: interview.created_at,
+      slug: interview.slug,
+    },
+    { author: danielAuthorJsonLd() },
+  );
 
   return (
     <>
@@ -161,7 +166,7 @@ export default async function InterviewPage({
                 </span>
               </p>
               <p className="mt-2 text-sm text-gray-500 font-[var(--font-inter)]">
-                Autor: <EditorialByline />
+                Autor: <AuthorByline authorKey="daniel-mihai" />
               </p>
 
             </header>

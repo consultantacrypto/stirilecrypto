@@ -22,6 +22,8 @@ export interface Stire {
   source?: string | null;
   tags?: string[] | null;
   source_urls?: string[] | null;
+  /** Optional byline. Absent on current rows; the page then uses Daniel Mihai. */
+  author?: string | null;
 }
 
 export interface StireInsert {

@@ -6,7 +6,19 @@ export const SITE_NAME = 'Știrile Crypto';
 export const EDITORIAL_DESK_NAME = 'Redacția Știrile Crypto';
 export const EDITORIAL_DESK_PATH = '/redactie';
 export const EDITORIAL_DESK_URL = `${SITE_URL}${EDITORIAL_DESK_PATH}`;
-export const PUBLISHER_LOGO_URL = `${SITE_URL}/icon.svg`;
+export const EDITORIAL_POLICY_PATH = '/politica-editoriala';
+export const CORRECTIONS_POLICY_PATH = '/corecturi';
+export const ADVERTISING_POLICY_PATH = '/publicitate';
+export const EDITORIAL_POLICY_LINKS = [
+  { href: EDITORIAL_POLICY_PATH, label: 'Politică editorială' },
+  { href: CORRECTIONS_POLICY_PATH, label: 'Corecturi' },
+  { href: ADVERTISING_POLICY_PATH, label: 'Publicitate și afiliere' },
+] as const;
+/** Raster logo for JSON-LD. 1024×1024, above Google's 112×112 NewsMediaOrganization minimum. Favicon stays `/icon.svg`. */
+export const PUBLISHER_LOGO_PATH = '/icon.jpg';
+export const PUBLISHER_LOGO_WIDTH = 1024;
+export const PUBLISHER_LOGO_HEIGHT = 1024;
+export const PUBLISHER_LOGO_URL = `${SITE_URL}${PUBLISHER_LOGO_PATH}`;
 export const SITE_SITEMAP_URL = `${SITE_URL}/sitemap.xml`;
 export const SITE_NEWS_SITEMAP_URL = `${SITE_URL}/news-sitemap.xml`;
 export const SITE_FEED_URL = `${SITE_URL}/feed.xml`;
@@ -38,6 +50,31 @@ export function buildWebsiteShareMetadata(options: {
       description: options.description,
       images: [DEFAULT_SHARE_IMAGE.url],
     },
+  };
+}
+
+export function publisherLogoJsonLd() {
+  return {
+    '@type': 'ImageObject' as const,
+    url: PUBLISHER_LOGO_URL,
+    width: PUBLISHER_LOGO_WIDTH,
+    height: PUBLISHER_LOGO_HEIGHT,
+  };
+}
+
+/** News brand publisher. Policies point at the public editorial pages. */
+export function newsPublisherJsonLd() {
+  return {
+    '@type': 'NewsMediaOrganization' as const,
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: publisherLogoJsonLd(),
+    publishingPrinciples: `${SITE_URL}${EDITORIAL_POLICY_PATH}`,
+    correctionsPolicy: `${SITE_URL}${CORRECTIONS_POLICY_PATH}`,
+    ethicsPolicy: `${SITE_URL}${EDITORIAL_POLICY_PATH}`,
+    actionableFeedbackPolicy: `${SITE_URL}${CORRECTIONS_POLICY_PATH}`,
+    ownershipFundingInfo: [`${SITE_URL}/despre`, `${SITE_URL}${ADVERTISING_POLICY_PATH}`],
+    masthead: EDITORIAL_DESK_URL,
   };
 }
 
@@ -93,15 +130,7 @@ export function buildNewsArticleJsonLd(
       name: EDITORIAL_DESK_NAME,
       url: EDITORIAL_DESK_URL,
     },
-    publisher: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: SITE_URL,
-      logo: {
-        '@type': 'ImageObject',
-        url: PUBLISHER_LOGO_URL,
-      },
-    },
+    publisher: newsPublisherJsonLd(),
     articleSection: options?.articleSection ?? article.category,
     inLanguage: 'ro-RO',
     isAccessibleForFree: true,
@@ -140,15 +169,7 @@ export function buildFinancialArticleJsonLd(
       name: EDITORIAL_DESK_NAME,
       url: EDITORIAL_DESK_URL,
     },
-    publisher: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: SITE_URL,
-      logo: {
-        '@type': 'ImageObject',
-        url: PUBLISHER_LOGO_URL,
-      },
-    },
+    publisher: newsPublisherJsonLd(),
     articleSection: 'Market Pulse',
     genre: 'Financial Analysis',
     keywords: 'Market Pulse, analiză tehnică, crypto, piețe financiare',
@@ -164,11 +185,8 @@ export function buildFinancialArticleJsonLd(
 export function buildOrganizationJsonLd() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: SITE_NAME,
+    ...newsPublisherJsonLd(),
     alternateName: 'Stirile Crypto',
-    url: SITE_URL,
-    logo: PUBLISHER_LOGO_URL,
     description:
       'Sursă de încredere pentru știri crypto, analiză on-chain și informații financiare digitale în limba română.',
     foundingLocation: {
@@ -211,7 +229,10 @@ export interface InterviewJsonLdInput {
   slug: string;
 }
 
-export function buildInterviewArticleJsonLd(interview: InterviewJsonLdInput) {
+export function buildInterviewArticleJsonLd(
+  interview: InterviewJsonLdInput,
+  options?: { author?: Record<string, unknown> },
+) {
   const pageUrl = `${SITE_URL}/interviuri/${interview.slug}`;
   const imageUrl = toAbsoluteUrl(interview.cover_image);
   const datePublished = toIsoDateTime(interview.created_at);
@@ -230,7 +251,7 @@ export function buildInterviewArticleJsonLd(interview: InterviewJsonLdInput) {
     image: imageUrl ? [imageUrl] : undefined,
     datePublished,
     dateModified: datePublished,
-    author: {
+    author: options?.author ?? {
       '@type': 'Organization',
       name: EDITORIAL_DESK_NAME,
       url: EDITORIAL_DESK_URL,
@@ -241,15 +262,7 @@ export function buildInterviewArticleJsonLd(interview: InterviewJsonLdInput) {
           name: interview.guest_name,
         }
       : undefined,
-    publisher: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: SITE_URL,
-      logo: {
-        '@type': 'ImageObject',
-        url: PUBLISHER_LOGO_URL,
-      },
-    },
+    publisher: newsPublisherJsonLd(),
     articleSection: 'Interviuri',
     inLanguage: 'ro-RO',
     isAccessibleForFree: true,
@@ -266,14 +279,7 @@ export function buildWebSiteJsonLd() {
     description:
       'Platformă media românească de știri crypto, analize de piață și date on-chain pentru investitori informați.',
     inLanguage: 'ro-RO',
-    publisher: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      logo: {
-        '@type': 'ImageObject',
-        url: PUBLISHER_LOGO_URL,
-      },
-    },
+    publisher: newsPublisherJsonLd(),
   };
 }
 

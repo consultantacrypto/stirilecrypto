@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
+import { EDITORIAL_POLICY_LINKS, SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 const REDACTIE_TITLE = 'Redacția';
 const REDACTIE_DESCRIPTION =
@@ -36,10 +36,14 @@ export default function RedactiePage() {
 
         <div className="space-y-6 text-gray-300 leading-relaxed font-[var(--font-inter)]">
           <p>
-            Articolele fără un autor individual menționat sunt publicate de{' '}
-            <strong className="text-white">Redacția Știrile Crypto</strong>.
-            Publicația acoperă știri crypto, analize de piață și educație
-            financiară în limba română.
+            <strong className="text-white">Știrile Crypto</strong> publică știri
+            crypto, analize de piață și educație financiară în limba română.
+            Redactorul publicației este{' '}
+            <Link href="/autori/daniel-mihai" className="text-blue-400 hover:text-blue-300 underline">
+              Daniel Mihai
+            </Link>
+            . Știrile și analizele de piață îi poartă numele pe pagină și în
+            datele structurate.
           </p>
 
           <h2 className="text-2xl font-bold text-white pt-4">Rolul redacției</h2>
@@ -63,28 +67,52 @@ export default function RedactiePage() {
             </li>
             <li>
               Unele linkuri pot fi de afiliere, fără cost suplimentar pentru
-              cititor. Detalii în pagina{' '}
-              <Link href="/despre" className="text-blue-400 hover:text-blue-300 underline">
-                Despre
+              cititor. Sunt marcate în pagină. Detalii la{' '}
+              <Link href="/publicitate" className="text-blue-400 hover:text-blue-300 underline">
+                Publicitate și afiliere
               </Link>
               .
             </li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-white pt-4">Analist</h2>
+          <h2 className="text-2xl font-bold text-white pt-4">Documente</h2>
+          <ul className="list-disc pl-5 space-y-2">
+            {EDITORIAL_POLICY_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="text-blue-400 hover:text-blue-300 underline">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <Link href="/despre" className="text-blue-400 hover:text-blue-300 underline">
+                Despre publicație
+              </Link>
+            </li>
+          </ul>
+
+          <h2 className="text-2xl font-bold text-white pt-4">Redactor</h2>
           <p>
-            Analizele Market Pulse sunt semnate de{' '}
+            Știrile și analizele Market Pulse sunt semnate de{' '}
             <Link href="/autori/daniel-mihai" className="text-blue-400 hover:text-blue-300 underline">
               Daniel Mihai
             </Link>
-            . Știrile de flux rămân ale redacției atunci când nu au un autor individual.
+            . Dacă un material are o altă semnătură, pagina articolului o arată.
           </p>
 
           <h2 className="text-2xl font-bold text-white pt-4">Contact</h2>
           <p>
-            Pentru sesizări editoriale, parteneriate sau corecții, folosiți pagina{' '}
+            Pentru sesizări editoriale, parteneriate sau corecții, scrieți la{' '}
+            <a href="mailto:contact@stirilecrypto.ro" className="text-blue-400 hover:text-blue-300 underline">
+              contact@stirilecrypto.ro
+            </a>{' '}
+            sau folosiți pagina{' '}
             <Link href="/contact" className="text-blue-400 hover:text-blue-300 underline">
               Contact
+            </Link>
+            . Modul de publicare a corecturilor este în pagina{' '}
+            <Link href="/corecturi" className="text-blue-400 hover:text-blue-300 underline">
+              Corecturi
             </Link>
             .
           </p>

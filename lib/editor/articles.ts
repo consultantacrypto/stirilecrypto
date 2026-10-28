@@ -5,12 +5,13 @@ import { isProvenanceColumn, isUniqueSlugViolation, missingStiriColumn } from '@
 import type { EditorArticleCreate, EditorArticlePatch, EditorListQuery } from '@/lib/editor/validate';
 import { countWords, slugFromTitle, withSlugSuffix } from '@/lib/editor/validate';
 import { prepareImageUrlForStorage } from '@/lib/image-url';
-import { EDITORIAL_DESK_NAME, SITE_URL } from '@/lib/json-ld';
+import { DANIEL_MIHAI } from '@/lib/authors';
+import { SITE_URL } from '@/lib/json-ld';
 import { createServiceClient } from '@/lib/supabase/service';
 import type { ArticleStatus } from '@/lib/types/stiri';
 
-if (EDITOR_ARTICLE_AUTHOR !== EDITORIAL_DESK_NAME) {
-  throw new Error('EDITOR_ARTICLE_AUTHOR must match EDITORIAL_DESK_NAME');
+if (EDITOR_ARTICLE_AUTHOR !== DANIEL_MIHAI.name) {
+  throw new Error('EDITOR_ARTICLE_AUTHOR must match DANIEL_MIHAI.name');
 }
 
 const TABLE = 'stiri';
@@ -446,7 +447,7 @@ function toJson(
     source: extras.source,
     tags: extras.tags,
     source_urls: extras.sourceUrls,
-    author: EDITORIAL_DESK_NAME,
+    author: EDITOR_ARTICLE_AUTHOR,
     path,
     url: `${SITE_URL}${path}`,
   };

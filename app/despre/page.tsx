@@ -3,12 +3,12 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { Award, ShieldCheck, Users } from 'lucide-react';
-import { SITE_URL } from '@/lib/json-ld';
+import { EDITORIAL_POLICY_LINKS, SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
   title: 'Despre Noi',
   description:
-    'Cine suntem și de ce există Știrile Crypto: știri filtrate, analiză on-chain și educație financiară aplicată.',
+    'Cine publică Știrile Crypto: redactorul Daniel Mihai, principiile editoriale și datele de contact. Datele de identificare ale operatorului sunt de completat.',
   alternates: {
     canonical: `${SITE_URL}/despre`,
   },
@@ -37,13 +37,30 @@ export default function AboutPage() {
                     Într-o lume plină de headline-uri fără substanță, misiunea noastră este clară: <strong>știri filtrate, analiză on-chain și educație financiară aplicată.</strong> Nu promitem îmbogățire peste noapte — oferim claritate.
                 </p>
                 
-                <p className="text-sm text-gray-500">
-                    Analizele de piață sunt semnate de{' '}
-                    <Link href="/autori/daniel-mihai" className="text-gray-300 underline">
-                        Daniel Mihai
-                    </Link>
-                    . Știrile fără semnătură individuală aparțin redacției.
-                </p>
+                <div className="rounded-2xl border border-white/10 bg-[#0b1221] p-6 text-sm leading-relaxed text-gray-300">
+                    <h2 className="text-lg font-bold text-white mb-3">Cine publică</h2>
+                    <p className="mb-3">
+                        <strong className="text-white">Știrile Crypto</strong> este o publicație în limba română despre știri crypto, analiză de piață și educație financiară. Site-ul este stirilecrypto.ro.
+                    </p>
+                    <p className="mb-3">
+                        Redactorul publicației este{' '}
+                        <Link href="/autori/daniel-mihai" className="text-blue-400 underline hover:text-blue-300">
+                            Daniel Mihai
+                        </Link>
+                        . El semnează știrile și analizele de piață.
+                    </p>
+                    <p>
+                        Email editorial:{' '}
+                        <a href="mailto:contact@stirilecrypto.ro" className="text-blue-400 underline hover:text-blue-300">
+                            contact@stirilecrypto.ro
+                        </a>
+                        . Programul afișat la{' '}
+                        <Link href="/contact" className="text-blue-400 underline hover:text-blue-300">
+                            Contact
+                        </Link>
+                        {' '}este luni–vineri, 09:00–18:00. Consultanța 1-la-1 este separată de publicație, pe mihaidaniel.ro.
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -55,7 +72,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">Integritate Editorială</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">
-                    Nu acceptăm plăți pentru a promova proiecte "pump & dump". Analizele noastre se bazează pe date on-chain, macroeconomie și realități legislative, nu pe hype plătit.
+                    Nu acceptăm plăți pentru a promova proiecte „pump & dump”. Analizele noastre se bazează pe date on-chain, macroeconomie și realități legislative, nu pe hype plătit.
                 </p>
             </div>
 
@@ -80,18 +97,79 @@ export default function AboutPage() {
             </div>
         </div>
 
-        {/* Disclaimer Legal & Affiliate (Obligatoriu Google News) */}
-        <div className="bg-[#0b1221]/50 p-8 rounded-2xl border border-white/5">
-            <h3 className="text-lg font-bold text-white mb-4">Politică Editorială & Disclaimer</h3>
+        <div className="bg-[#0b1221]/50 p-8 rounded-2xl border border-white/5 mb-8">
+            <h2 className="text-lg font-bold text-white mb-4">Politici</h2>
+            <ul className="space-y-2 text-sm">
+                {EDITORIAL_POLICY_LINKS.map((link) => (
+                    <li key={link.href}>
+                        <Link href={link.href} className="text-blue-400 underline hover:text-blue-300">
+                            {link.label}
+                        </Link>
+                    </li>
+                ))}
+                <li>
+                    <Link href="/redactie" className="text-blue-400 underline hover:text-blue-300">
+                        Redacție
+                    </Link>
+                </li>
+            </ul>
+        </div>
+
+        <div className="bg-[#0b1221]/50 p-8 rounded-2xl border border-white/5 mb-8">
+            <h2 className="text-lg font-bold text-white mb-4">Politică editorială și disclaimer</h2>
             <div className="space-y-4 text-sm text-gray-500">
                 <p>
-                    <strong>Disclaimer Financiar:</strong> Conținutul de pe acest site este strict în scop educațional și informativ. Știrile Crypto și echipa sa nu sunt consultanți financiari acreditați. Investițiile în criptomonede implică riscuri majore, inclusiv pierderea totală a capitalului. Fă-ți propriul research (DYOR) înainte de a investi.
+                    <strong>Disclaimer financiar:</strong> Conținutul de pe acest site este în scop educațional și informativ. Știrile Crypto nu oferă consultanță financiară autorizată. Investițiile în criptomonede implică riscuri majore, inclusiv pierderea capitalului.
                 </p>
                 <p>
-                    <strong>Transparență Afiliere:</strong> Unele link-uri de pe acest site pot fi link-uri de afiliere. Asta înseamnă că, dacă te înregistrezi folosind aceste link-uri, platforma poate primi un mic comision, fără costuri suplimentare pentru tine. Acest lucru ne ajută să menținem conținutul gratuit și calitativ. Recomandăm doar platforme pe care le folosim personal (ex: Binance, Bybit, Ledger).
+                    <strong>Afiliere:</strong> Unele linkuri pot fi de afiliere. Dacă te înregistrezi prin ele, platforma poate primi un comision, fără cost suplimentar pentru tine. Casetele sunt marcate „Link afiliat”. Detaliile sunt în pagina{' '}
+                    <Link href="/publicitate" className="text-gray-300 underline">
+                        Publicitate și afiliere
+                    </Link>
+                    .
                 </p>
             </div>
         </div>
+
+        <section id="date-operator" className="scroll-mt-28 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-8">
+            <p className="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2">
+                De completat
+            </p>
+            <h2 className="text-lg font-bold text-white mb-3">Date operator (de completat)</h2>
+            <p className="text-sm text-amber-100/80 mb-4 leading-relaxed">
+                Identitatea juridică a operatorului nu este publicată încă pe site. Câmpurile de mai jos sunt goale intenționat. Nu completa cu date inventate.
+            </p>
+            <dl className="space-y-3 text-sm">
+                <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
+                    <dt className="text-gray-400">Denumire</dt>
+                    <dd className="text-white">de completat</dd>
+                </div>
+                <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
+                    <dt className="text-gray-400">CUI</dt>
+                    <dd className="text-white">de completat</dd>
+                </div>
+                <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
+                    <dt className="text-gray-400">Sediu</dt>
+                    <dd className="text-white">de completat</dd>
+                </div>
+                <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
+                    <dt className="text-gray-400">Redactor-șef</dt>
+                    <dd className="text-white">
+                        <Link href="/autori/daniel-mihai" className="underline decoration-white/30 underline-offset-2">
+                            Daniel Mihai
+                        </Link>
+                    </dd>
+                </div>
+                <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
+                    <dt className="text-gray-400">Email editorial</dt>
+                    <dd>
+                        <a href="mailto:contact@stirilecrypto.ro" className="text-white underline decoration-white/30 underline-offset-2">
+                            contact@stirilecrypto.ro
+                        </a>
+                    </dd>
+                </div>
+            </dl>
+        </section>
 
       </main>
       <Footer />

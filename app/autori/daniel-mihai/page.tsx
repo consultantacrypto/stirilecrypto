@@ -5,11 +5,11 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { DANIEL_MIHAI, danielAuthorJsonLd } from '@/lib/authors';
 import { getMarketPulseArchive } from '@/lib/articles-db';
-import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
+import { EDITORIAL_POLICY_LINKS, SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
-const TITLE = 'Daniel Mihai, analist';
+const TITLE = 'Daniel Mihai, redactor';
 const DESCRIPTION =
-  'Pagina de autor a lui Daniel Mihai, analist la Știrile Crypto. Analize de piață educative, fără recomandări de cumpărare sau vânzare.';
+  'Pagina de autor a lui Daniel Mihai, redactor la Știrile Crypto. Știri și analize de piață educative, fără recomandări de cumpărare sau vânzare.';
 
 export const revalidate = 60;
 
@@ -26,7 +26,10 @@ export const metadata: Metadata = {
 
 export default async function DanielMihaiPage() {
   const analyses = (await getMarketPulseArchive()).slice(0, 8);
-  const jsonLd = danielAuthorJsonLd();
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    ...danielAuthorJsonLd(),
+  };
 
   return (
     <div className="min-h-screen bg-[#020617] text-white">
@@ -52,11 +55,7 @@ export default async function DanielMihaiPage() {
 
         <p className="mt-8 text-base leading-relaxed text-slate-300">{DANIEL_MIHAI.bio}</p>
         <p className="mt-4 text-sm leading-relaxed text-slate-500">
-          Știrile de flux fără semnătură individuală aparțin{' '}
-          <Link href="/redactie" className="text-slate-300 underline decoration-white/20 underline-offset-2">
-            redacției
-          </Link>
-          . Consultanța 1-la-1 este separată de publicație:{' '}
+          Consultanța 1-la-1 este separată de publicație:{' '}
           <a
             href={DANIEL_MIHAI.consultancyUrl}
             target="_blank"
@@ -65,8 +64,48 @@ export default async function DanielMihaiPage() {
           >
             mihaidaniel.ro
           </a>
+          . Principiile după care sunt scrise materialele sunt în{' '}
+          <Link href="/politica-editoriala" className="text-slate-300 underline decoration-white/20 underline-offset-2">
+            politica editorială
+          </Link>
           .
         </p>
+
+        <h2 className="mt-10 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+          Profiluri publice
+        </h2>
+        <ul className="mt-3 space-y-2 text-sm">
+          {DANIEL_MIHAI.sameAs.map((href) => (
+            <li key={href}>
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-300 underline decoration-white/20 underline-offset-2 hover:text-white"
+              >
+                {href.replace(/^https?:\/\/(www\.)?/, '')}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <h2 className="mt-10 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+          Redacție
+        </h2>
+        <ul className="mt-3 space-y-2 text-sm">
+          <li>
+            <Link href="/redactie" className="text-slate-300 underline decoration-white/20 underline-offset-2 hover:text-white">
+              Redacția Știrile Crypto
+            </Link>
+          </li>
+          {EDITORIAL_POLICY_LINKS.map((link) => (
+            <li key={link.href}>
+              <Link href={link.href} className="text-slate-300 underline decoration-white/20 underline-offset-2 hover:text-white">
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
 
         <h2 className="mt-12 border-b border-white/10 pb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
           Analize
