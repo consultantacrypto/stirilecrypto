@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { Mail, ShieldCheck, Globe, Clock } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
+import { PERSON_AUTHORS } from '@/lib/authors';
+import { EDITORIAL_POLICY_LINKS } from '@/lib/json-ld';
 import { SOCIAL_LINKS } from '@/lib/social';
 import MorningNewsletter from '@/components/MorningNewsletter';
 
@@ -147,10 +149,24 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/autori/daniel-mihai" className="hover:text-green-400 transition-colors">
-                  Daniel Mihai, analist
+                <Link href="/redactie" className="hover:text-green-400 transition-colors">
+                  Redacție
                 </Link>
               </li>
+              {PERSON_AUTHORS.map((author) => (
+                <li key={author.path}>
+                  <Link href={author.path} className="hover:text-green-400 transition-colors">
+                    {author.key === 'daniel-mihai' ? `${author.name}, redactor` : author.name}
+                  </Link>
+                </li>
+              ))}
+              {EDITORIAL_POLICY_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="hover:text-green-400 transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <a
                   href="https://www.mihaidaniel.ro/"
@@ -201,7 +217,18 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-8">
+        <div className="border-t border-white/5 pt-8 space-y-2">
+          <p className="text-xs text-gray-500">
+            Știrile Crypto este editată de{' '}
+            <Link href="/autori/daniel-mihai" className="text-gray-400 underline decoration-white/20 underline-offset-2 hover:text-white">
+              Daniel Mihai
+            </Link>
+            . Datele de identificare ale operatorului sunt de completat pe pagina{' '}
+            <Link href="/despre#date-operator" className="text-gray-400 underline decoration-white/20 underline-offset-2 hover:text-white">
+              Despre
+            </Link>
+            .
+          </p>
           <p className="text-xs text-gray-600">
             © {currentYear} Știrile Crypto. Toate drepturile rezervate.
           </p>

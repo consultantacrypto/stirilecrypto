@@ -5,7 +5,7 @@ import ArticleCoverImage from '@/components/ArticleCoverImage';
 import ViewTracker from '@/components/ViewTracker';
 import AuthorByline from '@/components/author/AuthorByline';
 import AuthorBox from '@/components/author/AuthorBox';
-import { authorDisplayName, danielAuthorJsonLd } from '@/lib/authors';
+import { authorDisplayName, isPersonAuthorKey, personAuthorJsonLd } from '@/lib/authors';
 import MorningNewsletter from '@/components/MorningNewsletter';
 import AffiliatePartnerBox from '@/components/AffiliatePartnerBox';
 import ArticleServiceCta from '@/components/services/ArticleServiceCta';
@@ -102,7 +102,7 @@ function MarketPulsePageContent({
   const published = formatPublishedDisplay(article.published_at, article.dateLabel);
   const jsonLd = buildFinancialArticleJsonLd(article, slug, {
     path: `/market-pulse/${slug}`,
-    author: article.authorKey === 'daniel-mihai' ? danielAuthorJsonLd() : undefined,
+    author: isPersonAuthorKey(article.authorKey) ? personAuthorJsonLd(article.authorKey) : undefined,
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
@@ -210,7 +210,7 @@ function MarketPulsePageContent({
             </aside>
           ) : null}
 
-          {article.authorKey === 'daniel-mihai' ? <AuthorBox /> : null}
+          {isPersonAuthorKey(article.authorKey) ? <AuthorBox authorKey={article.authorKey} /> : null}
 
           <MorningNewsletter location="market_pulse" variant="compact" id="newsletter-pulse" />
 

@@ -24,7 +24,7 @@ import AuthorByline from '@/components/author/AuthorByline';
 import AuthorBox from '@/components/author/AuthorBox';
 import ArticleServiceCta from '@/components/services/ArticleServiceCta';
 import { mentionedAsset } from '@/lib/products/placement';
-import { authorDisplayName, danielAuthorJsonLd } from '@/lib/authors';
+import { authorDisplayName, isPersonAuthorKey, personAuthorJsonLd } from '@/lib/authors';
 import { Metadata } from 'next';
 
 /** ISR: regenerate at most once per minute (TTFB / Supabase load). */
@@ -118,7 +118,7 @@ function ArticlePageContent({
   const coverSrc = normalizeImageUrl(article.image_url);
   const published = formatPublishedDisplay(article.published_at, article.dateLabel);
   const newsArticleJsonLd = buildNewsArticleJsonLd(article, slug, {
-    author: article.authorKey === 'daniel-mihai' ? danielAuthorJsonLd() : undefined,
+    author: isPersonAuthorKey(article.authorKey) ? personAuthorJsonLd(article.authorKey) : undefined,
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
@@ -206,7 +206,7 @@ function ArticlePageContent({
 
           {mainWithoutLead ? <ArticleContent content={mainWithoutLead} /> : null}
 
-          {article.authorKey === 'daniel-mihai' ? <AuthorBox /> : null}
+          {isPersonAuthorKey(article.authorKey) ? <AuthorBox authorKey={article.authorKey} /> : null}
 
           <ArticleServiceCta
             asset={mentionedAsset(article.title, article.excerpt, article.content)}

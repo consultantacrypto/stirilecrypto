@@ -1,15 +1,11 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import { DANIEL_MIHAI, danielAuthorJsonLd } from '@/lib/authors';
-import { getMarketPulseArchive } from '@/lib/articles-db';
+import AuthorProfile from '@/components/author/AuthorProfile';
+import { DANIEL_MIHAI } from '@/lib/authors';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
-const TITLE = 'Daniel Mihai, analist';
+const TITLE = 'Daniel Mihai, redactor';
 const DESCRIPTION =
-  'Pagina de autor a lui Daniel Mihai, analist la Știrile Crypto. Analize de piață educative, fără recomandări de cumpărare sau vânzare.';
+  'Pagina de autor a lui Daniel Mihai, redactor la Știrile Crypto. Știri și analize de piață educative, fără recomandări de cumpărare sau vânzare.';
 
 export const revalidate = 60;
 
@@ -24,73 +20,6 @@ export const metadata: Metadata = {
   }),
 };
 
-export default async function DanielMihaiPage() {
-  const analyses = (await getMarketPulseArchive()).slice(0, 8);
-  const jsonLd = danielAuthorJsonLd();
-
-  return (
-    <div className="min-h-screen bg-[#020617] text-white">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Navbar />
-      <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
-        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">Autor</p>
-        <div className="mt-6 flex items-center gap-4">
-          <Image
-            src={DANIEL_MIHAI.photo}
-            alt={DANIEL_MIHAI.photoAlt}
-            width={72}
-            height={72}
-            className="h-[72px] w-[72px] rounded-full object-cover"
-          />
-          <div>
-            <h1 className="font-[var(--font-space)] text-3xl font-bold tracking-tight sm:text-4xl">
-              {DANIEL_MIHAI.name}
-            </h1>
-            <p className="mt-1 text-sm text-slate-400">{DANIEL_MIHAI.role} · Știrile Crypto</p>
-          </div>
-        </div>
-
-        <p className="mt-8 text-base leading-relaxed text-slate-300">{DANIEL_MIHAI.bio}</p>
-        <p className="mt-4 text-sm leading-relaxed text-slate-500">
-          Știrile de flux fără semnătură individuală aparțin{' '}
-          <Link href="/redactie" className="text-slate-300 underline decoration-white/20 underline-offset-2">
-            redacției
-          </Link>
-          . Consultanța 1-la-1 este separată de publicație:{' '}
-          <a
-            href={DANIEL_MIHAI.consultancyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-slate-300 underline decoration-white/20 underline-offset-2"
-          >
-            mihaidaniel.ro
-          </a>
-          .
-        </p>
-
-        <h2 className="mt-12 border-b border-white/10 pb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
-          Analize
-        </h2>
-        {analyses.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-500">Analizele publicate apar aici.</p>
-        ) : (
-          <ul className="mt-2 divide-y divide-white/10">
-            {analyses.map((item) => (
-              <li key={item.id}>
-                <Link href={`/market-pulse/${item.slug}`} className="group block py-4">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                    {item.dateLabel || 'Market Pulse'}
-                  </span>
-                  <span className="mt-1 block font-semibold text-white group-hover:text-blue-300">
-                    {item.title}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </main>
-      <Footer />
-    </div>
-  );
+export default function DanielMihaiPage() {
+  return <AuthorProfile authorKey="daniel-mihai" />;
 }

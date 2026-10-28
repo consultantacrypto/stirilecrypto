@@ -2,7 +2,7 @@
 export const EDITOR_API_SOURCE = 'editor_api';
 
 /**
- * Public byline for every `/stiri` article, including admin posts.
- * Matches `EDITORIAL_DESK_NAME` in `lib/json-ld.ts`.
+ * Canonical public name for Daniel Mihai.
+ * Unsigned `/stiri` rows get a rotated byline in `authorKeyForArticle`.
  */
-export const EDITOR_ARTICLE_AUTHOR = 'Redacția Știrile Crypto';
+export const EDITOR_ARTICLE_AUTHOR = 'Daniel Mihai';
