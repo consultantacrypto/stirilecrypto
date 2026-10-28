@@ -1,3 +1,5 @@
+import { HERO_SLOGAN_LEAD, HERO_SLOGAN_TAIL } from '@/lib/hero-slogan';
+
 export default function HeroNewsPortal() {
   return (
     <section
@@ -39,10 +41,10 @@ export default function HeroNewsPortal() {
         </div>
 
         <h1 className="font-[family-name:var(--font-space),sans-serif] text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-7xl font-bold tracking-tight text-white leading-[1.08]">
-          Zgomotul e gratuit.
+          {HERO_SLOGAN_LEAD}
           <br />
           <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Semnalul costă.
+            {HERO_SLOGAN_TAIL}
           </span>
         </h1>
 
