@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { PERSON_AUTHORS } from '@/lib/authors';
 import { EDITORIAL_POLICY_LINKS, SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 const REDACTIE_TITLE = 'Redacția';
@@ -42,8 +43,15 @@ export default function RedactiePage() {
             <Link href="/autori/daniel-mihai" className="text-blue-400 hover:text-blue-300 underline">
               Daniel Mihai
             </Link>
-            . Știrile și analizele de piață îi poartă numele pe pagină și în
-            datele structurate.
+            . Știrile și analizele de piață sunt semnate de Daniel Mihai,{' '}
+            <Link href="/autori/cristian-vasile" className="text-blue-400 hover:text-blue-300 underline">
+              Cristian Vasile
+            </Link>{' '}
+            și{' '}
+            <Link href="/autori/emilian-constantin" className="text-blue-400 hover:text-blue-300 underline">
+              Emilian Constantin
+            </Link>
+            .
           </p>
 
           <h2 className="text-2xl font-bold text-white pt-4">Rolul redacției</h2>
@@ -91,13 +99,22 @@ export default function RedactiePage() {
             </li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-white pt-4">Redactor</h2>
+          <h2 className="text-2xl font-bold text-white pt-4">Autori</h2>
           <p>
-            Știrile și analizele Market Pulse sunt semnate de{' '}
-            <Link href="/autori/daniel-mihai" className="text-blue-400 hover:text-blue-300 underline">
-              Daniel Mihai
-            </Link>
-            . Dacă un material are o altă semnătură, pagina articolului o arată.
+            Redactorul este Daniel Mihai. Știrile și analizele Market Pulse sunt semnate de:
+          </p>
+          <ul className="list-disc pl-5 space-y-2">
+            {PERSON_AUTHORS.map((author) => (
+              <li key={author.path}>
+                <Link href={author.path} className="text-blue-400 hover:text-blue-300 underline">
+                  {author.name}
+                </Link>
+                {author.key === 'daniel-mihai' ? ', redactor' : null}
+              </li>
+            ))}
+          </ul>
+          <p>
+            Dacă un material are o semnătură care nu este a unuia dintre ei, pagina articolului o arată ca redacție.
           </p>
 
           <h2 className="text-2xl font-bold text-white pt-4">Contact</h2>

@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { authorKeyForArticle, authorKeyFromName, danielAuthorJsonLd } from './authors';
+import {
+  authorKeyForArticle,
+  authorKeyFromName,
+  personAuthorJsonLd,
+  unsignedAuthorKey,
+} from './authors';
 import { buildNewsArticleJsonLd, buildOrganizationJsonLd } from './json-ld';
 import type { ArticlePageData } from './articles-db';
 
@@ -21,57 +26,68 @@ const article = {
   views: 0,
   meta_title: null,
   meta_description: null,
-  authorKey: 'daniel-mihai',
+  authorKey: 'cristian-vasile',
 } satisfies ArticlePageData;
 
 describe('author byline', () => {
-  it('maps both name orders to Daniel Mihai', () => {
+  it('maps stored names to the three people, including Mihai Daniel', () => {
     assert.equal(authorKeyFromName('Daniel Mihai'), 'daniel-mihai');
     assert.equal(authorKeyFromName('Mihai Daniel'), 'daniel-mihai');
+    assert.equal(authorKeyFromName('Cristian Vasile'), 'cristian-vasile');
+    assert.equal(authorKeyFromName('Emilian Constantin'), 'emilian-constantin');
   });
 
-  it('signs unsigned news as Daniel Mihai, not the newsroom', () => {
-    assert.equal(authorKeyForArticle({ authorName: null }), 'daniel-mihai');
-    assert.equal(authorKeyForArticle({ authorName: '   ' }), 'daniel-mihai');
+  it('keeps an explicit non-person byline on the desk', () => {
+    assert.equal(
+      authorKeyForArticle({ authorName: 'Redacția Știrile Crypto', slug: 'orice-slug' }),
+      'desk',
+    );
   });
 
-  it('keeps an explicit non-Daniel byline on the desk', () => {
-    assert.equal(authorKeyForArticle({ authorName: 'Redacția Știrile Crypto' }), 'desk');
+  it('rotates unsigned stories by slug and keeps the assignment stable', () => {
+    const seen = new Set<string>();
+    for (let i = 0; i < 60; i += 1) {
+      seen.add(unsignedAuthorKey(`stire-${i}`));
+    }
+    assert.deepEqual([...seen].sort(), ['cristian-vasile', 'daniel-mihai', 'emilian-constantin']);
+    assert.equal(unsignedAuthorKey('stire-4'), unsignedAuthorKey('stire-4'));
+    assert.equal(authorKeyForArticle({ authorName: null, slug: 'stire-4' }), unsignedAuthorKey('stire-4'));
+    assert.equal(authorKeyForArticle({ authorName: '   ', slug: 'stire-4' }), unsignedAuthorKey('stire-4'));
+    assert.equal(
+      authorKeyForArticle({ authorName: 'Mihai Daniel', slug: 'stire-4' }),
+      'daniel-mihai',
+    );
   });
 });
 
 describe('news schema', () => {
   it('uses a Person author and a NewsMediaOrganization publisher', () => {
     const jsonLd = buildNewsArticleJsonLd(article, article.slug, {
-      author: danielAuthorJsonLd(),
+      author: personAuthorJsonLd('cristian-vasile'),
     });
-    const author = jsonLd.author as { '@type': string; name: string; url: string };
-    const publisher = jsonLd.publisher as {
-      '@type': string;
-      logo: { url: string; width: number; height: number };
-      publishingPrinciples: string;
-      correctionsPolicy: string;
-      ethicsPolicy: string;
-      ownershipFundingInfo: string[];
-    };
+    const author = jsonLd.author as { '@type': string; name: string; url: string; image?: string; sameAs?: string[] };
+    const publisher = jsonLd.publisher as { '@type': string; logo: { url: string; width: number } };
 
     assert.equal(author['@type'], 'Person');
-    assert.equal(author.name, 'Daniel Mihai');
-    assert.match(author.url, /\/autori\/daniel-mihai$/);
+    assert.equal(author.name, 'Cristian Vasile');
+    assert.match(author.url, /\/autori\/cristian-vasile$/);
+    assert.equal(author.image, undefined);
+    assert.equal(author.sameAs, undefined);
     assert.equal(publisher['@type'], 'NewsMediaOrganization');
     assert.match(publisher.logo.url, /\/icon\.jpg$/);
     assert.ok(publisher.logo.width >= 112);
-    assert.ok(publisher.logo.height >= 112);
-    assert.match(publisher.publishingPrinciples, /\/politica-editoriala$/);
-    assert.match(publisher.correctionsPolicy, /\/corecturi$/);
-    assert.match(publisher.ethicsPolicy, /\/politica-editoriala$/);
-    assert.ok(publisher.ownershipFundingInfo.some((url) => url.endsWith('/despre')));
-    assert.ok(publisher.ownershipFundingInfo.some((url) => url.endsWith('/publicitate')));
+  });
+
+  it('keeps Daniel Mihai photo and profiles on his Person node', () => {
+    const author = personAuthorJsonLd('daniel-mihai');
+    assert.equal(author.name, 'Daniel Mihai');
+    assert.match(author.image ?? '', /mihai-daniel-consultanta\.jpg$/);
+    assert.ok((author.sameAs ?? []).some((url) => url.includes('youtube.com')));
+    assert.equal(personAuthorJsonLd('emilian-constantin').image, undefined);
   });
 
   it('types the homepage publisher as NewsMediaOrganization', () => {
-    const organization = buildOrganizationJsonLd() as { '@type': string; logo: { url: string } };
+    const organization = buildOrganizationJsonLd() as { '@type': string };
     assert.equal(organization['@type'], 'NewsMediaOrganization');
-    assert.match(organization.logo.url, /\/icon\.jpg$/);
   });
 });

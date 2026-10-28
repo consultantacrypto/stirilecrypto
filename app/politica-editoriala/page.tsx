@@ -29,8 +29,9 @@ export default function PoliticaEditorialaPage() {
       <p>
         Redactorul publicației este{' '}
         <Link href="/autori/daniel-mihai">Daniel Mihai</Link>. Știrile și analizele de
-        piață îi poartă numele. Publicația este Știrile Crypto. Consultanța de pe
-        mihaidaniel.ro nu este parte din această redacție.
+        piață sunt semnate de el, de <Link href="/autori/cristian-vasile">Cristian Vasile</Link> sau
+        de <Link href="/autori/emilian-constantin">Emilian Constantin</Link>. Publicația este
+        Știrile Crypto. Consultanța de pe mihaidaniel.ro nu este parte din această redacție.
       </p>
 
       <h2>Ce publicăm</h2>

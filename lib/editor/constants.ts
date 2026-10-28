@@ -2,7 +2,7 @@
 export const EDITOR_API_SOURCE = 'editor_api';
 
 /**
- * Public byline returned by the editor API for `/stiri` articles.
- * Matches `DANIEL_MIHAI.name` in `lib/authors.ts`.
+ * Canonical public name for Daniel Mihai.
+ * Unsigned `/stiri` rows get a rotated byline in `authorKeyForArticle`.
  */
 export const EDITOR_ARTICLE_AUTHOR = 'Daniel Mihai';

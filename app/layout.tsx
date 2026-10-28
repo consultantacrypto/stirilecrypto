@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google"; 
 import "./globals.css";
 import Script from "next/script";
-import { DANIEL_MIHAI } from "@/lib/authors";
+import { DANIEL_MIHAI, PERSON_AUTHORS } from "@/lib/authors";
 import { SITE_URL } from "@/lib/json-ld";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import { Analytics } from "@vercel/analytics/next";
@@ -39,7 +39,10 @@ export const metadata: Metadata = {
     'ethereum stiri',
     'educatie financiara crypto',
   ],
-  authors: [{ name: DANIEL_MIHAI.name, url: `${SITE_URL}${DANIEL_MIHAI.path}` }],
+  authors: PERSON_AUTHORS.map((author) => ({
+    name: author.name,
+    url: `${SITE_URL}${author.path}`,
+  })),
   creator: DANIEL_MIHAI.name,
   publisher: 'Știrile Crypto',
   verification: {

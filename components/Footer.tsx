@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Mail, ShieldCheck, Globe, Clock } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
+import { PERSON_AUTHORS } from '@/lib/authors';
 import { EDITORIAL_POLICY_LINKS } from '@/lib/json-ld';
 import { SOCIAL_LINKS } from '@/lib/social';
 import MorningNewsletter from '@/components/MorningNewsletter';
@@ -152,11 +153,13 @@ export default function Footer() {
                   Redacție
                 </Link>
               </li>
-              <li>
-                <Link href="/autori/daniel-mihai" className="hover:text-green-400 transition-colors">
-                  Daniel Mihai, redactor
-                </Link>
-              </li>
+              {PERSON_AUTHORS.map((author) => (
+                <li key={author.path}>
+                  <Link href={author.path} className="hover:text-green-400 transition-colors">
+                    {author.key === 'daniel-mihai' ? `${author.name}, redactor` : author.name}
+                  </Link>
+                </li>
+              ))}
               {EDITORIAL_POLICY_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="hover:text-green-400 transition-colors">

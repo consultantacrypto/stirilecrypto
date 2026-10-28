@@ -5,7 +5,7 @@ import { isProvenanceColumn, isUniqueSlugViolation, missingStiriColumn } from '@
 import type { EditorArticleCreate, EditorArticlePatch, EditorListQuery } from '@/lib/editor/validate';
 import { countWords, slugFromTitle, withSlugSuffix } from '@/lib/editor/validate';
 import { prepareImageUrlForStorage } from '@/lib/image-url';
-import { DANIEL_MIHAI } from '@/lib/authors';
+import { DANIEL_MIHAI, authorDisplayName, authorKeyForArticle } from '@/lib/authors';
 import { SITE_URL } from '@/lib/json-ld';
 import { createServiceClient } from '@/lib/supabase/service';
 import type { ArticleStatus } from '@/lib/types/stiri';
@@ -447,7 +447,7 @@ function toJson(
     source: extras.source,
     tags: extras.tags,
     source_urls: extras.sourceUrls,
-    author: EDITOR_ARTICLE_AUTHOR,
+    author: authorDisplayName(authorKeyForArticle({ slug: row.slug })),
     path,
     url: `${SITE_URL}${path}`,
   };

@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import { authorKeyForArticle, authorKeyFromName, type AuthorKey } from '@/lib/authors';
+import { authorKeyForArticle, type AuthorKey } from '@/lib/authors';
 import { articles } from '@/lib/articles';
 import { resolveImageUrl } from '@/lib/image-url';
 import { HOME_FEED_FIRST_COUNT, HOME_FEED_PAGE_SIZE, type NewsFeedItem } from '@/lib/home-feed';
@@ -387,7 +387,10 @@ function staticArticleToPageData(article: StaticArticle): ArticlePageData {
     views: 0,
     meta_title: null,
     meta_description: null,
-    authorKey: authorKeyFromName(article.author),
+    authorKey: authorKeyForArticle({
+      authorName: article.author,
+      slug: article.slug ?? '',
+    }),
   };
 }
 
@@ -417,7 +420,10 @@ function stireToPageData(stire: Stire): ArticlePageData {
     views: typeof stire.views === 'number' ? stire.views : Number(stire.views ?? 0),
     meta_title: stire.meta_title ?? null,
     meta_description: stire.meta_description ?? null,
-    authorKey: authorKeyForArticle({ authorName: stire.author }),
+    authorKey: authorKeyForArticle({
+      authorName: stire.author,
+      slug: stire.slug,
+    }),
   };
 }
 

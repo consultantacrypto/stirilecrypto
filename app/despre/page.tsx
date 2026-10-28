@@ -47,7 +47,15 @@ export default function AboutPage() {
                         <Link href="/autori/daniel-mihai" className="text-blue-400 underline hover:text-blue-300">
                             Daniel Mihai
                         </Link>
-                        . El semnează știrile și analizele de piață.
+                        . Știrile și analizele de piață sunt semnate de el, de{' '}
+                        <Link href="/autori/cristian-vasile" className="text-blue-400 underline hover:text-blue-300">
+                            Cristian Vasile
+                        </Link>{' '}
+                        și de{' '}
+                        <Link href="/autori/emilian-constantin" className="text-blue-400 underline hover:text-blue-300">
+                            Emilian Constantin
+                        </Link>
+                        .
                     </p>
                     <p>
                         Email editorial:{' '}
