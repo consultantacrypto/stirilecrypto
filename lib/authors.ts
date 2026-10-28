@@ -1,4 +1,10 @@
-import { EDITORIAL_DESK_NAME, SITE_NAME, SITE_URL } from '@/lib/json-ld';
+import {
+  EDITORIAL_DESK_NAME,
+  OPERATOR_LEGAL_NAME,
+  SITE_NAME,
+  SITE_URL,
+  operatorPostalAddressJsonLd,
+} from '@/lib/json-ld';
 
 export type PersonAuthorKey = 'daniel-mihai' | 'cristian-vasile' | 'emilian-constantin';
 export type AuthorKey = PersonAuthorKey | 'desk';
@@ -149,7 +155,9 @@ export function personAuthorJsonLd(key: PersonAuthorKey) {
     worksFor: {
       '@type': 'NewsMediaOrganization' as const,
       name: SITE_NAME,
+      legalName: OPERATOR_LEGAL_NAME,
       url: SITE_URL,
+      address: operatorPostalAddressJsonLd(),
     },
   };
 }

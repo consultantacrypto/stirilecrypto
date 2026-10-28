@@ -5,7 +5,7 @@ import { Mail, ShieldCheck, Globe, Clock } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
 import { PERSON_AUTHORS } from '@/lib/authors';
-import { EDITORIAL_POLICY_LINKS } from '@/lib/json-ld';
+import { EDITORIAL_POLICY_LINKS, OPERATOR_LEGAL_NAME, OPERATOR_REGISTERED_OFFICE_LINE } from '@/lib/json-ld';
 import { SOCIAL_LINKS } from '@/lib/social';
 import MorningNewsletter from '@/components/MorningNewsletter';
 
@@ -223,7 +223,7 @@ export default function Footer() {
             <Link href="/autori/daniel-mihai" className="text-gray-400 underline decoration-white/20 underline-offset-2 hover:text-white">
               Daniel Mihai
             </Link>
-            . Datele de identificare ale operatorului sunt de completat pe pagina{' '}
+            {' '}și publicată de {OPERATOR_LEGAL_NAME}, {OPERATOR_REGISTERED_OFFICE_LINE}. CUI-ul operatorului este de completat pe pagina{' '}
             <Link href="/despre#date-operator" className="text-gray-400 underline decoration-white/20 underline-offset-2 hover:text-white">
               Despre
             </Link>

@@ -3,12 +3,17 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { Award, ShieldCheck, Users } from 'lucide-react';
-import { EDITORIAL_POLICY_LINKS, SITE_URL } from '@/lib/json-ld';
+import {
+  EDITORIAL_POLICY_LINKS,
+  OPERATOR_LEGAL_NAME,
+  OPERATOR_REGISTERED_OFFICE_LINE,
+  SITE_URL,
+} from '@/lib/json-ld';
 
 export const metadata: Metadata = {
   title: 'Despre Noi',
   description:
-    'Cine publică Știrile Crypto: redactorul Daniel Mihai, principiile editoriale și datele de contact. Datele de identificare ale operatorului sunt de completat.',
+    'Cine publică Știrile Crypto: redactorul Daniel Mihai și operatorul QuickExit, LLC. Principii editoriale și date de contact. CUI-ul operatorului nu este publicat încă.',
   alternates: {
     canonical: `${SITE_URL}/despre`,
   },
@@ -40,7 +45,7 @@ export default function AboutPage() {
                 <div className="rounded-2xl border border-white/10 bg-[#0b1221] p-6 text-sm leading-relaxed text-gray-300">
                     <h2 className="text-lg font-bold text-white mb-3">Cine publică</h2>
                     <p className="mb-3">
-                        <strong className="text-white">Știrile Crypto</strong> este o publicație în limba română despre știri crypto, analiză de piață și educație financiară. Site-ul este stirilecrypto.ro.
+                        <strong className="text-white">Știrile Crypto</strong> este o publicație în limba română despre știri crypto, analiză de piață și educație financiară. Site-ul este stirilecrypto.ro. Operatorul juridic este {OPERATOR_LEGAL_NAME}.
                     </p>
                     <p className="mb-3">
                         Redactorul publicației este{' '}
@@ -139,26 +144,23 @@ export default function AboutPage() {
             </div>
         </div>
 
-        <section id="date-operator" className="scroll-mt-28 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-8">
-            <p className="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2">
-                De completat
-            </p>
-            <h2 className="text-lg font-bold text-white mb-3">Date operator (de completat)</h2>
-            <p className="text-sm text-amber-100/80 mb-4 leading-relaxed">
-                Identitatea juridică a operatorului nu este publicată încă pe site. Câmpurile de mai jos sunt goale intenționat. Nu completa cu date inventate.
+        <section id="date-operator" className="scroll-mt-28 rounded-2xl border border-white/10 bg-[#0b1221] p-8">
+            <h2 className="text-lg font-bold text-white mb-3">Date operator</h2>
+            <p className="text-sm text-gray-400 mb-4 leading-relaxed">
+                Publicația este operată de {OPERATOR_LEGAL_NAME}. Sediul social înregistrat este în Delaware, Statele Unite. Codul fiscal (CUI / EIN) nu este publicat încă.
             </p>
             <dl className="space-y-3 text-sm">
                 <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
                     <dt className="text-gray-400">Denumire</dt>
-                    <dd className="text-white">de completat</dd>
+                    <dd className="text-white">{OPERATOR_LEGAL_NAME}</dd>
                 </div>
                 <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
                     <dt className="text-gray-400">CUI</dt>
-                    <dd className="text-white">de completat</dd>
+                    <dd className="text-amber-200">de completat</dd>
                 </div>
                 <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
                     <dt className="text-gray-400">Sediu</dt>
-                    <dd className="text-white">de completat</dd>
+                    <dd className="text-white">{OPERATOR_REGISTERED_OFFICE_LINE}</dd>
                 </div>
                 <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
                     <dt className="text-gray-400">Redactor-șef</dt>
