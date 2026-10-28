@@ -1,3 +1,4 @@
+import HeroSlogan from '@/components/HeroSlogan';
 import HomeNewsGrid from '@/components/HomeNewsGrid';
 import { getPublishedFeedPage, HOME_FEED_FIRST_COUNT } from '@/lib/articles-db';
 
@@ -8,10 +9,7 @@ export default async function NewsFeed() {
     <section id="news-feed" className="scroll-mt-20 bg-black pb-12 lg:pb-16">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl pt-5 text-center">
-          <h1 className="font-[family-name:var(--font-space)] text-xl font-bold tracking-tight text-white sm:text-2xl">
-            Zgomotul e gratuit.
-            <span className="text-gray-400"> Semnalul costă.</span>
-          </h1>
+          <HeroSlogan />
         </div>
 
         {items.length === 0 ? (
