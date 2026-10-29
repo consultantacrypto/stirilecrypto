@@ -78,6 +78,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/airdrop-alert" className="hover:text-blue-400 transition-colors">
+                  Airdrop Alert
+                </Link>
+              </li>
+              <li>
                 <Link href="/academie" className="hover:text-blue-400 transition-colors">
                   Academia Crypto
                 </Link>

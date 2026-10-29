@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import BrandMark from '@/components/BrandMark';
+import { isPathActive, pathOf } from '@/lib/nav-path';
 import {
   MARKET_TONE_DISCLAIMER,
   marketToneLabel,
@@ -19,7 +20,7 @@ type ToneState = MarketTone | 'unknown';
 const WALLET_LINK: NavItem = { href: '/verificare-portofel?src=nav', label: 'Verificare portofel' };
 
 const MAIN_LINKS: NavItem[] = [
-  { href: '/stiri', label: 'Știri' },
+  { href: '/airdrop-alert', label: 'Airdrop Alert' },
   { href: '/market', label: 'Piața azi' },
   { href: '/market-pulse', label: 'Pulsul Bitcoin' },
   WALLET_LINK,
@@ -27,6 +28,7 @@ const MAIN_LINKS: NavItem[] = [
 ];
 
 const MORE_LINKS: NavItem[] = [
+  { href: '/stiri', label: 'Știri' },
   { href: '/raport-strategic', label: 'Ce cumpără balenele' },
   { href: '/incepe-aici', label: 'Începe aici' },
   { href: '/interviuri', label: 'Interviuri' },
@@ -36,19 +38,6 @@ const MORE_LINKS: NavItem[] = [
 ];
 
 const ANALYSIS_HREF = '/analiza-tehnica?src=nav';
-
-function pathOf(href: string): string {
-  return href.split('?')[0];
-}
-
-function isPathActive(pathname: string, href: string): boolean {
-  const path = pathOf(href);
-  if (path === '/') return pathname === '/';
-  if (path === '/market') {
-    return pathname === '/market' || pathname.startsWith('/market/') || pathname === '/lichidari' || pathname === '/dashboard';
-  }
-  return pathname === path || pathname.startsWith(`${path}/`);
-}
 
 function accentFor(href: string, tone: ToneState): { background: string; foreground: string } | null {
   const path = pathOf(href);
