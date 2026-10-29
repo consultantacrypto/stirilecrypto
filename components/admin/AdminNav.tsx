@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FileText, Mic2, Radar, LayoutDashboard, LineChart, ClipboardList } from 'lucide-react';
+import { FileText, Mic2, Radar, LayoutDashboard, LineChart, ClipboardList, Bell } from 'lucide-react';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Articole', icon: FileText, exact: true },
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/admin/dashboard', label: 'Dashboard Public', icon: LayoutDashboard, exact: false },
   { href: '/admin/etf', label: 'ETF Flows', icon: LineChart, exact: false },
   { href: '/admin/radar', label: 'Trend Radar', icon: Radar, exact: false },
+  { href: '/admin/airdrop-alert', label: 'Airdrop Alert', icon: Bell, exact: false },
   { href: '/admin/comenzi', label: 'Comenzi', icon: ClipboardList, exact: false },
 ] as const;
 
