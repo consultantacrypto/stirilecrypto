@@ -66,7 +66,20 @@ describe('news schema', () => {
       author: personAuthorJsonLd('cristian-vasile'),
     });
     const author = jsonLd.author as { '@type': string; name: string; url: string; image?: string; sameAs?: string[] };
-    const publisher = jsonLd.publisher as { '@type': string; logo: { url: string; width: number } };
+    const publisher = jsonLd.publisher as {
+      '@type': string;
+      legalName?: string;
+      taxID?: string;
+      vatID?: string;
+      address?: {
+        streetAddress: string;
+        addressLocality: string;
+        addressRegion: string;
+        postalCode: string;
+        addressCountry: string;
+      };
+      logo: { url: string; width: number };
+    };
 
     assert.equal(author['@type'], 'Person');
     assert.equal(author.name, 'Cristian Vasile');
@@ -74,8 +87,18 @@ describe('news schema', () => {
     assert.equal(author.image, undefined);
     assert.equal(author.sameAs, undefined);
     assert.equal(publisher['@type'], 'NewsMediaOrganization');
+    assert.equal(publisher.legalName, 'QuickExit, LLC');
+    assert.equal(publisher.address?.streetAddress, '131 Continental Dr, Suite 305');
+    assert.equal(publisher.address?.addressLocality, 'Newark');
+    assert.equal(publisher.address?.addressRegion, 'DE');
+    assert.equal(publisher.address?.postalCode, '19713');
+    assert.equal(publisher.address?.addressCountry, 'US');
+    assert.equal(publisher.taxID, undefined);
+    assert.equal(publisher.vatID, undefined);
     assert.match(publisher.logo.url, /\/icon\.jpg$/);
     assert.ok(publisher.logo.width >= 112);
+    assert.equal(JSON.stringify(publisher).includes('Samurca'), false);
+    assert.equal(JSON.stringify(publisher).includes('Daraban'), false);
   });
 
   it('keeps Daniel Mihai photo and profiles on his Person node', () => {
@@ -83,11 +106,23 @@ describe('news schema', () => {
     assert.equal(author.name, 'Daniel Mihai');
     assert.match(author.image ?? '', /mihai-daniel-consultanta\.jpg$/);
     assert.ok((author.sameAs ?? []).some((url) => url.includes('youtube.com')));
+    assert.equal(author.worksFor.legalName, 'QuickExit, LLC');
+    assert.equal(author.worksFor.address.streetAddress, '131 Continental Dr, Suite 305');
+    assert.equal('taxID' in author.worksFor, false);
     assert.equal(personAuthorJsonLd('emilian-constantin').image, undefined);
   });
 
   it('types the homepage publisher as NewsMediaOrganization', () => {
-    const organization = buildOrganizationJsonLd() as { '@type': string };
+    const organization = buildOrganizationJsonLd() as {
+      '@type': string;
+      legalName?: string;
+      taxID?: string;
+      address?: { addressCountry: string; streetAddress: string };
+    };
     assert.equal(organization['@type'], 'NewsMediaOrganization');
+    assert.equal(organization.legalName, 'QuickExit, LLC');
+    assert.equal(organization.address?.streetAddress, '131 Continental Dr, Suite 305');
+    assert.equal(organization.address?.addressCountry, 'US');
+    assert.equal(organization.taxID, undefined);
   });
 });

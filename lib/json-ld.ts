@@ -3,6 +3,22 @@ import { stripBrandSuffix } from '@/lib/seo-title';
 
 export const SITE_URL = 'https://www.stirilecrypto.ro';
 export const SITE_NAME = 'Știrile Crypto';
+
+/**
+ * Legal operator of the publication.
+ * Name and Delaware registered office are from the certificate of formation (April 2026).
+ * Tax ID is intentionally omitted until the operator provides the number.
+ */
+export const OPERATOR_LEGAL_NAME = 'QuickExit, LLC';
+export const OPERATOR_REGISTERED_OFFICE = {
+  streetAddress: '131 Continental Dr, Suite 305',
+  addressLocality: 'Newark',
+  addressRegion: 'DE',
+  postalCode: '19713',
+  addressCountry: 'US',
+} as const;
+export const OPERATOR_REGISTERED_OFFICE_LINE =
+  '131 Continental Dr, Suite 305, Newark, DE 19713, USA';
 export const EDITORIAL_DESK_NAME = 'Redacția Știrile Crypto';
 export const EDITORIAL_DESK_PATH = '/redactie';
 export const EDITORIAL_DESK_URL = `${SITE_URL}${EDITORIAL_DESK_PATH}`;
@@ -62,12 +78,25 @@ export function publisherLogoJsonLd() {
   };
 }
 
+export function operatorPostalAddressJsonLd() {
+  return {
+    '@type': 'PostalAddress' as const,
+    streetAddress: OPERATOR_REGISTERED_OFFICE.streetAddress,
+    addressLocality: OPERATOR_REGISTERED_OFFICE.addressLocality,
+    addressRegion: OPERATOR_REGISTERED_OFFICE.addressRegion,
+    postalCode: OPERATOR_REGISTERED_OFFICE.postalCode,
+    addressCountry: OPERATOR_REGISTERED_OFFICE.addressCountry,
+  };
+}
+
 /** News brand publisher. Policies point at the public editorial pages. */
 export function newsPublisherJsonLd() {
   return {
     '@type': 'NewsMediaOrganization' as const,
     name: SITE_NAME,
+    legalName: OPERATOR_LEGAL_NAME,
     url: SITE_URL,
+    address: operatorPostalAddressJsonLd(),
     logo: publisherLogoJsonLd(),
     publishingPrinciples: `${SITE_URL}${EDITORIAL_POLICY_PATH}`,
     correctionsPolicy: `${SITE_URL}${CORRECTIONS_POLICY_PATH}`,
