@@ -1,6 +1,6 @@
-import { EDITORIAL_DESK_NAME, SITE_NAME, SITE_URL } from '@/lib/json-ld';
+import { EDITORIAL_DESK_NAME, ORGANIZATION_ID, SITE_URL } from '@/lib/json-ld';
 
-export type PersonAuthorKey = 'daniel-mihai' | 'cristian-vasile' | 'emilian-constantin';
+export type PersonAuthorKey = 'daniel-mihai' | 'cristian-vasile' | 'eduard-mihai' | 'emilian-constantin';
 export type AuthorKey = PersonAuthorKey | 'desk';
 
 type PersonAuthor = {
@@ -27,11 +27,11 @@ export const DANIEL_MIHAI: PersonAuthor = {
   photoAlt: 'Daniel Mihai, redactor la Știrile Crypto',
   consultancyUrl: 'https://www.mihaidaniel.ro/',
   sameAs: [
+    'https://www.mihaidaniel.ro/',
     'https://x.com/MIhaiDanielWeb3',
     'https://www.youtube.com/@DanielMihaiCrypto',
     'https://www.tiktok.com/@mihaidanielmarius',
     'https://www.linkedin.com/in/mihaidanielmarius/',
-    'https://www.mihaidaniel.ro/',
   ],
   shortBio:
     'Redactorul publicației. Semnează știrile și analizele de piață. Materialele sunt educative și nu sunt recomandări personalizate de investiții.',
@@ -48,6 +48,16 @@ export const CRISTIAN_VASILE: PersonAuthor = {
   bio: 'Cristian Vasile scrie pentru Știrile Crypto.',
 };
 
+/** No photo, bio, or social profiles are published for Eduard in this repo. */
+export const EDUARD_MIHAI: PersonAuthor = {
+  key: 'eduard-mihai',
+  name: 'Eduard Mihai',
+  role: 'Hack-uri',
+  path: '/autori/eduard-mihai',
+  shortBio: 'Acoperă hack-urile și incidentele de securitate pe Știrile Crypto.',
+  bio: 'Eduard Mihai acoperă hack-urile și incidentele de securitate pe Știrile Crypto.',
+};
+
 /** No photo, bio, or social profiles are published for Emilian in this repo. */
 export const EMILIAN_CONSTANTIN: PersonAuthor = {
   key: 'emilian-constantin',
@@ -58,11 +68,12 @@ export const EMILIAN_CONSTANTIN: PersonAuthor = {
   bio: 'Emilian Constantin scrie pentru Știrile Crypto.',
 };
 
-export const PERSON_AUTHORS = [DANIEL_MIHAI, CRISTIAN_VASILE, EMILIAN_CONSTANTIN] as const;
+export const PERSON_AUTHORS = [DANIEL_MIHAI, CRISTIAN_VASILE, EDUARD_MIHAI, EMILIAN_CONSTANTIN] as const;
 
 const AUTHORS: Record<PersonAuthorKey, PersonAuthor> = {
   'daniel-mihai': DANIEL_MIHAI,
   'cristian-vasile': CRISTIAN_VASILE,
+  'eduard-mihai': EDUARD_MIHAI,
   'emilian-constantin': EMILIAN_CONSTANTIN,
 };
 
@@ -70,6 +81,7 @@ const AUTHORS: Record<PersonAuthorKey, PersonAuthor> = {
  * Unsigned news and Market Pulse rotate across these three people.
  * Rule: FNV-1a 32-bit of the article slug, then modulo 3.
  * 0 → Daniel Mihai, 1 → Cristian Vasile, 2 → Emilian Constantin.
+ * Eduard Mihai is not in the rotation, so existing unsigned bylines stay put.
  * The same slug always keeps the same author. A stored byline wins over this.
  */
 export const UNSIGNED_AUTHOR_ROTATION = [
@@ -100,6 +112,7 @@ function hasTokens(normalized: string, first: string, second: string): boolean {
 export function authorKeyFromName(name: string | null | undefined): AuthorKey {
   if (!name?.trim()) return 'desk';
   const normalized = normalizeName(name);
+  if (normalized.includes('eduard')) return 'eduard-mihai';
   if (hasTokens(normalized, 'daniel', 'mihai')) return 'daniel-mihai';
   if (hasTokens(normalized, 'cristian', 'vasile')) return 'cristian-vasile';
   if (hasTokens(normalized, 'emilian', 'constantin')) return 'emilian-constantin';
@@ -142,15 +155,28 @@ export function personAuthorJsonLd(key: PersonAuthorKey) {
     '@type': 'Person' as const,
     '@id': `${url}#person`,
     name: author.name,
+    ...(key === 'daniel-mihai'
+      ? { alternateName: ['Mihai Daniel', 'Mihai Daniel Marius'] }
+      : {}),
     url,
     jobTitle: author.role,
+    ...(key === 'daniel-mihai'
+      ? {
+          description:
+            'Redactor și analist la Știrile Crypto; semnează știri și analize de piață crypto în limba română, cu accent pe Bitcoin, Ethereum și macroeconomie.',
+          knowsAbout: [
+            'Bitcoin',
+            'Ethereum',
+            'Cryptocurrency',
+            'On-chain analysis',
+            'Crypto markets',
+            'Macroeconomics',
+          ],
+        }
+      : {}),
     ...(author.photo ? { image: `${SITE_URL}${author.photo}` } : {}),
     ...(author.sameAs ? { sameAs: [...author.sameAs] } : {}),
-    worksFor: {
-      '@type': 'NewsMediaOrganization' as const,
-      name: SITE_NAME,
-      url: SITE_URL,
-    },
+    worksFor: { '@id': ORGANIZATION_ID },
   };
 }
 

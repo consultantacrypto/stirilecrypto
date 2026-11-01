@@ -3,6 +3,15 @@ import { stripBrandSuffix } from '@/lib/seo-title';
 
 export const SITE_URL = 'https://www.stirilecrypto.ro';
 export const SITE_NAME = 'Știrile Crypto';
+export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
+export const WEBSITE_ID = `${SITE_URL}/#website`;
+/**
+ * Draft date for the AEO pages. Replace with the publish date when the draft is approved.
+ * legalName and taxID stay off Organization while CUI on /despre is still „de completat”.
+ */
+export const AEO_DRAFT_DATE_MODIFIED = '2026-11-01';
+/** Brand channels only. Personal profiles belong on Person.sameAs, not here. */
+export const ORGANIZATION_SAME_AS = ['https://x.com/StirilecryptoRo'] as const;
 export const EDITORIAL_DESK_NAME = 'Redacția Știrile Crypto';
 export const EDITORIAL_DESK_PATH = '/redactie';
 export const EDITORIAL_DESK_URL = `${SITE_URL}${EDITORIAL_DESK_PATH}`;
@@ -56,6 +65,7 @@ export function buildWebsiteShareMetadata(options: {
 export function publisherLogoJsonLd() {
   return {
     '@type': 'ImageObject' as const,
+    '@id': `${SITE_URL}/#logo`,
     url: PUBLISHER_LOGO_URL,
     width: PUBLISHER_LOGO_WIDTH,
     height: PUBLISHER_LOGO_HEIGHT,
@@ -66,6 +76,7 @@ export function publisherLogoJsonLd() {
 export function newsPublisherJsonLd() {
   return {
     '@type': 'NewsMediaOrganization' as const,
+    '@id': ORGANIZATION_ID,
     name: SITE_NAME,
     url: SITE_URL,
     logo: publisherLogoJsonLd(),
@@ -131,6 +142,7 @@ export function buildNewsArticleJsonLd(
       url: EDITORIAL_DESK_URL,
     },
     publisher: newsPublisherJsonLd(),
+    isPartOf: { '@id': WEBSITE_ID },
     articleSection: options?.articleSection ?? article.category,
     inLanguage: 'ro-RO',
     isAccessibleForFree: true,
@@ -170,6 +182,7 @@ export function buildFinancialArticleJsonLd(
       url: EDITORIAL_DESK_URL,
     },
     publisher: newsPublisherJsonLd(),
+    isPartOf: { '@id': WEBSITE_ID },
     articleSection: 'Market Pulse',
     genre: 'Financial Analysis',
     keywords: 'Market Pulse, analiză tehnică, crypto, piețe financiare',
@@ -186,9 +199,10 @@ export function buildOrganizationJsonLd() {
   return {
     '@context': 'https://schema.org',
     ...newsPublisherJsonLd(),
-    alternateName: 'Stirile Crypto',
+    alternateName: ['Stirile Crypto', 'stirilecrypto.ro'],
     description:
-      'Sursă de încredere pentru știri crypto, analiză on-chain și informații financiare digitale în limba română.',
+      'Publicație online din România care publică, în limba română, știri crypto, analize de piață și date on-chain.',
+    inLanguage: 'ro-RO',
     foundingLocation: {
       '@type': 'Country',
       name: 'Romania',
@@ -203,14 +217,11 @@ export function buildOrganizationJsonLd() {
       'Ethereum',
       'On-chain analysis',
       'DeFi',
+      'MiCA',
       'Financial markets',
     ],
-    sameAs: [
-      'https://x.com/StirilecryptoRo',
-      'https://www.youtube.com/@DanielMihaiCrypto',
-      'https://x.com/MIhaiDanielWeb3',
-      'https://www.tiktok.com/@mihaidanielmarius',
-    ],
+    employee: [{ '@id': `${SITE_URL}/autori/daniel-mihai#person` }],
+    sameAs: [...ORGANIZATION_SAME_AS],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'editorial',
@@ -263,6 +274,7 @@ export function buildInterviewArticleJsonLd(
         }
       : undefined,
     publisher: newsPublisherJsonLd(),
+    isPartOf: { '@id': WEBSITE_ID },
     articleSection: 'Interviuri',
     inLanguage: 'ro-RO',
     isAccessibleForFree: true,
@@ -273,13 +285,14 @@ export function buildWebSiteJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': WEBSITE_ID,
     name: SITE_NAME,
     alternateName: 'Stirile Crypto',
-    url: SITE_URL,
+    url: `${SITE_URL}/`,
     description:
       'Platformă media românească de știri crypto, analize de piață și date on-chain pentru investitori informați.',
     inLanguage: 'ro-RO',
-    publisher: newsPublisherJsonLd(),
+    publisher: { '@id': ORGANIZATION_ID },
   };
 }
 

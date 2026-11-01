@@ -108,6 +108,12 @@ export default async function HubPage({
                 {config.title.split('—')[0].replace('Hub ', '').trim()}
               </Link>
             ))}
+            <Link
+              href="/hub/stiri-crypto-romania"
+              className="px-4 py-2 rounded-full border min-h-12 inline-flex items-center border-white/10 text-gray-400 hover:border-white/30"
+            >
+              Știri crypto România
+            </Link>
           </div>
 
           {articles.length === 0 ? (

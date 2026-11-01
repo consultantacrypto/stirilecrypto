@@ -29,7 +29,8 @@ export default function PoliticaEditorialaPage() {
       <p>
         Redactorul publicației este{' '}
         <Link href="/autori/daniel-mihai">Daniel Mihai</Link>. Știrile și analizele de
-        piață sunt semnate de el, de <Link href="/autori/cristian-vasile">Cristian Vasile</Link> sau
+        piață sunt semnate de el, de <Link href="/autori/cristian-vasile">Cristian Vasile</Link>, de{' '}
+        <Link href="/autori/eduard-mihai">Eduard Mihai</Link> sau
         de <Link href="/autori/emilian-constantin">Emilian Constantin</Link>. Publicația este
         Știrile Crypto. Consultanța de pe mihaidaniel.ro nu este parte din această redacție.
       </p>

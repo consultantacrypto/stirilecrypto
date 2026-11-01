@@ -3,6 +3,9 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { Award, ShieldCheck, Users } from 'lucide-react';
+import LinkedText from '@/components/LinkedText';
+import { buildAboutPageJsonLd } from '@/lib/about-json-ld';
+import { HUB_ENTITY, HUB_ENTITY_LINKS } from '@/lib/hub-stiri-crypto-romania';
 import { EDITORIAL_POLICY_LINKS, SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
@@ -15,8 +18,11 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const aboutJsonLd = buildAboutPageJsonLd();
+
   return (
     <div className="min-h-screen bg-[#02050a] text-white font-sans selection:bg-blue-500/30">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }} />
       <Navbar />
       
       <main className="pt-32 pb-20 px-4 md:px-8 max-w-5xl mx-auto">
@@ -39,9 +45,11 @@ export default function AboutPage() {
                 
                 <div className="rounded-2xl border border-white/10 bg-[#0b1221] p-6 text-sm leading-relaxed text-gray-300">
                     <h2 className="text-lg font-bold text-white mb-3">Cine publică</h2>
-                    <p className="mb-3">
-                        <strong className="text-white">Știrile Crypto</strong> este o publicație în limba română despre știri crypto, analiză de piață și educație financiară. Site-ul este stirilecrypto.ro.
-                    </p>
+                    <LinkedText
+                        text={HUB_ENTITY}
+                        links={HUB_ENTITY_LINKS}
+                        className="mb-3"
+                    />
                     <p className="mb-3">
                         Redactorul publicației este{' '}
                         <Link href="/autori/daniel-mihai" className="text-blue-400 underline hover:text-blue-300">
@@ -50,6 +58,10 @@ export default function AboutPage() {
                         . Știrile și analizele de piață sunt semnate de el, de{' '}
                         <Link href="/autori/cristian-vasile" className="text-blue-400 underline hover:text-blue-300">
                             Cristian Vasile
+                        </Link>
+                        , de{' '}
+                        <Link href="/autori/eduard-mihai" className="text-blue-400 underline hover:text-blue-300">
+                            Eduard Mihai
                         </Link>{' '}
                         și de{' '}
                         <Link href="/autori/emilian-constantin" className="text-blue-400 underline hover:text-blue-300">
@@ -120,6 +132,16 @@ export default function AboutPage() {
                         Redacție
                     </Link>
                 </li>
+                <li>
+                    <Link href="/intrebari-frecvente" className="text-blue-400 underline hover:text-blue-300">
+                        Întrebări frecvente
+                    </Link>
+                </li>
+                <li>
+                    <Link href="/hub/stiri-crypto-romania" className="text-blue-400 underline hover:text-blue-300">
+                        hub-ul de știri crypto din România
+                    </Link>
+                </li>
             </ul>
         </div>
 
@@ -161,7 +183,7 @@ export default function AboutPage() {
                     <dd className="text-white">de completat</dd>
                 </div>
                 <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
-                    <dt className="text-gray-400">Redactor-șef</dt>
+                    <dt className="text-gray-400">Redactor și analist</dt>
                     <dd className="text-white">
                         <Link href="/autori/daniel-mihai" className="underline decoration-white/30 underline-offset-2">
                             Daniel Mihai

@@ -144,7 +144,7 @@ function MarketPulsePageContent({
                 </span>
                 Pulsul Bitcoin
               </span>
-              <span className="text-amber-500/70">luni și joi, ora 19</span>
+              <span className="text-amber-500/70">7 zile din 7</span>
               <span className="flex items-center gap-1 text-gray-400 font-[var(--font-inter)]">
                 <Calendar size={12} />
                 {published.dateTime ? (
@@ -170,7 +170,7 @@ function MarketPulsePageContent({
             <div className="flex items-center gap-2 mb-4 justify-center md:justify-start text-amber-400/80">
               <Activity size={16} aria-hidden />
               <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
-                Pulsul Bitcoin, luni și joi, ora 19
+                Pulsul Bitcoin, 7 zile din 7
               </span>
             </div>
 

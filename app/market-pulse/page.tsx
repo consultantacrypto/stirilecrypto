@@ -8,9 +8,9 @@ import { getMarketPulseArchive } from '@/lib/articles-db';
 import { SITE_URL } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Pulsul Bitcoin | luni și joi, ora 19',
+  title: 'Pulsul Bitcoin | 7 zile din 7',
   description:
-    'Arhiva Pulsul Bitcoin: analizele lui Mihai Daniel, luni și joi, ora 19.',
+    'Arhiva Pulsul Bitcoin. Publicat 7 zile din 7. Aici sunt edițiile publicate, de la cea mai nouă.',
   alternates: {
     canonical: `${SITE_URL}/market-pulse`,
   },
@@ -35,16 +35,16 @@ export default async function MarketPulseArchivePage() {
             Pulsul Bitcoin
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight font-[var(--font-space)]">
-            Pulsul Bitcoin
+            Pulsul Bitcoin, 7 zile din 7
           </h1>
           <p className="mt-4 max-w-2xl text-base md:text-lg text-slate-400 leading-relaxed font-[var(--font-inter)]">
-            Luni și joi, ora 19. Aici stau edițiile publicate, de la cea mai nouă.
+            Publicat 7 zile din 7. Aici sunt edițiile publicate, de la cea mai nouă.
           </p>
         </header>
 
         {archive.length === 0 ? (
           <p className="pb-16 text-center text-slate-500 text-sm font-[var(--font-inter)]">
-            Nu e publicat încă un puls. Revino luni sau joi, ora 19.
+            Nu e publicat încă un puls.
           </p>
         ) : (
           <ul className="flex flex-col gap-4 list-none p-0 m-0 pb-16">
