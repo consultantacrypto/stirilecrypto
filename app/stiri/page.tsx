@@ -119,6 +119,13 @@ export default async function NewsPage({
                         <strong className="text-white font-semibold">Nu citi doar știri.</strong> Înțelege contextul. 
                         Analizele noastre sunt filtrate pentru investitorii care vor să fie <em className="text-cyan-300 not-italic">înaintea mulțimii</em>, nu în spatele ei.
                     </p>
+                    <p className="text-sm text-blue-100/70 leading-relaxed max-w-lg">
+                        Știrile crypto din România, grupate pe teme, sunt în{' '}
+                        <Link href="/hub/stiri-crypto-romania" className="text-blue-300 underline">
+                            Știri crypto România
+                        </Link>
+                        .
+                    </p>
                 </div>
 
                 {/* COL 2: INDICATORUL (Fear & Greed) */}

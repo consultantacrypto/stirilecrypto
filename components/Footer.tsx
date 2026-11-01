@@ -149,6 +149,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/intrebari-frecvente" className="hover:text-green-400 transition-colors">
+                  Întrebări frecvente
+                </Link>
+              </li>
+              <li>
+                <Link href="/hub/stiri-crypto-romania" className="hover:text-green-400 transition-colors">
+                  Știri crypto România
+                </Link>
+              </li>
+              <li>
                 <Link href="/contact" className="hover:text-green-400 transition-colors">
                   Contact & Suport
                 </Link>
@@ -161,7 +171,7 @@ export default function Footer() {
               {PERSON_AUTHORS.map((author) => (
                 <li key={author.path}>
                   <Link href={author.path} className="hover:text-green-400 transition-colors">
-                    {author.key === 'daniel-mihai' ? `${author.name}, redactor` : author.name}
+                    {author.key === 'daniel-mihai' ? `${author.name}, redactor și analist` : author.name}
                   </Link>
                 </li>
               ))}

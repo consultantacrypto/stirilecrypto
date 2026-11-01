@@ -47,6 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/analiza-tehnica`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/verificare-portofel`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/despre`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${SITE_URL}/intrebari-frecvente`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/raport-strategic`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/termeni`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
@@ -59,6 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/hub/mica`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
     { url: `${SITE_URL}/hub/bitcoin`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
     { url: `${SITE_URL}/hub/securitate`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${SITE_URL}/hub/stiri-crypto-romania`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
   ];
 
   let articleRoutes: MetadataRoute.Sitemap = [];

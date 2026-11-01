@@ -43,9 +43,13 @@ export default function RedactiePage() {
             <Link href="/autori/daniel-mihai" className="text-blue-400 hover:text-blue-300 underline">
               Daniel Mihai
             </Link>
-            . Știrile și analizele de piață sunt semnate de Daniel Mihai,{' '}
+            , redactor și analist. Știrile și analizele de piață sunt semnate de Daniel Mihai,{' '}
             <Link href="/autori/cristian-vasile" className="text-blue-400 hover:text-blue-300 underline">
               Cristian Vasile
+            </Link>
+            ,{' '}
+            <Link href="/autori/eduard-mihai" className="text-blue-400 hover:text-blue-300 underline">
+              Eduard Mihai
             </Link>{' '}
             și{' '}
             <Link href="/autori/emilian-constantin" className="text-blue-400 hover:text-blue-300 underline">
@@ -109,7 +113,10 @@ export default function RedactiePage() {
                 <Link href={author.path} className="text-blue-400 hover:text-blue-300 underline">
                   {author.name}
                 </Link>
-                {author.key === 'daniel-mihai' ? ', redactor' : null}
+                {author.key === 'daniel-mihai' ? ', redactor și analist' : null}
+                {author.key === 'cristian-vasile' ? ', hype și reglementări' : null}
+                {author.key === 'eduard-mihai' ? ', hack-uri' : null}
+                {author.key === 'emilian-constantin' ? ', generalist' : null}
               </li>
             ))}
           </ul>

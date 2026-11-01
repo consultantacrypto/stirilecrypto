@@ -101,7 +101,7 @@ export default function IncepeAiciPage() {
           <li className="rounded-3xl border border-white/5 bg-[#1c1c1e] p-5 sm:p-6">
             <StepHead n="6" title="Cum urmărești piața" />
             <p className="mt-3 text-sm leading-relaxed text-slate-300">
-              Piața azi arată prețurile în dolari. Pulsul Bitcoin se publică luni și joi, la ora 19. Dimineața
+              Piața azi arată prețurile în dolari. Pulsul Bitcoin se publică 7 zile din 7. Dimineața
               poți primi un email cu ce contează în piață, de pe prima pagină.
             </p>
             <Link href="/market" className={linkClass}>

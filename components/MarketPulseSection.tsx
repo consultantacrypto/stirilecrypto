@@ -5,7 +5,7 @@ import { getLatestMarketPulse } from '@/lib/articles-db';
 import { formatPulseTimestamp } from '@/lib/market-pulse-freshness';
 
 const PULSE_LABEL = 'Pulsul Bitcoin';
-const PULSE_SCHEDULE = 'luni și joi, ora 19';
+const PULSE_SCHEDULE = '7 zile din 7';
 
 export default async function MarketPulseSection() {
   const pulse = await getLatestMarketPulse();
@@ -22,7 +22,7 @@ export default async function MarketPulseSection() {
 
   return (
     <section
-      aria-label="Pulsul Bitcoin, luni și joi, ora 19"
+      aria-label="Pulsul Bitcoin, 7 zile din 7"
       className="mt-10 mb-2"
     >
       <Link

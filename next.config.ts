@@ -136,6 +136,16 @@ const nextConfig: NextConfig = {
         destination: '/cookies',
         permanent: true,
       },
+      {
+        source: '/faq',
+        destination: '/intrebari-frecvente',
+        statusCode: 301,
+      },
+      {
+        source: '/stiri-crypto-romania',
+        destination: '/hub/stiri-crypto-romania',
+        statusCode: 301,
+      },
     ];
   },
 };
