@@ -1,3 +1,10 @@
+/** Crypto-card roundup. The author is a Bybit and RedotPay ambassador. */
+export const CRYPTO_CARD_ROUNDUP_SLUG =
+  'topul-cardurilor-crypto-de-plata-in-2026-recomandarile-mele-pentru-utilizatorii-din-romania';
+
+export const CRYPTO_CARD_ROUNDUP_DISCLOSURE =
+  'Material de afiliere. Autorul este ambasador Bybit și RedotPay. Dacă deschizi un cont prin linkurile din acest text, partenerul poate plăti un comision publicației. Este reclamă, nu o recomandare de investiții.';
+
 export const DEFAULT_BYBIT_AFFILIATE_URL = 'https://partner.bybit.eu/b/STIRICRYPTO';
 export const DEFAULT_BINANCE_AFFILIATE_URL = 'https://www.binance.com/join?ref=35329648';
 

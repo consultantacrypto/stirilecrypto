@@ -2,6 +2,7 @@ import { cache } from 'react';
 import { authorKeyForArticle, type AuthorKey } from '@/lib/authors';
 import { articles } from '@/lib/articles';
 import { resolveImageUrl } from '@/lib/image-url';
+import { articlePublicationIso } from '@/lib/published-time';
 import { HOME_FEED_FIRST_COUNT, HOME_FEED_PAGE_SIZE, type NewsFeedItem } from '@/lib/home-feed';
 import { getSupabase } from '@/lib/supabase';
 import type { ArticleContentType, Stire } from '@/lib/types/stiri';
@@ -22,6 +23,7 @@ type FeedRow = {
   category: string;
   image_url: string | null;
   published_at: string | null;
+  created_at?: string | null;
   content_type: ArticleContentType;
 };
 
@@ -34,7 +36,7 @@ function rowToFeedItem(row: FeedRow): NewsFeedItem {
     excerpt: row.excerpt,
     category: row.category,
     image_url: resolveImageUrl(row),
-    dateLabel: formatArticleDate(row.published_at),
+    dateLabel: formatArticleDate(articlePublicationIso(row.published_at, row.created_at)),
     href: pulse ? `/market-pulse/${row.slug}` : `/stiri/${row.slug}`,
   };
 }
@@ -55,7 +57,7 @@ export async function getPublishedFeedPage(
 
   const { data, error } = await supabase
     .from('stiri')
-    .select('id, slug, title, excerpt, category, image_url, published_at, content_type')
+    .select('id, slug, title, excerpt, category, image_url, published_at, created_at, content_type')
     .eq('status', PUBLISHED_STATUS)
     .order('published_at', { ascending: false, nullsFirst: false })
     .order('id', { ascending: false })
@@ -66,8 +68,10 @@ export async function getPublishedFeedPage(
     return { items: [], hasMore: false };
   }
 
-  const rows = (data ?? []) as FeedRow[];
-  const hasMore = rows.length > safeLimit;
+  const rows = ((data ?? []) as FeedRow[]).filter((row) =>
+    articlePublicationIso(row.published_at, row.created_at),
+  );
+  const hasMore = (data ?? []).length > safeLimit;
   return { items: rows.slice(0, safeLimit).map(rowToFeedItem), hasMore };
 }
 
@@ -115,8 +119,8 @@ function stireToMarketPulseArchiveItem(stire: Stire): MarketPulseArchiveItem {
     title: stire.title,
     excerpt: stire.excerpt,
     image_url: resolveImageUrl(stire),
-    dateLabel: formatArticleDate(stire.published_at),
-    published_at: stire.published_at,
+    dateLabel: formatArticleDate(articlePublicationIso(stire.published_at, stire.created_at)),
+    published_at: articlePublicationIso(stire.published_at, stire.created_at),
   };
 }
 
@@ -219,7 +223,7 @@ export async function getAllPublishedArticles(): Promise<Stire[]> {
 
   const { data, error } = await supabase
     .from('stiri')
-    .select('id, slug, title, excerpt, category, content_type, image_url, published_at, status, views')
+    .select('id, slug, title, excerpt, category, content_type, image_url, published_at, created_at, status, views')
     .eq('status', PUBLISHED_STATUS)
     .neq('content_type', MARKET_PULSE_CONTENT_TYPE)
     .order('published_at', { ascending: false, nullsFirst: false });
@@ -229,7 +233,9 @@ export async function getAllPublishedArticles(): Promise<Stire[]> {
     return [];
   }
 
-  return (data ?? []) as Stire[];
+  return ((data ?? []) as Stire[]).filter((row) =>
+    articlePublicationIso(row.published_at, row.created_at),
+  );
 }
 
 /** Card shape for /stiri grid — Supabase + legacy static */
@@ -252,7 +258,7 @@ function stireToListingItem(stire: Stire): NewsListingItem {
     summary: stire.excerpt,
     category: stire.category,
     image: resolveImageUrl(stire),
-    date: formatArticleDate(stire.published_at),
+    date: formatArticleDate(articlePublicationIso(stire.published_at, stire.created_at)),
     impact: 'neutral',
   };
 }
@@ -401,7 +407,7 @@ function parseDisplayDateToIso(display: string): string | null {
 }
 
 function stireToPageData(stire: Stire): ArticlePageData {
-  const publishedIso = stire.published_at ?? null;
+  const publishedIso = articlePublicationIso(stire.published_at, stire.created_at);
   const updatedIso = publishedIso;
   return {
     id: stire.id,
@@ -411,7 +417,7 @@ function stireToPageData(stire: Stire): ArticlePageData {
     content: stire.content,
     category: stire.category,
     image_url: resolveImageUrl(stire),
-    dateLabel: formatArticleDate(stire.published_at),
+    dateLabel: formatArticleDate(publishedIso),
     published_at: publishedIso,
     updated_at: updatedIso,
     readTime: '5 min',

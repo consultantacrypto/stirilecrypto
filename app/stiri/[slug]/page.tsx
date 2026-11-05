@@ -24,7 +24,8 @@ import AuthorByline from '@/components/author/AuthorByline';
 import AuthorBox from '@/components/author/AuthorBox';
 import ArticleServiceCta from '@/components/services/ArticleServiceCta';
 import { mentionedAsset } from '@/lib/products/placement';
-import { authorDisplayName, isPersonAuthorKey, personAuthorJsonLd } from '@/lib/authors';
+import { CRYPTO_CARD_ROUNDUP_DISCLOSURE, CRYPTO_CARD_ROUNDUP_SLUG } from '@/lib/affiliates';
+import { articleAuthorMeta, authorDisplayName, isPersonAuthorKey, personAuthorJsonLd } from '@/lib/authors';
 import { Metadata } from 'next';
 
 /** ISR: regenerate at most once per minute (TTFB / Supabase load). */
@@ -59,6 +60,7 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
     },
+    authors: [articleAuthorMeta(article.authorKey)],
     openGraph: {
       title: seoTitle,
       description: seoDescription,
@@ -199,6 +201,12 @@ function ArticlePageContent({
               />
             }
           />
+
+          {slug === CRYPTO_CARD_ROUNDUP_SLUG ? (
+            <p className="mb-8 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm leading-relaxed text-amber-50">
+              {CRYPTO_CARD_ROUNDUP_DISCLOSURE}
+            </p>
+          ) : null}
 
           <p className="text-xl text-gray-300 leading-relaxed border-l-4 border-blue-500/50 pl-6 italic font-[var(--font-inter)] mb-12">
             {article.excerpt}

@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
+  articleAuthorMeta,
   authorKeyForArticle,
   authorKeyFromName,
   personAuthorJsonLd,
   unsignedAuthorKey,
 } from './authors';
+import { SITE_OPERATOR } from './operator';
 import { buildNewsArticleJsonLd, buildOrganizationJsonLd, buildWebSiteJsonLd } from './json-ld';
 import type { ArticlePageData } from './articles-db';
 
@@ -60,6 +62,16 @@ describe('author byline', () => {
       authorKeyForArticle({ authorName: 'Mihai Daniel', slug: 'stire-4' }),
       'daniel-mihai',
     );
+  });
+});
+
+describe('article author meta', () => {
+  it('returns one signed person, not the whole desk', () => {
+    assert.deepEqual(articleAuthorMeta('cristian-vasile'), {
+      name: 'Cristian Vasile',
+      url: 'https://www.stirilecrypto.ro/autori/cristian-vasile',
+    });
+    assert.equal(articleAuthorMeta('desk').name, 'Redacția Știrile Crypto');
   });
 });
 
@@ -118,8 +130,10 @@ describe('news schema', () => {
     assert.deepEqual(website.publisher, { '@id': 'https://www.stirilecrypto.ro/#organization' });
     assert.deepEqual(organization.sameAs, ['https://x.com/StirilecryptoRo']);
     assert.equal(organization.founder, undefined);
-    assert.equal(organization.legalName, undefined);
+    assert.equal(organization.legalName, 'QuickExit, LLC');
     assert.equal(organization.taxID, undefined);
+    assert.equal(SITE_OPERATOR.taxId, '—');
+    assert.equal(SITE_OPERATOR.name, 'QuickExit, LLC (Delaware)');
     assert.deepEqual(organization.employee, [
       { '@id': 'https://www.stirilecrypto.ro/autori/daniel-mihai#person' },
     ]);

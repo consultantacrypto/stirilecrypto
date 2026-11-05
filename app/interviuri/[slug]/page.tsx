@@ -24,7 +24,7 @@ import {
   toAbsoluteUrl,
 } from '@/lib/json-ld';
 import AuthorByline from '@/components/author/AuthorByline';
-import { DANIEL_MIHAI, danielAuthorJsonLd } from '@/lib/authors';
+import { DANIEL_MIHAI, articleAuthorMeta, danielAuthorJsonLd } from '@/lib/authors';
 
 export const revalidate = 60;
 
@@ -55,6 +55,7 @@ export async function generateMetadata({
     title: `${pageTitle} | Interviuri`,
     description: interview.excerpt,
     alternates: { canonical: canonicalUrl },
+    authors: [articleAuthorMeta('daniel-mihai')],
     openGraph: {
       title: pageTitle,
       description: interview.excerpt,

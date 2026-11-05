@@ -65,7 +65,7 @@ export default function PublicitatePage() {
         mihaidaniel.ro și este separată de redacție.
       </p>
       <p>
-        Cine editează publicația și ce date de operator lipsesc încă sunt pe pagina{' '}
+        Cine editează publicația și datele operatorului sunt pe pagina{' '}
         <Link href="/despre#date-operator">Despre</Link>.
       </p>
 

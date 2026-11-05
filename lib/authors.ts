@@ -1,4 +1,4 @@
-import { EDITORIAL_DESK_NAME, ORGANIZATION_ID, SITE_URL } from '@/lib/json-ld';
+import { EDITORIAL_DESK_NAME, EDITORIAL_DESK_URL, ORGANIZATION_ID, SITE_URL } from '@/lib/json-ld';
 
 export type PersonAuthorKey = 'daniel-mihai' | 'cristian-vasile' | 'eduard-mihai' | 'emilian-constantin';
 export type AuthorKey = PersonAuthorKey | 'desk';
@@ -146,6 +146,15 @@ export function authorKeyForArticle(input: {
 
 export function authorDisplayName(key: AuthorKey): string {
   return key === 'desk' ? EDITORIAL_DESK_NAME : AUTHORS[key].name;
+}
+
+/** One `<meta name="author">` entry. Signed people link to their profile. */
+export function articleAuthorMeta(key: AuthorKey): { name: string; url: string } {
+  if (!isPersonAuthorKey(key)) {
+    return { name: EDITORIAL_DESK_NAME, url: EDITORIAL_DESK_URL };
+  }
+  const person = authorByKey(key);
+  return { name: person.name, url: `${SITE_URL}${person.path}` };
 }
 
 export function personAuthorJsonLd(key: PersonAuthorKey) {

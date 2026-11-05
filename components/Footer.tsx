@@ -5,6 +5,7 @@ import { Mail, ShieldCheck, Globe, Clock } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
 import { PERSON_AUTHORS } from '@/lib/authors';
+import { SITE_OPERATOR } from '@/lib/operator';
 import { EDITORIAL_POLICY_LINKS } from '@/lib/json-ld';
 import { SOCIAL_LINKS } from '@/lib/social';
 import MorningNewsletter from '@/components/MorningNewsletter';
@@ -234,13 +235,14 @@ export default function Footer() {
 
         <div className="border-t border-white/5 pt-8 space-y-2">
           <p className="text-xs text-gray-500">
-            Știrile Crypto este editată de{' '}
+            Știrile Crypto este operată de {SITE_OPERATOR.name}, cu sediul la {SITE_OPERATOR.address}.{' '}
+            {SITE_OPERATOR.taxIdLabel}: {SITE_OPERATOR.taxId}. Redactor:{' '}
             <Link href="/autori/daniel-mihai" className="text-gray-400 underline decoration-white/20 underline-offset-2 hover:text-white">
               Daniel Mihai
             </Link>
-            . Datele de identificare ale operatorului sunt de completat pe pagina{' '}
+            .{' '}
             <Link href="/despre#date-operator" className="text-gray-400 underline decoration-white/20 underline-offset-2 hover:text-white">
-              Despre
+              Date operator
             </Link>
             .
           </p>

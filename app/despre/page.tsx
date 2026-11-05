@@ -7,11 +7,12 @@ import LinkedText from '@/components/LinkedText';
 import { buildAboutPageJsonLd } from '@/lib/about-json-ld';
 import { HUB_ENTITY, HUB_ENTITY_LINKS } from '@/lib/hub-stiri-crypto-romania';
 import { EDITORIAL_POLICY_LINKS, SITE_URL } from '@/lib/json-ld';
+import { SITE_OPERATOR } from '@/lib/operator';
 
 export const metadata: Metadata = {
   title: 'Despre Noi',
   description:
-    'Cine publică Știrile Crypto: redactorul Daniel Mihai, principiile editoriale și datele de contact. Datele de identificare ale operatorului sunt de completat.',
+    'Cine publică Știrile Crypto: redactorul Daniel Mihai, principiile editoriale, datele de contact și operatorul QuickExit, LLC.',
   alternates: {
     canonical: `${SITE_URL}/despre`,
   },
@@ -161,26 +162,20 @@ export default function AboutPage() {
             </div>
         </div>
 
-        <section id="date-operator" className="scroll-mt-28 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-8">
-            <p className="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2">
-                De completat
-            </p>
-            <h2 className="text-lg font-bold text-white mb-3">Date operator (de completat)</h2>
-            <p className="text-sm text-amber-100/80 mb-4 leading-relaxed">
-                Identitatea juridică a operatorului nu este publicată încă pe site. Câmpurile de mai jos sunt goale intenționat. Nu completa cu date inventate.
-            </p>
+        <section id="date-operator" className="scroll-mt-28 rounded-2xl border border-white/5 bg-[#0b1221]/50 p-8">
+            <h2 className="text-lg font-bold text-white mb-4">Date operator</h2>
             <dl className="space-y-3 text-sm">
                 <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
                     <dt className="text-gray-400">Denumire</dt>
-                    <dd className="text-white">de completat</dd>
+                    <dd className="text-white">{SITE_OPERATOR.name}</dd>
                 </div>
                 <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
-                    <dt className="text-gray-400">CUI</dt>
-                    <dd className="text-white">de completat</dd>
+                    <dt className="text-gray-400">{SITE_OPERATOR.taxIdLabel}</dt>
+                    <dd className="text-white">{SITE_OPERATOR.taxId}</dd>
                 </div>
                 <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
                     <dt className="text-gray-400">Sediu</dt>
-                    <dd className="text-white">de completat</dd>
+                    <dd className="text-white">{SITE_OPERATOR.address}</dd>
                 </div>
                 <div className="grid gap-1 sm:grid-cols-[11rem_1fr]">
                     <dt className="text-gray-400">Redactor și analist</dt>

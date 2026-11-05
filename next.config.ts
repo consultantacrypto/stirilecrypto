@@ -79,7 +79,8 @@ const nextConfig: NextConfig = {
         source: '/:path*',
         has: [{ type: 'host', value: 'stirilecrypto.ro' }],
         destination: 'https://www.stirilecrypto.ro/:path*',
-        permanent: true, // 308 permanent (SEO-equivalent to 301)
+        // 308. The Vercel project domain redirect runs first and must use the same code.
+        permanent: true,
       },
       {
         source: '/raport-risc',
