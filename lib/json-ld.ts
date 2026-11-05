@@ -1,4 +1,5 @@
 import type { ArticlePageData } from '@/lib/articles-db';
+import { SITE_OPERATOR } from '@/lib/operator';
 import { stripBrandSuffix } from '@/lib/seo-title';
 
 export const SITE_URL = 'https://www.stirilecrypto.ro';
@@ -7,7 +8,7 @@ export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 /**
  * Draft date for the AEO pages. Replace with the publish date when the draft is approved.
- * legalName and taxID stay off Organization while CUI on /despre is still „de completat”.
+ * taxID stays off Organization: /despre publishes an em dash, not a CUI or EIN.
  */
 export const AEO_DRAFT_DATE_MODIFIED = '2026-11-01';
 /** Brand channels only. Personal profiles belong on Person.sameAs, not here. */
@@ -78,7 +79,16 @@ export function newsPublisherJsonLd() {
     '@type': 'NewsMediaOrganization' as const,
     '@id': ORGANIZATION_ID,
     name: SITE_NAME,
+    legalName: SITE_OPERATOR.legalName,
     url: SITE_URL,
+    address: {
+      '@type': 'PostalAddress' as const,
+      streetAddress: SITE_OPERATOR.streetAddress,
+      addressLocality: SITE_OPERATOR.addressLocality,
+      addressRegion: SITE_OPERATOR.addressRegion,
+      postalCode: SITE_OPERATOR.postalCode,
+      addressCountry: SITE_OPERATOR.addressCountry,
+    },
     logo: publisherLogoJsonLd(),
     publishingPrinciples: `${SITE_URL}${EDITORIAL_POLICY_PATH}`,
     correctionsPolicy: `${SITE_URL}${CORRECTIONS_POLICY_PATH}`,

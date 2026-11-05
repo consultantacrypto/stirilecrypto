@@ -5,7 +5,7 @@ import ArticleCoverImage from '@/components/ArticleCoverImage';
 import ViewTracker from '@/components/ViewTracker';
 import AuthorByline from '@/components/author/AuthorByline';
 import AuthorBox from '@/components/author/AuthorBox';
-import { authorDisplayName, isPersonAuthorKey, personAuthorJsonLd } from '@/lib/authors';
+import { articleAuthorMeta, authorDisplayName, isPersonAuthorKey, personAuthorJsonLd } from '@/lib/authors';
 import MorningNewsletter from '@/components/MorningNewsletter';
 import AffiliatePartnerBox from '@/components/AffiliatePartnerBox';
 import ArticleServiceCta from '@/components/services/ArticleServiceCta';
@@ -49,6 +49,7 @@ export async function generateMetadata({
     title: `${seoTitle} | Pulsul Bitcoin`,
     description: seoDescription,
     alternates: { canonical: canonicalUrl },
+    authors: [articleAuthorMeta(article.authorKey)],
     openGraph: {
       title: seoTitle,
       description: seoDescription,
