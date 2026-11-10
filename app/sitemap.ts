@@ -17,6 +17,7 @@ import {
   latestContentDate,
   sitemapDate,
 } from '@/lib/sitemap-lastmod';
+import { withoutNoindexSitemapUrls } from '@/lib/sitemap-indexable';
 
 /** Runtime generation — avoids blocking build when Supabase is unavailable */
 export const dynamic = 'force-dynamic';
@@ -96,7 +97,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/confidentialitate`, lastModified: sitemapDate(SITEMAP_LASTMOD.confidentialitate), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE_URL}/cookies`, lastModified: sitemapDate(SITEMAP_LASTMOD.cookies), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE_URL}/taxe`, lastModified: sitemapDate(SITEMAP_LASTMOD.taxe), changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${SITE_URL}/cauta`, lastModified: sitemapDate(SITEMAP_LASTMOD.cauta), changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/glosar`, lastModified: sitemapDate(SITEMAP_LASTMOD.glosar), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/incepe-aici`, lastModified: sitemapDate(SITEMAP_LASTMOD.incepeAici), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/hub/mica`, lastModified: sitemapDate(SITEMAP_LASTMOD.hubTopic), changeFrequency: 'weekly', priority: 0.75 },
@@ -151,5 +151,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.65,
   }));
 
-  return [...staticRoutes, ...academyRoutes, ...articleRoutes, ...marketPulseRoutes, ...interviewRoutes];
+  return withoutNoindexSitemapUrls([
+    ...staticRoutes,
+    ...academyRoutes,
+    ...articleRoutes,
+    ...marketPulseRoutes,
+    ...interviewRoutes,
+  ]);
 }
