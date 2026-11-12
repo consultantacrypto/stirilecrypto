@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import AcademyPageClient from '@/components/AcademyPageClient';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
@@ -9,9 +10,9 @@ const ACADEMY_DESCRIPTION =
 export const metadata: Metadata = {
   title: ACADEMY_TITLE,
   description: ACADEMY_DESCRIPTION,
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/academie`,
-  },
+  }),
   ...buildWebsiteShareMetadata({
     title: ACADEMY_TITLE,
     description: ACADEMY_DESCRIPTION,

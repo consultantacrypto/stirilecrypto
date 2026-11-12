@@ -1,38 +1,6 @@
 import type { MetadataRoute } from 'next';
-import { SITE_NEWS_SITEMAP_URL, SITE_SITEMAP_URL } from '@/lib/json-ld';
-
-// Training crawlers stay fully blocked. Citation crawlers (ChatGPT-User,
-// PerplexityBot, OAI-SearchBot) are omitted so they follow the public * rules.
-const AI_BOTS = [
-  'GPTBot',
-  'Google-Extended',
-  'CCBot',
-  'anthropic-ai',
-  'ClaudeBot',
-] as const;
-
-const PRIVATE_PATHS = [
-  '/admin/',
-  '/admin',
-  '/api/',
-  '/login',
-  '/editeaza',
-  '/articol-nou',
-] as const;
+import { buildRobots } from '@/lib/robots-policy';
 
 export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: [...PRIVATE_PATHS],
-      },
-      ...AI_BOTS.map((userAgent) => ({
-        userAgent,
-        disallow: ['/'],
-      })),
-    ],
-    sitemap: [SITE_SITEMAP_URL, SITE_NEWS_SITEMAP_URL],
-  };
+  return buildRobots();
 }

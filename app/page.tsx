@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -19,9 +20,9 @@ const HOME_DESCRIPTION =
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
   description: HOME_DESCRIPTION,
-  alternates: {
+  alternates: withRssAlternate({
     canonical: SITE_URL,
-  },
+  }),
   ...buildWebsiteShareMetadata({
     title: HOME_TITLE,
     description: HOME_DESCRIPTION,

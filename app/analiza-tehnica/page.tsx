@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import OrderForm from '@/components/products/OrderForm';
 import ProductFrame from '@/components/products/ProductFrame';
@@ -15,7 +16,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${SITE_URL}/analiza-tehnica` },
+  alternates: withRssAlternate({ canonical: `${SITE_URL}/analiza-tehnica` }),
   ...buildWebsiteShareMetadata({
     title: TITLE,
     description: DESCRIPTION,

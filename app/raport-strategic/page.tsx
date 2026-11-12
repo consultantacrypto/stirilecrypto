@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -11,9 +12,9 @@ export const metadata: Metadata = {
   title: 'Ce cumpără balenele',
   description:
     'Analiza detaliată a celor care controlează fluxurile globale de capital, de la asset manageri la vizionarii care construiesc viitorul banilor.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/raport-strategic`,
-  },
+  }),
 };
 
 // --- BAZA DE DATE EXTINSĂ (DOSARELE COMPLETE) ---

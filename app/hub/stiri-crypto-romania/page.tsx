@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -40,7 +41,7 @@ const HUB_PILLS = [
 export const metadata: Metadata = {
   title: { absolute: HUB_TITLE },
   description: HUB_DESCRIPTION,
-  alternates: { canonical: HUB_URL },
+  alternates: withRssAlternate({ canonical: HUB_URL }),
   ...buildWebsiteShareMetadata({
     title: HUB_TITLE,
     description: HUB_DESCRIPTION,

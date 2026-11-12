@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -18,7 +19,7 @@ import { buildBreadcrumbJsonLd, buildWebsiteShareMetadata } from '@/lib/json-ld'
 export const metadata: Metadata = {
   title: { absolute: FAQ_TITLE },
   description: FAQ_DESCRIPTION,
-  alternates: { canonical: FAQ_URL },
+  alternates: withRssAlternate({ canonical: FAQ_URL }),
   ...buildWebsiteShareMetadata({
     title: FAQ_TITLE,
     description: FAQ_DESCRIPTION,

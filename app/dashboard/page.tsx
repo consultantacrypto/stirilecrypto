@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import Navbar from '@/components/Navbar';
 import PiataAziTabs from '@/components/PiataAziTabs';
 import Footer from '@/components/Footer';
@@ -23,9 +24,9 @@ export const metadata: Metadata = {
   title: 'Tablou de bord | Știrile Crypto',
   description:
     'Analiza la comandă și datele care sunt încă de actualitate. Snapshot-urile vechi de suport, ETF și conformitate nu sunt afișate.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/dashboard`,
-  },
+  }),
 };
 
 export const revalidate = 60;

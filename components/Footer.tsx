@@ -246,6 +246,15 @@ export default function Footer() {
             </Link>
             .
           </p>
+          <p className="text-xs text-gray-500">
+            Din aceeași redacție:{' '}
+            <a
+              href="https://www.stiriai.ro"
+              className="text-gray-400 underline decoration-white/20 underline-offset-2 hover:text-white"
+            >
+              StiriAI.ro
+            </a>
+          </p>
           <p className="text-xs text-gray-600">
             © {currentYear} Știrile Crypto. Toate drepturile rezervate.
           </p>

@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -8,9 +9,9 @@ import { SITE_URL } from '@/lib/json-ld';
 export const metadata: Metadata = {
   title: 'Interviuri',
   description: 'Interviuri publicate cu invitați din crypto și tech: nume, copertă și rezumat.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/interviuri`,
-  },
+  }),
 };
 
 export const revalidate = 60;

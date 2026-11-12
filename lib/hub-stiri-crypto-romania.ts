@@ -3,10 +3,11 @@ import { AEO_DRAFT_DATE_MODIFIED, ORGANIZATION_ID, SITE_URL, WEBSITE_ID } from '
 
 export const HUB_PATH = '/hub/stiri-crypto-romania';
 export const HUB_URL = `${SITE_URL}${HUB_PATH}`;
-export const HUB_TITLE = 'Știri crypto România: surse, Bitcoin și analize în română | Știrile Crypto';
-export const HUB_H1 = 'Știri crypto din România, în limba română';
+export const HUB_TITLE =
+  'Surse crypto România 2026: știri, Bitcoin și analize în română | Știrile Crypto';
+export const HUB_H1 = 'Surse crypto din România, în 2026';
 export const HUB_DESCRIPTION =
-  'Hub Știrile Crypto: unde citești știri crypto și Bitcoin în română, cum alegem sursele și cum verifici o informație crypto înainte să acționezi.';
+  'Surse crypto pentru cititorii din România, în 2026: unde citești știri și Bitcoin în română și cum verifici o informație la ANAF, ASF, BNR și ESMA.';
 export const HUB_UPDATED_LABEL = '1 noiembrie 2026';
 
 /** First paragraph under the H1. Kept identical on /despre. */

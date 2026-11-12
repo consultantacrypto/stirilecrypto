@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -9,7 +10,7 @@ import { SITE_URL } from '@/lib/json-ld';
 export const metadata: Metadata = {
   title: 'Caută articole',
   description: 'Caută în titlurile și rezumatele articolelor Știrile Crypto.',
-  alternates: { canonical: `${SITE_URL}/cauta` },
+  alternates: withRssAlternate({ canonical: `${SITE_URL}/cauta` }),
   robots: { index: false, follow: true },
 };
 

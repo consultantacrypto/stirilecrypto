@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import EditorialDocument from '@/components/editorial/EditorialDocument';
@@ -10,7 +11,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${SITE_URL}${CORRECTIONS_POLICY_PATH}` },
+  alternates: withRssAlternate({ canonical: `${SITE_URL}${CORRECTIONS_POLICY_PATH}` }),
   ...buildWebsiteShareMetadata({
     title: TITLE,
     description: DESCRIPTION,

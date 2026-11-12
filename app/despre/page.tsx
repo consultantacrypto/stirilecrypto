@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -13,9 +14,9 @@ export const metadata: Metadata = {
   title: 'Despre Noi',
   description:
     'Cine publică Știrile Crypto: redactorul Daniel Mihai, principiile editoriale, datele de contact și operatorul QuickExit, LLC.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/despre`,
-  },
+  }),
 };
 
 export default function AboutPage() {

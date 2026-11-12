@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -8,9 +9,9 @@ export const metadata: Metadata = {
   title: 'Politica de Confidențialitate',
   description:
     'Cum colectăm, folosim și protejăm datele personale pe Știrile Crypto, în conformitate cu GDPR.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/confidentialitate`,
-  },
+  }),
 };
 
 export default function Confidentialitate() {

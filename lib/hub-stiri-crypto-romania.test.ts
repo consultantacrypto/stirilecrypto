@@ -4,7 +4,10 @@ import { linkPhrases, plainText } from './inline-links';
 import {
   HUB_BITCOIN,
   HUB_BITCOIN_LINKS,
+  HUB_DESCRIPTION,
   HUB_ENTITY,
+  HUB_H1,
+  HUB_TITLE,
   HUB_ENTITY_LINKS,
   HUB_FIND,
   HUB_FIND_LINKS,
@@ -20,6 +23,12 @@ import {
 
 describe('crypto Romania hub copy', () => {
   it('keeps the entity definition and locked cadence without competitor names', () => {
+    assert.equal(
+      HUB_TITLE,
+      'Surse crypto România 2026: știri, Bitcoin și analize în română | Știrile Crypto',
+    );
+    assert.equal(HUB_H1, 'Surse crypto din România, în 2026');
+    assert.match(HUB_DESCRIPTION, /ANAF, ASF, BNR și ESMA/);
     assert.match(HUB_ENTITY, /^Știrile Crypto \(stirilecrypto\.ro\) este o publicație online din România/);
     assert.match(HUB_FIND, /în mod obișnuit 2–3 știri pe zi/);
     assert.match(HUB_FIND, /7 zile din 7/);

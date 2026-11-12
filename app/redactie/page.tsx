@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -12,9 +13,9 @@ const REDACTIE_DESCRIPTION =
 export const metadata: Metadata = {
   title: REDACTIE_TITLE,
   description: REDACTIE_DESCRIPTION,
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/redactie`,
-  },
+  }),
   ...buildWebsiteShareMetadata({
     title: REDACTIE_TITLE,
     description: REDACTIE_DESCRIPTION,
