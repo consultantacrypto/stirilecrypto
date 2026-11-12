@@ -7,7 +7,9 @@ import {
   stiriListPath,
   stiriNormalizedPath,
 } from '@/lib/stiri-url';
-import { buildWebsiteShareMetadata } from '@/lib/json-ld';
+import { buildArticleItemListJsonLd, buildCollectionPageJsonLd } from '@/lib/collection-json-ld';
+import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
+import { withRssAlternate } from '@/lib/rss-alternate';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CategoryFilter from '@/components/CategoryFilter';
@@ -32,18 +34,17 @@ export async function generateMetadata({
   const title =
     page >= 2
       ? `Știri crypto explicate — pagina ${page}`
-      : 'Știri care îți ating banii';
+      : STIRI_H1;
 
   const canonical = stiriListCanonical(page, category);
-  const description =
-    'Analize de piață, știri crypto traduse și explicate de Știrile Crypto.';
+  const description = STIRI_DESCRIPTION;
 
   return {
     title,
     description,
-    alternates: {
+    alternates: withRssAlternate({
       canonical,
-    },
+    }),
     ...buildWebsiteShareMetadata({
       title,
       description,
@@ -57,6 +58,9 @@ export async function generateMetadata({
 }
 
 const ITEMS_PER_PAGE = 6;
+const STIRI_H1 = 'Știri care îți ating banii';
+const STIRI_DESCRIPTION =
+  'Analize de piață, știri crypto traduse și explicate de Știrile Crypto.';
 
 export default async function NewsPage({
   searchParams,
@@ -85,8 +89,40 @@ export default async function NewsPage({
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentArticles = filteredArticles.slice(startIndex, endIndex);
+  const collectionUrl = stiriListCanonical(1, categoryFilter);
+  const collectionJsonLd =
+    currentPage === 1
+      ? buildCollectionPageJsonLd({
+          url: collectionUrl,
+          name: STIRI_H1,
+          description: STIRI_DESCRIPTION,
+          aboutName: categoryFilter ?? 'Știri crypto',
+        })
+      : null;
+  const itemListJsonLd =
+    currentPage === 1 && filteredArticles.length > 0
+      ? buildArticleItemListJsonLd(
+          filteredArticles.slice(0, 20).map((item) => ({
+            name: item.title,
+            url: `${SITE_URL}/stiri/${item.slug}`,
+          })),
+        )
+      : null;
 
   return (
+    <>
+    {collectionJsonLd ? (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+    ) : null}
+    {itemListJsonLd ? (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
+    ) : null}
     <main className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30 flex flex-col">
       <Navbar />
 
@@ -228,5 +264,6 @@ export default async function NewsPage({
       </div>
       <Footer />
     </main>
+    </>
   );
 }

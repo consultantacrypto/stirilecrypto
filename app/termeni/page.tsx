@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -8,9 +9,9 @@ export const metadata: Metadata = {
   title: 'Termeni și Condiții',
   description:
     'Termenii și condițiile de utilizare ale platformei Știrile Crypto. Informație educativă, fără consultanță financiară autorizată.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/termeni`,
-  },
+  }),
 };
 
 export default function Termeni() {

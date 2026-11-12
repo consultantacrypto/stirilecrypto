@@ -129,7 +129,10 @@ describe('news schema', () => {
     assert.equal(website['@id'], 'https://www.stirilecrypto.ro/#website');
     assert.deepEqual(website.publisher, { '@id': 'https://www.stirilecrypto.ro/#organization' });
     assert.deepEqual(organization.sameAs, ['https://x.com/StirilecryptoRo']);
-    assert.equal(organization.founder, undefined);
+    assert.equal(JSON.stringify(organization.sameAs).includes('stiriai'), false);
+    assert.deepEqual(organization.founder, {
+      '@id': 'https://www.stirilecrypto.ro/autori/daniel-mihai#person',
+    });
     assert.equal(organization.legalName, 'QuickExit, LLC');
     assert.equal(organization.taxID, undefined);
     assert.equal(SITE_OPERATOR.taxId, '—');

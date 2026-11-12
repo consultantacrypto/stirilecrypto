@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -5,37 +6,12 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ArticleCard from '@/components/ArticleCard';
 import { getMergedNewsListingArticles } from '@/lib/articles-db';
+import { buildArticleItemListJsonLd, buildCollectionPageJsonLd } from '@/lib/collection-json-ld';
 import { buildBreadcrumbJsonLd, SITE_URL } from '@/lib/json-ld';
-
-type HubConfig = {
-  title: string;
-  description: string;
-  keywords: string[];
-};
-
-const HUBS: Record<string, HubConfig> = {
-  mica: {
-    title: 'Hub MiCA — Reglementare Crypto UE',
-    description:
-      'Toate articolele Știrile Crypto despre MiCA, compliance, exchange-uri licențiate și impactul reglementării europene.',
-    keywords: ['mica', 'reglement', 'compliance', 'ue', 'european', 'licenț', 'anaf', 'fiscal'],
-  },
-  bitcoin: {
-    title: 'Hub Bitcoin — Analize & Știri',
-    description:
-      'Articole și analize despre Bitcoin: preț, on-chain, ETF-uri, macro și context pentru investitori.',
-    keywords: ['bitcoin', 'btc', 'satoshi', 'etf', 'on-chain', 'halving'],
-  },
-  securitate: {
-    title: 'Hub Securitate Crypto',
-    description:
-      'Ghiduri și alerte despre securitatea portofelelor, hack-uri, phishing și bune practici.',
-    keywords: ['securitate', 'hack', 'phishing', 'wallet', 'portofel', 'scam', 'fraud'],
-  },
-};
+import { TOPIC_HUBS } from '@/lib/topic-hubs';
 
 export function generateStaticParams() {
-  return Object.keys(HUBS).map((topic) => ({ topic }));
+  return Object.keys(TOPIC_HUBS).map((topic) => ({ topic }));
 }
 
 export async function generateMetadata({
@@ -44,15 +20,15 @@ export async function generateMetadata({
   params: Promise<{ topic: string }>;
 }): Promise<Metadata> {
   const { topic } = await params;
-  const hub = HUBS[topic];
+  const hub = TOPIC_HUBS[topic];
   if (!hub) return { title: 'Hub inexistent' };
 
   return {
     title: hub.title,
     description: hub.description,
-    alternates: {
+    alternates: withRssAlternate({
       canonical: `${SITE_URL}/hub/${topic}`,
-    },
+    }),
   };
 }
 
@@ -62,7 +38,7 @@ export default async function HubPage({
   params: Promise<{ topic: string }>;
 }) {
   const { topic } = await params;
-  const hub = HUBS[topic];
+  const hub = TOPIC_HUBS[topic];
   if (!hub) notFound();
 
   const all = await getMergedNewsListingArticles();
@@ -72,13 +48,35 @@ export default async function HubPage({
     return needles.some((k) => haystack.includes(k));
   });
 
+  const hubUrl = `${SITE_URL}/hub/${topic}`;
+  const listed = articles.slice(0, 20);
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
-    { name: hub.title, path: `/hub/${topic}` },
+    { name: hub.h1, path: `/hub/${topic}` },
   ]);
+  const collectionJsonLd = buildCollectionPageJsonLd({
+    url: hubUrl,
+    name: hub.h1,
+    description: hub.description,
+    aboutName: hub.about,
+  });
+  const itemListJsonLd = buildArticleItemListJsonLd(
+    listed.map((item) => ({
+      name: item.title,
+      url: `${SITE_URL}/stiri/${item.slug}`,
+    })),
+  );
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
@@ -90,12 +88,12 @@ export default async function HubPage({
             Hub tematic
           </p>
           <h1 className="text-3xl md:text-5xl font-black mb-4 font-[var(--font-space)]">
-            {hub.title}
+            {hub.h1}
           </h1>
           <p className="text-gray-400 text-lg max-w-3xl mb-10">{hub.description}</p>
 
           <div className="flex flex-wrap gap-3 mb-12 text-sm">
-            {Object.entries(HUBS).map(([slug, config]) => (
+            {Object.entries(TOPIC_HUBS).map(([slug, config]) => (
               <Link
                 key={slug}
                 href={`/hub/${slug}`}
@@ -105,7 +103,7 @@ export default async function HubPage({
                     : 'border-white/10 text-gray-400 hover:border-white/30'
                 }`}
               >
-                {config.title.split('—')[0].replace('Hub ', '').trim()}
+                {config.label}
               </Link>
             ))}
             <Link

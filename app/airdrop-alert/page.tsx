@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -15,7 +16,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${SITE_URL}/airdrop-alert` },
+  alternates: withRssAlternate({ canonical: `${SITE_URL}/airdrop-alert` }),
   robots: { index: true, follow: true },
   ...buildWebsiteShareMetadata({
     title: TITLE,

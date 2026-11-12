@@ -18,6 +18,10 @@ export type AcademyItem = {
   analogy: string;    
   mihaiTake: string;  
   fullContent: string;
+  /** Optional document title. The layout template still appends the brand. */
+  seoTitle?: string;
+  /** ISO date shown in Article JSON-LD. Falls back to the AEO draft date. */
+  updatedAt?: string;
 };
 
 // --- 2. CONȚINUTUL ACADEMIEI (FULL CONTENT) ---
