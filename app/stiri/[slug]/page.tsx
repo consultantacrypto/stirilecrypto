@@ -23,6 +23,7 @@ import ViewTracker from '@/components/ViewTracker';
 import AuthorByline from '@/components/author/AuthorByline';
 import AuthorBox from '@/components/author/AuthorBox';
 import ArticleServiceCta from '@/components/services/ArticleServiceCta';
+import ArticleConsultBox from '@/components/services/ArticleConsultBox';
 import { mentionedAsset } from '@/lib/products/placement';
 import { CRYPTO_CARD_ROUNDUP_DISCLOSURE, CRYPTO_CARD_ROUNDUP_SLUG } from '@/lib/affiliates';
 import { articleAuthorMeta, authorDisplayName, isPersonAuthorKey, personAuthorJsonLd } from '@/lib/authors';
@@ -232,6 +233,8 @@ function ArticlePageContent({
               <ArticleContent content={conclusion} />
             </aside>
           ) : null}
+
+          <ArticleConsultBox />
 
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 font-[var(--font-inter)]">
             <div className="text-sm text-gray-500">
