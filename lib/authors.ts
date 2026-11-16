@@ -1,3 +1,4 @@
+import type { InlineLink } from '@/lib/inline-links';
 import { EDITORIAL_DESK_NAME, EDITORIAL_DESK_URL, ORGANIZATION_ID, SITE_URL } from '@/lib/json-ld';
 
 export type PersonAuthorKey = 'daniel-mihai' | 'cristian-vasile' | 'eduard-mihai' | 'emilian-constantin';
@@ -11,6 +12,11 @@ type PersonAuthor = {
   path: string;
   shortBio: string;
   bio: string;
+  /** Author-page H1 when it differs from the schema name. */
+  pageHeading?: string;
+  /** Direct-answer paragraph shown before `bio` on the author page. */
+  lead?: string;
+  leadLinks?: readonly InlineLink[];
   photo?: string;
   photoAlt?: string;
   consultancyUrl?: string;
@@ -33,8 +39,12 @@ export const DANIEL_MIHAI: PersonAuthor = {
     'https://www.tiktok.com/@mihaidanielmarius',
     'https://www.linkedin.com/in/mihaidanielmarius/',
   ],
+  pageHeading: 'Mihai Daniel (Daniel Mihai)',
   shortBio:
     'Redactorul publicației. Semnează știrile și analizele de piață. Materialele sunt educative și nu sunt recomandări personalizate de investiții.',
+  lead:
+    'Mihai Daniel, cunoscut și ca Daniel Mihai, este redactor și analist la publicația Știrile Crypto (stirilecrypto.ro) și consultant crypto din România. Pe stirilecrypto.ro semnează știri și analize de piață în limba română, cu accent pe Bitcoin, Ethereum și macroeconomie. Pe mihaidaniel.ro, același autor oferă separat consultanță crypto 1-la-1, mentorat și cursuri. Publicația de știri și consultanța sunt activități separate: conținutul editorial de pe stirilecrypto.ro nu este consultanță personalizată.',
+  leadLinks: [{ phrase: 'mihaidaniel.ro', href: 'https://www.mihaidaniel.ro/' }],
   bio: 'Daniel Mihai este redactorul publicației Știrile Crypto. Semnează știrile și analizele de piață publicate pe site. Textele explică contextul de piață pornind de la surse publice; nu sunt consultanță financiară autorizată și nu conțin apeluri de cumpărare sau de vânzare.',
 };
 

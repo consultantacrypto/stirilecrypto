@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { AEO_REDIRECTS } from "./lib/aeo-redirects";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['rss-parser'],
@@ -147,6 +148,7 @@ const nextConfig: NextConfig = {
         destination: '/hub/stiri-crypto-romania',
         statusCode: 301,
       },
+      ...AEO_REDIRECTS,
     ];
   },
 };

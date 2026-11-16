@@ -4,33 +4,57 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ArticleCard from '@/components/ArticleCard';
+import LinkedText from '@/components/LinkedText';
 import { getMergedNewsListingArticles } from '@/lib/articles-db';
-import { buildBreadcrumbJsonLd, SITE_URL } from '@/lib/json-ld';
+import {
+  BITCOIN_DEFINITION,
+  BITCOIN_DEFINITION_LINKS,
+  BITCOIN_DESCRIPTION,
+  BITCOIN_H1,
+  BITCOIN_SITE_ANSWER,
+  BITCOIN_SITE_H3,
+  BITCOIN_SITE_LINKS,
+  BITCOIN_TITLE,
+  BITCOIN_WHERE_H2,
+  BITCOIN_WHERE_ITEMS,
+  buildBitcoinCollectionJsonLd,
+  buildBitcoinItemListJsonLd,
+} from '@/lib/hub-bitcoin';
+import { buildBreadcrumbJsonLd, buildWebsiteShareMetadata, SITE_URL } from '@/lib/json-ld';
 
 type HubConfig = {
   title: string;
+  h1: string;
   description: string;
   keywords: string[];
+  label: string;
+  absoluteTitle?: boolean;
 };
 
 const HUBS: Record<string, HubConfig> = {
   mica: {
     title: 'Hub MiCA — Reglementare Crypto UE',
+    h1: 'Hub MiCA — Reglementare Crypto UE',
     description:
       'Toate articolele Știrile Crypto despre MiCA, compliance, exchange-uri licențiate și impactul reglementării europene.',
     keywords: ['mica', 'reglement', 'compliance', 'ue', 'european', 'licenț', 'anaf', 'fiscal'],
+    label: 'MiCA',
   },
   bitcoin: {
-    title: 'Hub Bitcoin — Analize & Știri',
-    description:
-      'Articole și analize despre Bitcoin: preț, on-chain, ETF-uri, macro și context pentru investitori.',
+    title: BITCOIN_TITLE,
+    h1: BITCOIN_H1,
+    description: BITCOIN_DESCRIPTION,
     keywords: ['bitcoin', 'btc', 'satoshi', 'etf', 'on-chain', 'halving'],
+    label: 'Bitcoin',
+    absoluteTitle: true,
   },
   securitate: {
     title: 'Hub Securitate Crypto',
+    h1: 'Hub Securitate Crypto',
     description:
       'Ghiduri și alerte despre securitatea portofelelor, hack-uri, phishing și bune practici.',
     keywords: ['securitate', 'hack', 'phishing', 'wallet', 'portofel', 'scam', 'fraud'],
+    label: 'Securitate Crypto',
   },
 };
 
@@ -47,12 +71,24 @@ export async function generateMetadata({
   const hub = HUBS[topic];
   if (!hub) return { title: 'Hub inexistent' };
 
+  const canonical = `${SITE_URL}/hub/${topic}`;
+  if (hub.absoluteTitle) {
+    return {
+      title: { absolute: hub.title },
+      description: hub.description,
+      alternates: { canonical },
+      ...buildWebsiteShareMetadata({
+        title: hub.title,
+        description: hub.description,
+        canonical,
+      }),
+    };
+  }
+
   return {
     title: hub.title,
     description: hub.description,
-    alternates: {
-      canonical: `${SITE_URL}/hub/${topic}`,
-    },
+    alternates: { canonical },
   };
 }
 
@@ -74,11 +110,24 @@ export default async function HubPage({
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
-    { name: hub.title, path: `/hub/${topic}` },
+    { name: hub.h1, path: `/hub/${topic}` },
   ]);
+  const isBitcoin = topic === 'bitcoin';
 
   return (
     <>
+      {isBitcoin ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBitcoinCollectionJsonLd()) }}
+        />
+      ) : null}
+      {isBitcoin ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBitcoinItemListJsonLd()) }}
+        />
+      ) : null}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
@@ -90,9 +139,33 @@ export default async function HubPage({
             Hub tematic
           </p>
           <h1 className="text-3xl md:text-5xl font-black mb-4 font-[var(--font-space)]">
-            {hub.title}
+            {hub.h1}
           </h1>
-          <p className="text-gray-400 text-lg max-w-3xl mb-10">{hub.description}</p>
+          {isBitcoin ? (
+            <div className="max-w-3xl mb-10 space-y-8 text-gray-300 leading-relaxed">
+              <LinkedText
+                text={BITCOIN_DEFINITION}
+                links={BITCOIN_DEFINITION_LINKS}
+                className="text-lg text-gray-300"
+              />
+              <section>
+                <h2 className="text-2xl font-bold text-white">{BITCOIN_WHERE_H2}</h2>
+                <ul className="mt-4 list-disc space-y-2 pl-5">
+                  {BITCOIN_WHERE_ITEMS.map((item) => (
+                    <li key={item.text}>
+                      <LinkedText text={item.text} links={item.links} />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+              <section>
+                <h3 className="text-lg font-bold text-white">{BITCOIN_SITE_H3}</h3>
+                <LinkedText text={BITCOIN_SITE_ANSWER} links={BITCOIN_SITE_LINKS} className="mt-2" />
+              </section>
+            </div>
+          ) : (
+            <p className="text-gray-400 text-lg max-w-3xl mb-10">{hub.description}</p>
+          )}
 
           <div className="flex flex-wrap gap-3 mb-12 text-sm">
             {Object.entries(HUBS).map(([slug, config]) => (
@@ -105,7 +178,7 @@ export default async function HubPage({
                     : 'border-white/10 text-gray-400 hover:border-white/30'
                 }`}
               >
-                {config.title.split('—')[0].replace('Hub ', '').trim()}
+                {config.label}
               </Link>
             ))}
             <Link

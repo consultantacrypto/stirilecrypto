@@ -9,6 +9,7 @@ import {
   type PersonAuthorKey,
 } from '@/lib/authors';
 import { getMarketPulseArchive } from '@/lib/articles-db';
+import LinkedText from '@/components/LinkedText';
 import { EDITORIAL_POLICY_LINKS } from '@/lib/json-ld';
 
 export default async function AuthorProfile({ authorKey }: { authorKey: PersonAuthorKey }) {
@@ -39,13 +40,20 @@ export default async function AuthorProfile({ authorKey }: { authorKey: PersonAu
           ) : null}
           <div>
             <h1 className="font-[var(--font-space)] text-3xl font-bold tracking-tight sm:text-4xl">
-              {author.name}
+              {author.pageHeading ?? author.name}
             </h1>
             <p className="mt-1 text-sm text-slate-400">{author.role} · Știrile Crypto</p>
           </div>
         </div>
 
-        <p className="mt-8 text-base leading-relaxed text-slate-300">{author.bio}</p>
+        {author.lead ? (
+          <LinkedText
+            text={author.lead}
+            links={author.leadLinks}
+            className="mt-8 text-base leading-relaxed text-slate-300"
+          />
+        ) : null}
+        <p className={`${author.lead ? 'mt-4' : 'mt-8'} text-base leading-relaxed text-slate-300`}>{author.bio}</p>
         {author.consultancyUrl ? (
           <p className="mt-4 text-sm leading-relaxed text-slate-500">
             Consultanța 1-la-1 este separată de publicație:{' '}

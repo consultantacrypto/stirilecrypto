@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
+  DANIEL_MIHAI,
   articleAuthorMeta,
   authorKeyForArticle,
   authorKeyFromName,
@@ -97,12 +98,23 @@ describe('news schema', () => {
   it('keeps Daniel Mihai photo and profiles on his Person node', () => {
     const author = personAuthorJsonLd('daniel-mihai');
     assert.equal(author.name, 'Daniel Mihai');
+    assert.equal(DANIEL_MIHAI.pageHeading, 'Mihai Daniel (Daniel Mihai)');
     assert.equal(author.jobTitle, 'Redactor și analist');
     assert.deepEqual(author.alternateName, ['Mihai Daniel', 'Mihai Daniel Marius']);
     assert.deepEqual(author.worksFor, { '@id': 'https://www.stirilecrypto.ro/#organization' });
     assert.match(author.image ?? '', /mihai-daniel-consultanta\.jpg$/);
-    assert.ok((author.sameAs ?? []).some((url) => url.includes('youtube.com')));
-    assert.ok((author.sameAs ?? []).includes('https://www.mihaidaniel.ro/'));
+    assert.deepEqual(author.sameAs, [
+      'https://www.mihaidaniel.ro/',
+      'https://x.com/MIhaiDanielWeb3',
+      'https://www.youtube.com/@DanielMihaiCrypto',
+      'https://www.tiktok.com/@mihaidanielmarius',
+      'https://www.linkedin.com/in/mihaidanielmarius/',
+    ]);
+    const blocked = ['youtube.com/@StirileCrypto', 'tiktok.com/@stiriai', 'tiktok.com/@stirilecrypto'];
+    const serialized = JSON.stringify(author);
+    for (const url of blocked) {
+      assert.equal(serialized.includes(url), false, url);
+    }
     assert.equal(personAuthorJsonLd('emilian-constantin').image, undefined);
     const eduard = personAuthorJsonLd('eduard-mihai');
     assert.equal(eduard.name, 'Eduard Mihai');
@@ -129,6 +141,9 @@ describe('news schema', () => {
     assert.equal(website['@id'], 'https://www.stirilecrypto.ro/#website');
     assert.deepEqual(website.publisher, { '@id': 'https://www.stirilecrypto.ro/#organization' });
     assert.deepEqual(organization.sameAs, ['https://x.com/StirilecryptoRo']);
+    const organizationJson = JSON.stringify(organization);
+    assert.equal(organizationJson.includes('youtube.com/@StirileCrypto'), false);
+    assert.equal(organizationJson.includes('tiktok.com/@stiriai'), false);
     assert.equal(organization.founder, undefined);
     assert.equal(organization.legalName, 'QuickExit, LLC');
     assert.equal(organization.taxID, undefined);
