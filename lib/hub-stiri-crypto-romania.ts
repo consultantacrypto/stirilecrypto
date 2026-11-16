@@ -1,13 +1,16 @@
 import type { InlineLink } from '@/lib/inline-links';
-import { AEO_DRAFT_DATE_MODIFIED, ORGANIZATION_ID, SITE_URL, WEBSITE_ID } from '@/lib/json-ld';
+import { ORGANIZATION_ID, SITE_URL, WEBSITE_ID } from '@/lib/json-ld';
 
 export const HUB_PATH = '/hub/stiri-crypto-romania';
 export const HUB_URL = `${SITE_URL}${HUB_PATH}`;
-export const HUB_TITLE = 'Știri crypto România: surse, Bitcoin și analize în română | Știrile Crypto';
-export const HUB_H1 = 'Știri crypto din România, în limba română';
+export const HUB_TITLE =
+  'Surse crypto România 2026: știri, Bitcoin și analize în română | Știrile Crypto';
+export const HUB_H1 = 'Surse crypto din România, în 2026';
 export const HUB_DESCRIPTION =
-  'Hub Știrile Crypto: unde citești știri crypto și Bitcoin în română, cum alegem sursele și cum verifici o informație crypto înainte să acționezi.';
-export const HUB_UPDATED_LABEL = '1 noiembrie 2026';
+  'Surse crypto pentru cititorii din România, în 2026: unde citești știri și Bitcoin în română și cum verifici o informație la ANAF, ASF, BNR și ESMA.';
+/** Content revision of the approved SC3 copy. Not a request clock. */
+export const HUB_DATE_MODIFIED = '2026-11-16';
+export const HUB_UPDATED_LABEL = '16 noiembrie 2026';
 
 /** First paragraph under the H1. Kept identical on /despre. */
 export const HUB_ENTITY =
@@ -108,6 +111,21 @@ export const HUB_SOURCES_LINKS: readonly InlineLink[] = [
   { phrase: 'Conținutul plătit și linkurile de afiliere', href: '/publicitate' },
 ];
 
+export const HUB_BEST_SOURCES_H2 = 'Cele mai bune surse crypto din România în 2026';
+export const HUB_BEST_SOURCES =
+  'În 2026, nu există un clasament oficial al surselor crypto din România. Pentru un cititor de aici, sursele utile sunt de două feluri: publicațiile de știri și analize în română, și sursele primare la care verifici o informație înainte să acționezi. Știrile Crypto (stirilecrypto.ro) este o publicație românească de știri crypto, analize de piață și date on-chain; în mod obișnuit publică 2–3 știri pe zi și Pulsul Bitcoin, 7 zile din 7. Informațiile fiscale și de reglementare se verifică la ANAF, ASF, BNR, ESMA și în textul regulamentului MiCA. Prețul și volumul se verifică la agregatoare de date de piață; o adresă sau o tranzacție, la un explorator blockchain.';
+
+export const HUB_BEST_SOURCES_LINKS: readonly InlineLink[] = [
+  { phrase: 'Știrile Crypto', href: '/' },
+  { phrase: 'Pulsul Bitcoin', href: '/market-pulse' },
+  { phrase: 'ANAF', href: 'https://www.anaf.ro/' },
+  { phrase: 'ASF', href: 'https://www.asfromania.ro/' },
+  { phrase: 'BNR', href: 'https://www.bnr.ro/' },
+  { phrase: 'ESMA', href: 'https://www.esma.europa.eu/' },
+  { phrase: 'regulamentului MiCA', href: 'https://eur-lex.europa.eu/legal-content/RO/TXT/?uri=CELEX%3A32023R1114' },
+];
+
+export const HUB_VERIFY_H2 = 'Unde verifici o informație crypto în 2026';
 export const HUB_USEFUL =
   'Nu există un clasament oficial al surselor crypto din România. O sursă se evaluează după autori identificabili, politică editorială publică, corecturi publice și separarea publicității de textul editorial. Informațiile importante se verifică la surse primare: ANAF pentru obligațiile fiscale, ASF și BNR pentru avertismente și reglementarea națională, ESMA și textul MiCA pentru cadrul Uniunii Europene. Pentru preț și volum se folosesc agregatoare de date de piață. Pentru o tranzacție sau o adresă publică se folosesc exploratoare blockchain.';
 
@@ -173,6 +191,7 @@ export function hubCopyBlob(): string {
     HUB_WHERE_INTRO,
     ...HUB_ENTRIES.map((entry) => `${entry.title} ${entry.text}`),
     HUB_SOURCES,
+    HUB_BEST_SOURCES,
     HUB_USEFUL,
     HUB_BITCOIN,
     HUB_WHO,
@@ -192,7 +211,7 @@ export function buildHubCollectionJsonLd() {
     isPartOf: { '@id': WEBSITE_ID },
     about: { '@id': ORGANIZATION_ID },
     publisher: { '@id': ORGANIZATION_ID },
-    dateModified: AEO_DRAFT_DATE_MODIFIED,
+    dateModified: HUB_DATE_MODIFIED,
   };
 }
 
