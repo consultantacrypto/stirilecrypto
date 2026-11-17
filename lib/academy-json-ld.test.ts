@@ -38,6 +38,11 @@ describe('academy JSON-LD', () => {
     assert.deepEqual(article.author, {
       '@id': 'https://www.stirilecrypto.ro/autori/daniel-mihai#person',
     });
+    assert.deepEqual(article.publisher, {
+      '@id': 'https://www.stirilecrypto.ro/#organization',
+    });
+    assert.equal(JSON.stringify(article).includes('"@type":"Person"'), false);
+    assert.equal(JSON.stringify(article).includes('Organization'), false);
     assert.deepEqual(article.image, ['https://www.stirilecrypto.ro/cryptoromanialege.jpg']);
     assert.equal(article.dateModified, '2026-11-01');
     assert.equal(JSON.stringify(article).includes('FAQPage'), false);

@@ -8,7 +8,7 @@ import {
   stiriNormalizedPath,
 } from '@/lib/stiri-url';
 import { buildArticleItemListJsonLd, buildCollectionPageJsonLd } from '@/lib/collection-json-ld';
-import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
+import { SITE_URL, buildBreadcrumbJsonLd, buildWebsiteShareMetadata } from '@/lib/json-ld';
 import { withRssAlternate } from '@/lib/rss-alternate';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -23,6 +23,11 @@ import type { Metadata } from 'next';
 export const revalidate = 60;
 
 type StiriSearchParams = { [key: string]: string | string[] | undefined };
+
+const ITEMS_PER_PAGE = 6;
+const STIRI_H1 = 'Știri care îți ating banii';
+const STIRI_DESCRIPTION =
+  'Analize de piață, știri crypto traduse și explicate de Știrile Crypto.';
 
 export async function generateMetadata({
   searchParams,
@@ -56,11 +61,6 @@ export async function generateMetadata({
     },
   };
 }
-
-const ITEMS_PER_PAGE = 6;
-const STIRI_H1 = 'Știri care îți ating banii';
-const STIRI_DESCRIPTION =
-  'Analize de piață, știri crypto traduse și explicate de Știrile Crypto.';
 
 export default async function NewsPage({
   searchParams,
@@ -108,6 +108,10 @@ export default async function NewsPage({
           })),
         )
       : null;
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Acasă', path: '/' },
+    { name: 'Știri', path: '/stiri' },
+  ]);
 
   return (
     <>
@@ -123,6 +127,10 @@ export default async function NewsPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
     ) : null}
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+    />
     <main className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30 flex flex-col">
       <Navbar />
 

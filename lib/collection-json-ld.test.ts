@@ -14,6 +14,14 @@ describe('collection JSON-LD', () => {
     assert.equal(page['@id'], 'https://www.stirilecrypto.ro/hub/bitcoin');
     assert.equal(page.inLanguage, 'ro-RO');
     assert.deepEqual(page.isPartOf, { '@id': 'https://www.stirilecrypto.ro/#website' });
+    assert.deepEqual(page.publisher, { '@id': 'https://www.stirilecrypto.ro/#organization' });
+    const pageJson = JSON.stringify(page);
+    assert.equal(pageJson.includes('"@type":"Organization"'), false);
+    assert.equal(pageJson.includes('NewsMediaOrganization'), false);
+    assert.equal(pageJson.includes('"@type":"Person"'), false);
+    assert.equal(pageJson.includes('FAQPage'), false);
+    assert.equal(pageJson.includes('AboutPage'), false);
+    assert.equal(pageJson.includes('"@type":"WebSite"'), false);
 
     const items = Array.from({ length: 25 }, (_, index) => ({
       name: `Articol ${index + 1}`,

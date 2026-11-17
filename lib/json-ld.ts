@@ -11,11 +11,7 @@ export const WEBSITE_ID = `${SITE_URL}/#website`;
  * taxID stays off Organization: /despre publishes an em dash, not a CUI or EIN.
  */
 export const AEO_DRAFT_DATE_MODIFIED = '2026-11-01';
-/**
- * Brand channels only. Personal profiles belong on Person.sameAs, not here.
- * StiriAI is a different publication: the shared operator is legalName
- * (QuickExit, LLC), not a sameAs entry.
- */
+/** Brand channels only. Personal profiles belong on Person.sameAs, not here. */
 export const ORGANIZATION_SAME_AS = ['https://x.com/StirilecryptoRo'] as const;
 export const EDITORIAL_DESK_NAME = 'Redacția Știrile Crypto';
 export const EDITORIAL_DESK_PATH = '/redactie';
@@ -94,7 +90,6 @@ export function newsPublisherJsonLd() {
       addressCountry: SITE_OPERATOR.addressCountry,
     },
     logo: publisherLogoJsonLd(),
-    founder: { '@id': `${SITE_URL}/autori/daniel-mihai#person` },
     publishingPrinciples: `${SITE_URL}${EDITORIAL_POLICY_PATH}`,
     correctionsPolicy: `${SITE_URL}${CORRECTIONS_POLICY_PATH}`,
     ethicsPolicy: `${SITE_URL}${EDITORIAL_POLICY_PATH}`,

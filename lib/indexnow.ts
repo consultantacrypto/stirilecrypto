@@ -25,8 +25,8 @@ export function matchingIndexNowKey(segment: string): string | null {
 }
 
 /**
- * Response for `/{INDEXNOW_KEY}.txt`. Null means "not this file" so other
- * `.txt` routes (robots.txt, llms.txt) keep their own handlers.
+ * Response for `/{INDEXNOW_KEY}.txt`. Null means "not this file", so other
+ * `.txt` paths (including robots.txt) keep their own handlers.
  * App Router does not treat `app/[key].txt` as a dynamic segment.
  */
 export function indexNowKeyHttpResponse(pathname: string): Response | null {

@@ -5,6 +5,8 @@
  * Operator pages were revised on 5 Nov 2026 (QuickExit identity).
  */
 export const OPERATOR_COPY_LASTMOD = '2026-11-05T08:45:00.000Z';
+/** Approved SC3–SC5 copy revision. A fixed content date, not the request clock. */
+export const AEO_SC3_SC5_LASTMOD = '2026-11-16T00:00:00.000Z';
 
 export const SITEMAP_LASTMOD = {
   home: '2026-10-24T19:23:34+03:00',
@@ -34,8 +36,9 @@ export const SITEMAP_LASTMOD = {
   glosar: '2026-10-24T19:23:34+03:00',
   incepeAici: '2026-11-01T12:33:43+02:00',
   hubTopic: '2026-11-01T12:33:43+02:00',
-  hubStiriRomania: '2026-11-01T12:33:43+02:00',
-  authorDaniel: '2026-10-28T18:16:39+02:00',
+  hubBitcoin: AEO_SC3_SC5_LASTMOD,
+  hubStiriRomania: AEO_SC3_SC5_LASTMOD,
+  authorDaniel: AEO_SC3_SC5_LASTMOD,
   authorCristian: '2026-10-28T18:16:39+02:00',
   authorEduard: '2026-11-01T12:33:43+02:00',
   authorEmilian: '2026-10-28T18:16:39+02:00',

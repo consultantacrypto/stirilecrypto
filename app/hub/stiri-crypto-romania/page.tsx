@@ -5,8 +5,12 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import LinkedText from '@/components/LinkedText';
 import {
+  HUB_BEST_SOURCES,
+  HUB_BEST_SOURCES_H2,
+  HUB_BEST_SOURCES_LINKS,
   HUB_BITCOIN,
   HUB_BITCOIN_LINKS,
+  HUB_DATE_MODIFIED,
   HUB_DESCRIPTION,
   HUB_ENTITY,
   HUB_ENTITY_LINKS,
@@ -23,13 +27,14 @@ import {
   HUB_URL,
   HUB_USEFUL,
   HUB_USEFUL_LINKS,
+  HUB_VERIFY_H2,
   HUB_WHERE_INTRO,
   HUB_WHO,
   HUB_WHO_LINKS,
   buildHubCollectionJsonLd,
   buildHubItemListJsonLd,
 } from '@/lib/hub-stiri-crypto-romania';
-import { AEO_DRAFT_DATE_MODIFIED, buildBreadcrumbJsonLd, buildWebsiteShareMetadata } from '@/lib/json-ld';
+import { buildBreadcrumbJsonLd, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 const HUB_PILLS = [
   { href: HUB_PATH, label: 'Știri crypto România' },
@@ -76,7 +81,7 @@ export default function StiriCryptoRomaniaHubPage() {
         <h1 className="mb-4 text-4xl font-black leading-tight md:text-5xl">{HUB_H1}</h1>
         <p className="mb-8 text-sm text-gray-500">
           Actualizat la:{' '}
-          <time dateTime={AEO_DRAFT_DATE_MODIFIED}>{HUB_UPDATED_LABEL}</time>
+          <time dateTime={HUB_DATE_MODIFIED}>{HUB_UPDATED_LABEL}</time>
         </p>
         <LinkedText text={HUB_ENTITY} links={HUB_ENTITY_LINKS} className="text-lg leading-relaxed text-gray-300" />
 
@@ -124,7 +129,12 @@ export default function StiriCryptoRomaniaHubPage() {
           </section>
 
           <section>
-            <h2>Surse crypto utile pentru cititorii din România</h2>
+            <h2>{HUB_BEST_SOURCES_H2}</h2>
+            <LinkedText text={HUB_BEST_SOURCES} links={HUB_BEST_SOURCES_LINKS} className="mt-3" />
+          </section>
+
+          <section>
+            <h2>{HUB_VERIFY_H2}</h2>
             <LinkedText text={HUB_USEFUL} links={HUB_USEFUL_LINKS} className="mt-3" />
           </section>
 

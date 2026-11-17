@@ -5,13 +5,63 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ArticleCard from '@/components/ArticleCard';
+import LinkedText from '@/components/LinkedText';
 import { getMergedNewsListingArticles } from '@/lib/articles-db';
 import { buildArticleItemListJsonLd, buildCollectionPageJsonLd } from '@/lib/collection-json-ld';
-import { buildBreadcrumbJsonLd, SITE_URL } from '@/lib/json-ld';
-import { TOPIC_HUBS } from '@/lib/topic-hubs';
+import {
+  BITCOIN_DEFINITION,
+  BITCOIN_DEFINITION_LINKS,
+  BITCOIN_DESCRIPTION,
+  BITCOIN_H1,
+  BITCOIN_SITE_ANSWER,
+  BITCOIN_SITE_H3,
+  BITCOIN_SITE_LINKS,
+  BITCOIN_TITLE,
+  BITCOIN_WHERE_H2,
+  BITCOIN_WHERE_ITEMS,
+  buildBitcoinCollectionJsonLd,
+  buildBitcoinItemListJsonLd,
+} from '@/lib/hub-bitcoin';
+import { buildBreadcrumbJsonLd, buildWebsiteShareMetadata, SITE_URL } from '@/lib/json-ld';
+
+type HubConfig = {
+  title: string;
+  h1: string;
+  description: string;
+  keywords: string[];
+  label: string;
+  absoluteTitle?: boolean;
+};
+
+const HUBS: Record<string, HubConfig> = {
+  mica: {
+    title: 'Hub MiCA — Reglementare Crypto UE',
+    h1: 'Hub MiCA — Reglementare Crypto UE',
+    description:
+      'Toate articolele Știrile Crypto despre MiCA, compliance, exchange-uri licențiate și impactul reglementării europene.',
+    keywords: ['mica', 'reglement', 'compliance', 'ue', 'european', 'licenț', 'anaf', 'fiscal'],
+    label: 'MiCA',
+  },
+  bitcoin: {
+    title: BITCOIN_TITLE,
+    h1: BITCOIN_H1,
+    description: BITCOIN_DESCRIPTION,
+    keywords: ['bitcoin', 'btc', 'satoshi', 'etf', 'on-chain', 'halving'],
+    label: 'Bitcoin',
+    absoluteTitle: true,
+  },
+  securitate: {
+    title: 'Hub Securitate Crypto',
+    h1: 'Hub Securitate Crypto',
+    description:
+      'Ghiduri și alerte despre securitatea portofelelor, hack-uri, phishing și bune practici.',
+    keywords: ['securitate', 'hack', 'phishing', 'wallet', 'portofel', 'scam', 'fraud'],
+    label: 'Securitate Crypto',
+  },
+};
 
 export function generateStaticParams() {
-  return Object.keys(TOPIC_HUBS).map((topic) => ({ topic }));
+  return Object.keys(HUBS).map((topic) => ({ topic }));
 }
 
 export async function generateMetadata({
@@ -20,15 +70,28 @@ export async function generateMetadata({
   params: Promise<{ topic: string }>;
 }): Promise<Metadata> {
   const { topic } = await params;
-  const hub = TOPIC_HUBS[topic];
+  const hub = HUBS[topic];
   if (!hub) return { title: 'Hub inexistent' };
+
+  const canonical = `${SITE_URL}/hub/${topic}`;
+  const alternates = withRssAlternate({ canonical });
+  if (hub.absoluteTitle) {
+    return {
+      title: { absolute: hub.title },
+      description: hub.description,
+      alternates,
+      ...buildWebsiteShareMetadata({
+        title: hub.title,
+        description: hub.description,
+        canonical,
+      }),
+    };
+  }
 
   return {
     title: hub.title,
     description: hub.description,
-    alternates: withRssAlternate({
-      canonical: `${SITE_URL}/hub/${topic}`,
-    }),
+    alternates,
   };
 }
 
@@ -38,7 +101,7 @@ export default async function HubPage({
   params: Promise<{ topic: string }>;
 }) {
   const { topic } = await params;
-  const hub = TOPIC_HUBS[topic];
+  const hub = HUBS[topic];
   if (!hub) notFound();
 
   const all = await getMergedNewsListingArticles();
@@ -49,34 +112,55 @@ export default async function HubPage({
   });
 
   const hubUrl = `${SITE_URL}/hub/${topic}`;
-  const listed = articles.slice(0, 20);
+  // Bitcoin already publishes CollectionPage + ItemList from lib/hub-bitcoin.
+  const isBitcoin = topic === 'bitcoin';
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
     { name: hub.h1, path: `/hub/${topic}` },
   ]);
-  const collectionJsonLd = buildCollectionPageJsonLd({
-    url: hubUrl,
-    name: hub.h1,
-    description: hub.description,
-    aboutName: hub.about,
-  });
-  const itemListJsonLd = buildArticleItemListJsonLd(
-    listed.map((item) => ({
-      name: item.title,
-      url: `${SITE_URL}/stiri/${item.slug}`,
-    })),
-  );
+  const collectionJsonLd = isBitcoin
+    ? null
+    : buildCollectionPageJsonLd({
+        url: hubUrl,
+        name: hub.h1,
+        description: hub.description,
+        aboutName: hub.label,
+      });
+  const itemListJsonLd = isBitcoin
+    ? null
+    : buildArticleItemListJsonLd(
+        articles.slice(0, 20).map((item) => ({
+          name: item.title,
+          url: `${SITE_URL}/stiri/${item.slug}`,
+        })),
+      );
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
-      />
+      {isBitcoin ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBitcoinCollectionJsonLd()) }}
+        />
+      ) : null}
+      {isBitcoin ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBitcoinItemListJsonLd()) }}
+        />
+      ) : null}
+      {collectionJsonLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+        />
+      ) : null}
+      {itemListJsonLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+      ) : null}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
@@ -90,10 +174,34 @@ export default async function HubPage({
           <h1 className="text-3xl md:text-5xl font-black mb-4 font-[var(--font-space)]">
             {hub.h1}
           </h1>
-          <p className="text-gray-400 text-lg max-w-3xl mb-10">{hub.description}</p>
+          {isBitcoin ? (
+            <div className="max-w-3xl mb-10 space-y-8 text-gray-300 leading-relaxed">
+              <LinkedText
+                text={BITCOIN_DEFINITION}
+                links={BITCOIN_DEFINITION_LINKS}
+                className="text-lg text-gray-300"
+              />
+              <section>
+                <h2 className="text-2xl font-bold text-white">{BITCOIN_WHERE_H2}</h2>
+                <ul className="mt-4 list-disc space-y-2 pl-5">
+                  {BITCOIN_WHERE_ITEMS.map((item) => (
+                    <li key={item.text}>
+                      <LinkedText text={item.text} links={item.links} />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+              <section>
+                <h3 className="text-lg font-bold text-white">{BITCOIN_SITE_H3}</h3>
+                <LinkedText text={BITCOIN_SITE_ANSWER} links={BITCOIN_SITE_LINKS} className="mt-2" />
+              </section>
+            </div>
+          ) : (
+            <p className="text-gray-400 text-lg max-w-3xl mb-10">{hub.description}</p>
+          )}
 
           <div className="flex flex-wrap gap-3 mb-12 text-sm">
-            {Object.entries(TOPIC_HUBS).map(([slug, config]) => (
+            {Object.entries(HUBS).map(([slug, config]) => (
               <Link
                 key={slug}
                 href={`/hub/${slug}`}
