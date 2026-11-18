@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import AuthorProfile from '@/components/author/AuthorProfile';
 import { EMILIAN_CONSTANTIN } from '@/lib/authors';
@@ -11,7 +12,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${SITE_URL}${EMILIAN_CONSTANTIN.path}` },
+  alternates: withRssAlternate({ canonical: `${SITE_URL}${EMILIAN_CONSTANTIN.path}` }),
   ...buildWebsiteShareMetadata({
     title: TITLE,
     description: DESCRIPTION,

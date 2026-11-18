@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import Navbar from '@/components/Navbar';
 import PiataAziTabs from '@/components/PiataAziTabs';
 import Footer from '@/components/Footer';
@@ -11,9 +12,9 @@ export const metadata: Metadata = {
   title: 'Harta pieței crypto | Variații 24h',
   description:
     'Harta pieței crypto: variația pe 24 de ore a principalelor active după capitalizare. Nu este un flux de lichidări live.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/lichidari`,
-  },
+  }),
 };
 
 export const revalidate = 60;

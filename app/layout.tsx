@@ -4,6 +4,7 @@ import "./globals.css";
 import Script from "next/script";
 import { DANIEL_MIHAI } from "@/lib/authors";
 import { SITE_URL } from "@/lib/json-ld";
+import { rssAlternateTypes } from "@/lib/rss-alternate";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -39,6 +40,11 @@ export const metadata: Metadata = {
     'ethereum stiri',
     'educatie financiara crypto',
   ],
+  // RSS is site-wide. Do not set canonical here; each route sets its own.
+  // Routes that set `alternates.canonical` replace this object, so they call withRssAlternate().
+  alternates: {
+    types: rssAlternateTypes(),
+  },
   creator: DANIEL_MIHAI.name,
   publisher: 'Știrile Crypto',
   verification: {

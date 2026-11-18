@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AffiliateSection from '@/components/AffiliateSection';
@@ -11,9 +12,9 @@ import { SITE_URL } from '@/lib/json-ld';
 export const metadata: Metadata = {
   title: 'Bitcoin Peak Signals | Analiză On-Chain',
   description: 'Grafice avansate pentru detectarea vârfurilor de ciclu Bitcoin. 2-Year MA Multiplier.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/market/peak-signals`,
-  },
+  }),
 };
 
 export default function PeakSignalsPage() {

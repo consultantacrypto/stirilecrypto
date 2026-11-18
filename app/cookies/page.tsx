@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -8,9 +9,9 @@ export const metadata: Metadata = {
   title: 'Politica de Cookies',
   description:
     'Ce cookie-uri folosim pe Știrile Crypto și cum poți controla preferințele din browser.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/cookies`,
-  },
+  }),
 };
 
 export default function CookiesPage() {

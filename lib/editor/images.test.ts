@@ -320,7 +320,7 @@ function restoreEnv(name: 'EDITOR_API_TOKEN' | 'NEXT_PUBLIC_SUPABASE_URL', previ
 async function postImage(
   headers: Record<string, string>,
   extraHeaders?: Record<string, string>,
-  options?: { body?: BodyInit; url?: string; token?: string },
+  options?: { body?: BodyInit | Uint8Array; url?: string; token?: string },
 ) {
   const previousToken = process.env.EDITOR_API_TOKEN;
   if (options && 'token' in options) {
@@ -343,7 +343,7 @@ async function postImage(
   const request = new NextRequest(options?.url ?? 'http://localhost/api/editor/images', {
     method: 'POST',
     headers: { ...headers, ...extraHeaders },
-    body: options?.body ?? stream,
+    body: (options?.body ?? stream) as BodyInit,
     duplex: 'half',
   });
   const before = readsDuringHandler;

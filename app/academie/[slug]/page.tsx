@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import { dictionary, enhanceContent } from '@/lib/dictionary'; // ✅ Am importat enhanceContent
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -6,6 +7,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Lightbulb, Zap, Clock } from 'lucide-react';
 import type { Metadata } from 'next';
+import {
+  academyPageTitle,
+  buildAcademyArticleJsonLd,
+  buildAcademyBreadcrumbJsonLd,
+} from '@/lib/academy-json-ld';
 import { SITE_URL } from '@/lib/json-ld';
 import TaxServicePromos from '@/components/services/TaxServicePromos';
 import { FISCAL_GUIDE_PATH } from '@/lib/fiscal-2026';
@@ -14,11 +20,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const term = dictionary.find((t) => t.slug === slug);
   return {
-    title: term ? `${term.term} - Explicație Completă | Academia Crypto` : 'Termen Necunoscut',
+    title: academyPageTitle(term),
     description: term?.definition,
-    alternates: {
+    alternates: withRssAlternate({
       canonical: `${SITE_URL}/academie/${slug}`,
-    },
+    }),
   };
 }
 
@@ -35,7 +41,19 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
   const readingMinutes = Math.max(1, Math.round(wordCount / 200));
   const isFiscalGuide = `/academie/${slug}` === FISCAL_GUIDE_PATH;
 
+  const articleJsonLd = buildAcademyArticleJsonLd(term, slug);
+  const breadcrumbJsonLd = buildAcademyBreadcrumbJsonLd(term, slug);
+
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+    />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+    />
     <main className="min-h-screen bg-[#020617] text-white selection:bg-cyan-500/30 flex flex-col">
       {/* ✅ Activăm Senzorul Invizibil */}
       <ArticleTracker slug={term.slug} />
@@ -78,7 +96,7 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
             <div className="absolute -top-3 -left-3 bg-cyan-500 text-black p-1 rounded-full"><Zap size={20}/></div>
             <h3 className="text-cyan-400 font-black text-xs uppercase tracking-[0.2em] mb-3">Take Editorial</h3>
             <p className="text-xl text-white font-medium italic leading-relaxed">
-                "{term.mihaiTake}"
+                {`"${term.mihaiTake}"`}
             </p>
         </div>
 
@@ -114,5 +132,6 @@ export default async function TermPage({ params }: { params: Promise<{ slug: str
       </div>
       <Footer />
     </main>
+    </>
   );
 }

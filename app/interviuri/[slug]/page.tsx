@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArticleCoverImage from '@/components/ArticleCoverImage';
@@ -54,7 +55,7 @@ export async function generateMetadata({
   return {
     title: `${pageTitle} | Interviuri`,
     description: interview.excerpt,
-    alternates: { canonical: canonicalUrl },
+    alternates: withRssAlternate({ canonical: canonicalUrl }),
     authors: [articleAuthorMeta('daniel-mihai')],
     openGraph: {
       title: pageTitle,

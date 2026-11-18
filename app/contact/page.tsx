@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -8,9 +9,9 @@ export const metadata: Metadata = {
   title: 'Contact',
   description:
     'Contactează echipa Știrile Crypto pentru suport, parteneriate sau sesiuni de consultanță.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/contact`,
-  },
+  }),
 };
 
 export default function ContactPage() {

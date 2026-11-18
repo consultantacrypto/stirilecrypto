@@ -6,6 +6,7 @@ import type { EditorArticleCreate, EditorArticlePatch, EditorListQuery } from '@
 import { countWords, slugFromTitle, withSlugSuffix } from '@/lib/editor/validate';
 import { prepareImageUrlForStorage } from '@/lib/image-url';
 import { DANIEL_MIHAI, authorDisplayName, authorKeyForArticle } from '@/lib/authors';
+import { indexNowUrlsForSlug, notifyIndexNow } from '@/lib/indexnow';
 import { SITE_URL } from '@/lib/json-ld';
 import { createServiceClient } from '@/lib/supabase/service';
 import type { ArticleStatus } from '@/lib/types/stiri';
@@ -117,7 +118,7 @@ export async function createEditorArticle(input: EditorArticleCreate): Promise<E
 
   const written = await writeRow(supabase, 'insert', null, row, { retrySlug: !input.slug });
   const revalidated =
-    input.status === 'published' ? revalidateNewsSurfaces(written.row.slug) : false;
+    input.status === 'published' ? await revalidateNewsSurfaces(written.row.slug) : false;
 
   return toJson(written.row, {
     source: written.dropped.includes('source') ? null : EDITOR_API_SOURCE,
@@ -178,9 +179,9 @@ export async function updateEditorArticle(
 
   const written = await writeRow(supabase, 'update', id, row, { retrySlug: false });
   const touchesPublic = nextStatus === 'published' || existing.status === 'published';
-  const revalidated = touchesPublic ? revalidateNewsSurfaces(written.row.slug) : false;
+  const revalidated = touchesPublic ? await revalidateNewsSurfaces(written.row.slug) : false;
   if (touchesPublic && existing.slug !== written.row.slug) {
-    revalidateNewsSurfaces(existing.slug);
+    await revalidateNewsSurfaces(existing.slug);
   }
 
   return toJson(written.row, {
@@ -390,7 +391,7 @@ function normalizeCover(imageUrl: string | null): string | null {
   return stored;
 }
 
-function revalidateNewsSurfaces(slug: string): boolean {
+async function revalidateNewsSurfaces(slug: string): Promise<boolean> {
   try {
     revalidatePath('/', 'layout');
     revalidatePath('/');
@@ -402,11 +403,13 @@ function revalidateNewsSurfaces(slug: string): boolean {
     revalidatePath('/hub/bitcoin');
     revalidatePath('/hub/mica');
     revalidatePath('/hub/securitate');
-    return true;
   } catch (error) {
     console.error('[editor] revalidate', error);
     return false;
   }
+
+  await notifyIndexNow(indexNowUrlsForSlug(slug));
+  return true;
 }
 
 function summarize(row: StiriRow): EditorArticleJson {

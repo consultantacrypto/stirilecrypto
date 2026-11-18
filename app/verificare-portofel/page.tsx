@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -13,7 +14,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${SITE_URL}/verificare-portofel` },
+  alternates: withRssAlternate({ canonical: `${SITE_URL}/verificare-portofel` }),
   ...buildWebsiteShareMetadata({
     title: TITLE,
     description: DESCRIPTION,

@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -10,9 +11,9 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/media-kit`,
-  },
+  }),
   ...buildWebsiteShareMetadata({
     title: TITLE,
     description: DESCRIPTION,

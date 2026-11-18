@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import Navbar from '@/components/Navbar';
 import PiataAziTabs from '@/components/PiataAziTabs';
 import Footer from '@/components/Footer';
@@ -21,9 +22,9 @@ const MARKET_DESCRIPTION =
 export const metadata: Metadata = {
   title: MARKET_TITLE,
   description: MARKET_DESCRIPTION,
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/market`,
-  },
+  }),
   ...buildWebsiteShareMetadata({
     title: MARKET_TITLE,
     description: MARKET_DESCRIPTION,

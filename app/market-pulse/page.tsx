@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Activity, ArrowRight } from 'lucide-react';
@@ -11,9 +12,9 @@ export const metadata: Metadata = {
   title: 'Pulsul Bitcoin | 7 zile din 7',
   description:
     'Arhiva Pulsul Bitcoin. Publicat 7 zile din 7. Aici sunt edițiile publicate, de la cea mai nouă.',
-  alternates: {
+  alternates: withRssAlternate({
     canonical: `${SITE_URL}/market-pulse`,
-  },
+  }),
 };
 
 export const revalidate = 60;

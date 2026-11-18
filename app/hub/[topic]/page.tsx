@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -6,6 +7,7 @@ import Footer from '@/components/Footer';
 import ArticleCard from '@/components/ArticleCard';
 import LinkedText from '@/components/LinkedText';
 import { getMergedNewsListingArticles } from '@/lib/articles-db';
+import { buildArticleItemListJsonLd, buildCollectionPageJsonLd } from '@/lib/collection-json-ld';
 import {
   BITCOIN_DEFINITION,
   BITCOIN_DEFINITION_LINKS,
@@ -72,11 +74,12 @@ export async function generateMetadata({
   if (!hub) return { title: 'Hub inexistent' };
 
   const canonical = `${SITE_URL}/hub/${topic}`;
+  const alternates = withRssAlternate({ canonical });
   if (hub.absoluteTitle) {
     return {
       title: { absolute: hub.title },
       description: hub.description,
-      alternates: { canonical },
+      alternates,
       ...buildWebsiteShareMetadata({
         title: hub.title,
         description: hub.description,
@@ -88,7 +91,7 @@ export async function generateMetadata({
   return {
     title: hub.title,
     description: hub.description,
-    alternates: { canonical },
+    alternates,
   };
 }
 
@@ -108,11 +111,29 @@ export default async function HubPage({
     return needles.some((k) => haystack.includes(k));
   });
 
+  const hubUrl = `${SITE_URL}/hub/${topic}`;
+  // Bitcoin already publishes CollectionPage + ItemList from lib/hub-bitcoin.
+  const isBitcoin = topic === 'bitcoin';
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
     { name: hub.h1, path: `/hub/${topic}` },
   ]);
-  const isBitcoin = topic === 'bitcoin';
+  const collectionJsonLd = isBitcoin
+    ? null
+    : buildCollectionPageJsonLd({
+        url: hubUrl,
+        name: hub.h1,
+        description: hub.description,
+        aboutName: hub.label,
+      });
+  const itemListJsonLd = isBitcoin
+    ? null
+    : buildArticleItemListJsonLd(
+        articles.slice(0, 20).map((item) => ({
+          name: item.title,
+          url: `${SITE_URL}/stiri/${item.slug}`,
+        })),
+      );
 
   return (
     <>
@@ -126,6 +147,18 @@ export default async function HubPage({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBitcoinItemListJsonLd()) }}
+        />
+      ) : null}
+      {collectionJsonLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+        />
+      ) : null}
+      {itemListJsonLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
         />
       ) : null}
       <script

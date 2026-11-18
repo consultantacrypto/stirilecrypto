@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import Navbar from '@/components/Navbar';
 import ShareButtons from '@/components/ShareButtons';
 import ArticleContent from '@/components/ArticleContent';
@@ -48,7 +49,7 @@ export async function generateMetadata({
   return {
     title: `${seoTitle} | Pulsul Bitcoin`,
     description: seoDescription,
-    alternates: { canonical: canonicalUrl },
+    alternates: withRssAlternate({ canonical: canonicalUrl }),
     authors: [articleAuthorMeta(article.authorKey)],
     openGraph: {
       title: seoTitle,

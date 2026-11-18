@@ -1,3 +1,4 @@
+import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -12,7 +13,7 @@ const DESCRIPTION = 'Termeni crypto explicați pe scurt, în română, pentru ci
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${SITE_URL}/glosar` },
+  alternates: withRssAlternate({ canonical: `${SITE_URL}/glosar` }),
   ...buildWebsiteShareMetadata({ title: TITLE, description: DESCRIPTION, canonical: `${SITE_URL}/glosar` }),
 };
 
