@@ -3,9 +3,9 @@ import { SITE_NEWS_SITEMAP_URL, SITE_SITEMAP_URL } from '@/lib/json-ld';
 
 // Training crawlers stay fully blocked. Citation crawlers (ChatGPT-User,
 // PerplexityBot, OAI-SearchBot) are omitted so they follow the public * rules.
+// Google-Extended allowed as a test from 19 Nov 2026 until 1 Dec 2026 (AI visibility test); revert by re-adding it here.
 const AI_BOTS = [
   'GPTBot',
-  'Google-Extended',
   'CCBot',
   'anthropic-ai',
   'ClaudeBot',
