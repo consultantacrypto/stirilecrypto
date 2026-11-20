@@ -34,8 +34,8 @@ export default function ProductFrame({
           <div className="mesh-hero pointer-events-none absolute inset-0" aria-hidden="true" />
           <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-16">
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400">{kicker}</p>
-            <div className="mt-5 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
-              <div className="lg:col-span-7">
+            <div className="mt-5 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-10">
+              <div className="lg:col-span-7 lg:col-start-1 lg:row-start-1">
                 <h1 className="max-w-4xl font-[var(--font-space)] text-[2.55rem] font-semibold leading-[0.96] tracking-[-0.045em] text-white sm:text-6xl lg:text-[4.15rem]">
                   {title}
                 </h1>
@@ -96,16 +96,16 @@ export default function ProductFrame({
                 </ul>
               </div>
 
+              <div className="lg:col-span-7 lg:col-start-1 lg:row-start-2">{children}</div>
+
               <aside
                 id="comanda"
-                className="scroll-mt-24 lg:col-span-5 lg:row-span-2 lg:sticky lg:top-24 lg:self-start"
+                className="scroll-mt-24 lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1 lg:sticky lg:top-24 lg:self-start"
               >
                 <div className="rounded-3xl border border-white/10 bg-[#12141a]/92 p-5 shadow-[0_30px_80px_-36px_rgba(0,0,0,0.85)] backdrop-blur-xl sm:p-6">
                   {aside}
                 </div>
               </aside>
-
-              <div className="lg:col-span-7">{children}</div>
             </div>
           </div>
         </section>

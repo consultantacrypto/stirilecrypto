@@ -10,7 +10,7 @@ export default function InterviewCard({ item }: InterviewCardProps) {
   return (
     <Link
       href={`/interviuri/${item.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] transition-colors duration-300 hover:border-white/25"
+      className="group flex h-full flex-col rounded-2xl border border-white/10 bg-[#0a0f1e]/90 overflow-hidden backdrop-blur-md hover:border-white/30 transition-colors duration-300"
     >
       <ArticleCoverImage
         src={item.cover_image}

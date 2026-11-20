@@ -34,7 +34,7 @@ export default function Home() {
   return (
     <>
       <HomeJsonLd />
-      <main className="flex min-h-screen flex-col overflow-x-hidden bg-[var(--background)] font-sans text-white selection:bg-[var(--signal)]/30">
+      <main className="flex min-h-screen flex-col overflow-x-hidden bg-black font-sans text-white selection:bg-blue-500/30">
         <ScrollProgress />
         <Navbar />
         <HomeMarketBar />
@@ -43,7 +43,7 @@ export default function Home() {
           <HomeServiceStrip />
           <MarketPulseSection />
         </div>
-        <div className="container mx-auto mt-16 w-full max-w-6xl border-t border-white/[0.08] px-4 pt-10 sm:px-6">
+        <div className="container mx-auto mt-16 w-full max-w-6xl border-t border-white/10 px-4 pt-8 sm:px-6">
           <InterviewsSection />
         </div>
         <Footer />

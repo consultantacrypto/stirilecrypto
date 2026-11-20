@@ -6,9 +6,9 @@ export default async function NewsFeed() {
   const { items, hasMore } = await getPublishedFeedPage(0, HOME_FEED_FIRST_COUNT);
 
   return (
-    <section id="news-feed" className="scroll-mt-20 pb-12 lg:pb-16">
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="mx-auto max-w-3xl pb-2 pt-10 text-center sm:pt-14">
+    <section id="news-feed" className="scroll-mt-20 bg-black pb-12 lg:pb-16">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mx-auto max-w-3xl pt-5 text-center">
           <HeroSlogan />
         </div>
 
