@@ -88,7 +88,7 @@ export default function MorningNewsletter({
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-bold text-white transition-all hover:bg-blue-500 disabled:bg-blue-600/60"
+        className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-60"
       >
         {status === 'loading' ? (
           <>
@@ -135,7 +135,7 @@ export default function MorningNewsletter({
     <section
       id={id}
       aria-label="Știrile Crypto de dimineață"
-      className="my-8 scroll-mt-24 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-md md:px-5"
+      className="my-10 scroll-mt-24 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 backdrop-blur-md md:px-5"
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex min-w-0 items-start gap-3">

@@ -17,12 +17,12 @@ export default async function HomeMarketBar() {
   if (coins.length === 0 && !fearGreed) return null;
 
   return (
-    <section aria-label="Piața azi" className="border-b border-white/10 bg-black">
+    <section aria-label="Piața azi" className="border-b border-white/[0.08] bg-[#090a0d]">
       <Link
         href="/market"
-        className="container mx-auto flex h-9 max-w-7xl items-center gap-5 overflow-x-auto whitespace-nowrap px-4 text-xs tabular-nums text-slate-300 sm:px-6"
+        className="container mx-auto flex h-10 max-w-6xl items-center gap-5 overflow-x-auto whitespace-nowrap px-4 text-xs tabular-nums text-zinc-300 sm:px-6"
       >
-        <span className="font-bold uppercase tracking-wide text-blue-400">Piața azi</span>
+        <span className="font-semibold uppercase tracking-[0.14em] text-[var(--signal)]">Piața azi</span>
         {coins.map((coin) => (
           <span key={coin.symbol} className="inline-flex items-baseline gap-2">
             <span className="font-bold text-white">{coin.symbol}</span>
@@ -34,7 +34,7 @@ export default async function HomeMarketBar() {
         ))}
         {fearGreed ? (
           <span className="inline-flex items-baseline gap-2">
-            <span className="text-slate-500">Frică și lăcomie</span>
+            <span className="text-zinc-500">Frică și lăcomie</span>
             <span className="font-bold text-white">
               {fearGreed.value} {fearGreed.label}
             </span>

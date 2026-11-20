@@ -3,8 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #030712; /* Un negru și mai adânc */
-  --foreground: #ffffff;
+  --background: #090a0d;
+  --foreground: #f4f5f7;
+  --panel: #12141a;
+  --line: rgba(255, 255, 255, 0.08);
+  --muted: #a1a1aa;
+  --signal: #c7d2fe;
+  --sand: #e4c48a;
   --neon-blue: #38bdf8;
   --neon-purple: #818cf8;
 }
@@ -12,22 +17,33 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-space); /* Activam noul font */
   overflow-x: hidden;
 }
 
-/* GRILA MATEMATICA V2 (Foarte subtilă) */
+/* Soft vignette plus a faint grid. Decorative only. */
 body::before {
   content: "";
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(199, 210, 254, 0.08), transparent 55%),
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: auto, 72px 72px, 72px 72px;
+  mask-image: radial-gradient(circle at 50% 15%, black 10%, transparent 72%);
   pointer-events: none;
   z-index: -1;
+}
+
+/* Stripe-like wash: two soft radials, no animation. */
+.mesh-hero {
+  background:
+    radial-gradient(ellipse 72% 80% at 0% 0%, rgba(199, 210, 254, 0.18), transparent 58%),
+    radial-gradient(ellipse 48% 56% at 100% 0%, rgba(228, 196, 138, 0.14), transparent 52%),
+    radial-gradient(ellipse 40% 46% at 78% 100%, rgba(125, 211, 252, 0.07), transparent 60%);
 }
 
 @keyframes cover-shimmer {
@@ -40,20 +56,23 @@ body::before {
   animation: cover-shimmer 1.35s ease-in-out infinite;
 }
 
-/* CARD DE STICLĂ "FROSTED" */
 .glass-card {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.65);
 }
 
-/* GRADIENT TEXT */
 .text-gradient {
-  background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+  background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+::selection {
+  background: rgba(199, 210, 254, 0.35);
+  color: #fff;
 }
 
 /* TipTap / ProseMirror (admin rich text editor) */
@@ -89,7 +108,8 @@ body::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-slogan-in {
+  .hero-slogan-in,
+  .cover-shimmer {
     animation: none;
   }
 }

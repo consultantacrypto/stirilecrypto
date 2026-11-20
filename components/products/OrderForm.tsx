@@ -13,7 +13,7 @@ const CONCERNS: { id: RiskConcern; label: string }[] = [
 ];
 
 const fieldClass =
-  'w-full min-h-12 rounded-lg border border-white/10 bg-black/40 px-3 text-sm text-white outline-none focus:border-sky-400/70';
+  'w-full min-h-12 rounded-xl border border-white/10 bg-black/30 px-3 text-sm text-white outline-none transition-colors placeholder:text-zinc-500 focus-visible:border-white/40 focus-visible:ring-2 focus-visible:ring-white/25';
 
 interface OrderFormProps {
   deliveryLabel: string;
@@ -105,12 +105,12 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-5" noValidate>
+    <form onSubmit={onSubmit} className="space-y-5 accent-white" noValidate>
       <input type="text" name="company_website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
 
-      <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-slate-300">
+      <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-zinc-300">
         <p>Plata se face pe pagina securizată Stripe. Analiza se pregătește manual după confirmarea plății.</p>
-        <p className="mt-1 text-slate-500">
+        <p className="mt-1 text-zinc-400">
           Livrare orientativă: {deliveryLabel}, pe email de la contact@stirilecrypto.ro.
         </p>
       </div>
@@ -128,9 +128,9 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
         />
       </Field>
       <fieldset>
-        <legend className="mb-2 text-sm font-medium text-slate-300">Tarif</legend>
+        <legend className="mb-2 text-sm font-medium text-zinc-300">Tarif</legend>
         <div className="space-y-2">
-          <label className={`flex items-start gap-3 text-sm ${majorAllowed ? 'text-slate-200' : 'text-slate-500'}`}>
+          <label className={`flex items-start gap-3 rounded-xl border px-3 py-3 text-sm ${tier === 'major' ? 'border-white/30 bg-white/[0.04]' : 'border-white/10'} ${majorAllowed ? 'text-zinc-100' : 'text-zinc-500'}`}>
             <input
               type="radio"
               name="tier"
@@ -142,7 +142,7 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
             />
             <span>Monedă mare (top 30) – 79 lei</span>
           </label>
-          <label className="flex items-start gap-3 text-sm text-slate-200">
+          <label className={`flex items-start gap-3 rounded-xl border px-3 py-3 text-sm text-zinc-100 ${tier === 'altcoin' ? 'border-white/30 bg-white/[0.04]' : 'border-white/10'}`}>
             <input
               type="radio"
               name="tier"
@@ -155,11 +155,11 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
           </label>
         </div>
         {majorAllowed ? (
-          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+          <p className="mt-2 text-xs leading-relaxed text-zinc-400">
             Poți alege oricare tarif. Suma plătită este calculată pe server, nu din formular.
           </p>
         ) : (
-          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+          <p className="mt-2 text-xs leading-relaxed text-zinc-400">
             {asset.trim().length >= 2
               ? 'Acest simbol nu este în top 30. Serverul încasează 139 lei chiar dacă se trimite tariful de 79.'
               : 'Monedele din afara top 30 se taxează la 139 lei.'}
@@ -170,9 +170,9 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
         <textarea id="question" name="question" maxLength={1000} rows={3} className={fieldClass} />
       </Field>
 
-      <fieldset className="space-y-4 rounded-xl border border-white/10 p-4">
+      <fieldset className="space-y-4 rounded-2xl border border-white/10 p-4">
         <legend className="px-1 text-sm font-semibold text-white">Risc token (opțional)</legend>
-        <p className="text-xs leading-relaxed text-slate-500">
+        <p className="text-xs leading-relaxed text-zinc-400">
           Completează doar ce știi. Lichiditatea, listările, deținătorii, deblocările și riscul de dump
           intră oricum în analiză.
         </p>
@@ -182,7 +182,7 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
         <Field label="Rețea" htmlFor="network">
           <input id="network" name="network" maxLength={40} placeholder="Ethereum, Solana, Bitcoin" className={fieldClass} />
         </Field>
-        <label className="flex items-start gap-3 text-sm text-slate-300">
+        <label className="flex items-start gap-3 text-sm text-zinc-300">
           <input
             type="checkbox"
             className="mt-1 h-4 w-4"
@@ -200,8 +200,8 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
           <textarea id="why" name="why" maxLength={2000} rows={3} className={fieldClass} />
         </Field>
         <fieldset>
-          <legend className="mb-2 text-sm text-slate-300">Deții deja moneda?</legend>
-          <div className="flex gap-4 text-sm text-slate-300">
+          <legend className="mb-2 text-sm text-zinc-300">Deții deja moneda?</legend>
+          <div className="flex gap-4 text-sm text-zinc-300">
             <label className="inline-flex items-center gap-2">
               <input type="radio" name="holds-ui" checked={holds === true} onChange={() => setHolds(true)} />
               Da
@@ -226,10 +226,10 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
           </select>
         </Field>
         <fieldset>
-          <legend className="mb-2 text-sm text-slate-300">Îngrijorări</legend>
+          <legend className="mb-2 text-sm text-zinc-300">Îngrijorări</legend>
           <div className="space-y-2">
             {CONCERNS.map((item) => (
-              <label key={item.id} className="flex items-center gap-2 text-sm text-slate-300">
+              <label key={item.id} className="flex items-center gap-2 text-sm text-zinc-300">
                 <input type="checkbox" checked={concerns.includes(item.id)} onChange={() => toggleConcern(item.id)} />
                 {item.label}
               </label>
@@ -240,8 +240,8 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
           <textarea id="questions" name="questions" maxLength={2000} rows={3} className={fieldClass} />
         </Field>
         <fieldset>
-          <legend className="mb-2 text-sm text-slate-300">Livrare preferată</legend>
-          <div className="flex gap-4 text-sm text-slate-300">
+          <legend className="mb-2 text-sm text-zinc-300">Livrare preferată</legend>
+          <div className="flex gap-4 text-sm text-zinc-300">
             <label className="inline-flex items-center gap-2">
               <input type="radio" name="delivery" value="email" defaultChecked />
               Email
@@ -258,7 +258,7 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
         <input id="email" name="email" type="email" required autoComplete="email" className={fieldClass} />
       </Field>
 
-      <label className="flex items-start gap-3 text-sm leading-relaxed text-slate-300">
+      <label className="flex items-start gap-3 text-sm leading-relaxed text-zinc-300">
         <input
           type="checkbox"
           className="mt-1 h-4 w-4 shrink-0"
@@ -272,7 +272,7 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
         </span>
       </label>
 
-      <p className="text-xs leading-relaxed text-slate-500">
+      <p className="text-xs leading-relaxed text-zinc-400">
         Material educațional, nu o recomandare de investiții personalizată și fără apeluri de cumpărare
         sau de vânzare.
       </p>
@@ -291,7 +291,7 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-white px-5 text-sm font-bold text-black hover:bg-slate-100 disabled:opacity-60"
+        className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-black hover:bg-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-60"
       >
         {pending ? 'Se trimite…' : 'Continuă către plată'}
       </button>
@@ -302,7 +302,7 @@ export default function OrderForm({ deliveryLabel, initialAsset = '', source = n
 function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: ReactNode }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-slate-300">
+      <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-zinc-300">
         {label}
       </label>
       {children}
