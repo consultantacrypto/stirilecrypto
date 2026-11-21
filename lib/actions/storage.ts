@@ -4,6 +4,7 @@ import { IMAGINI_STIRI_BUCKET } from '@/lib/storage/constants';
 import { sanitizeFileName } from '@/lib/slugify';
 import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service';
+import { isAdminSession } from '@/lib/auth/admin';
 
 export type SignedImageUploadUrlResult =
   | { success: true; signedUrl: string; path: string }
@@ -11,12 +12,7 @@ export type SignedImageUploadUrlResult =
 
 async function requireAdminUser(): Promise<{ ok: true } | { ok: false; error: string }> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
+  if (!(await isAdminSession(supabase))) {
     return { ok: false, error: 'Neautorizat.' };
   }
 

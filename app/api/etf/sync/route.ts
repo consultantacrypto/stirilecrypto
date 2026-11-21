@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { upsertEtfSnapshot } from '@/lib/etf/fetchEtfData';
+import { isAdminSession } from '@/lib/auth/admin';
 import {
   billionsToUsd,
   isEtfAsset,
@@ -27,10 +28,7 @@ async function authorize(request: NextRequest, bodySecret: unknown): Promise<boo
 
   try {
     const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    return Boolean(user);
+    return await isAdminSession(supabase);
   } catch {
     return false;
   }

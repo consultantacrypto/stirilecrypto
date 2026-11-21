@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { isAdminSession } from '@/lib/auth/admin';
 
 export type InterviewActionResult =
   | { success: true; id: string }
@@ -9,13 +10,8 @@ export type InterviewActionResult =
 
 async function requireAdminSupabase() {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { supabase: null, error: 'Trebuie să fii autentificat.' as const };
+  if (!(await isAdminSession(supabase))) {
+    return { supabase: null, error: 'Neautorizat.' as const };
   }
 
   return { supabase, error: null };
