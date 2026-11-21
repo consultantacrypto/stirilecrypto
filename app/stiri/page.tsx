@@ -131,7 +131,7 @@ export default async function NewsPage({
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
     />
-    <main className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30 flex flex-col">
+    <main className="flex min-h-screen flex-col bg-[var(--background)] text-white selection:bg-[var(--signal)]/30">
       <Navbar />
 
       <div className="container mx-auto px-6 py-12 flex-grow">
@@ -189,7 +189,7 @@ export default async function NewsPage({
           {currentArticles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {currentArticles.map((item, idx) => (
-                    <Link href={`/stiri/${item.slug}`} key={item.slug} className="group bg-[#0a0f1e] border border-white/10 rounded-3xl overflow-hidden flex flex-col hover:border-blue-500/50 transition-all hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] h-full">
+                    <Link href={`/stiri/${item.slug}`} key={item.slug} className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] transition-colors hover:border-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
                         {/* Imagine */}
                         <ArticleCoverImage
                             src={item.image}

@@ -55,8 +55,8 @@ export default async function AnalizaTehnicaPage({
       deliveryLabel={catalog.ta.deliveryLabel}
       aside={
         <>
-          <h2 className="font-[var(--font-space)] text-lg font-bold">Comandă</h2>
-          <p className="mt-2 mb-5 text-sm leading-relaxed text-slate-400">
+          <h2 className="font-[var(--font-space)] text-xl font-semibold tracking-tight">Comandă</h2>
+          <p className="mb-5 mt-2 text-sm leading-relaxed text-zinc-400">
             Simbolul este obligatoriu. Câmpurile de risc sunt opționale și ajută la redactare.
           </p>
           <OrderForm
@@ -68,27 +68,29 @@ export default async function AnalizaTehnicaPage({
       }
       below={<TaSample />}
     >
-      <ul className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <ul className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-7">
         {FRAMES.map((frame) => (
           <li
             key={frame}
-            className="rounded-lg border border-white/10 px-3 py-2 text-center text-sm font-semibold text-slate-200"
+            className="rounded-xl border border-white/10 bg-white/[0.03] px-2 py-3 text-center font-[var(--font-space)] text-base font-semibold tracking-tight text-white"
           >
             {frame}
           </li>
         ))}
       </ul>
-      <h2 className="mt-8 font-[var(--font-space)] text-lg font-bold text-white">Risc token</h2>
-      <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-300">
+      <h2 className="mt-8 font-[var(--font-space)] text-lg font-semibold tracking-tight text-white">Risc token</h2>
+      <ul className="mt-3 space-y-3 text-sm leading-relaxed text-zinc-300">
         {RISK_POINTS.map((point) => (
-          <li key={point}>{point}</li>
+          <li key={point} className="border-l border-[var(--sand)]/60 pl-3">
+            {point}
+          </li>
         ))}
       </ul>
-      <p className="mt-6 text-sm leading-relaxed text-slate-300">
+      <p className="mt-6 text-sm leading-relaxed text-zinc-300">
         Un coleg pregătește materialul, Daniel Mihai îl revizuiește, apoi pleacă pe email de la{' '}
         {ANALYSIS_DELIVERY_FROM}, de regulă în {catalog.ta.deliveryLabel.toLowerCase()}.
       </p>
-      <p className="mt-6 text-sm leading-relaxed text-slate-500">
+      <p className="mt-6 text-sm leading-relaxed text-zinc-400">
         Analiză tehnică generală și o citire de risc, ambele în scop educațional. Nu este o
         recomandare de investiții personalizată, nu ține loc de consultanță financiară autorizată și
         nu conține apeluri de cumpărare sau de vânzare.

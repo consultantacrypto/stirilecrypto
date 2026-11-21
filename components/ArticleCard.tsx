@@ -24,14 +24,14 @@ export default function ArticleCard({
   priority = false,
   href,
   className = '',
-  aspectRatio = 'video',
+  aspectRatio = '16/10',
 }: ArticleCardProps) {
   const articleHref = href ?? `/stiri/${slug}`;
 
   return (
     <Link
       href={articleHref}
-      className={`group flex flex-col bg-[#0a0f1e] border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/40 transition-all hover:shadow-[0_0_24px_rgba(59,130,246,0.12)] h-full ${className}`}
+      className={`group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] transition-colors hover:border-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${className}`}
     >
       <ArticleCoverImage
         src={image}
@@ -39,25 +39,28 @@ export default function ArticleCard({
         priority={priority}
         aspectRatio={aspectRatio}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        imageClassName="transition-transform duration-500 group-hover:scale-105"
+        imageClassName="transition-transform duration-500 group-hover:scale-[1.03]"
       />
 
-      <div className="p-5 flex flex-col flex-1">
-        {category ? (
-          <span className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-2 font-[var(--font-space)]">
-            {category}
-          </span>
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        {category || date ? (
+          <p className="mb-2 flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[0.14em]">
+            {category ? <span className="text-[var(--signal)]">{category}</span> : null}
+            {category && date ? (
+              <span className="text-zinc-600" aria-hidden="true">
+                ·
+              </span>
+            ) : null}
+            {date ? <span className="font-medium normal-case tracking-normal text-zinc-400">{date}</span> : null}
+          </p>
         ) : null}
-        {date ? (
-          <span className="text-[11px] font-medium text-slate-500 mb-2">{date}</span>
-        ) : null}
-        <h3 className="text-white font-bold leading-snug mb-3 line-clamp-3 group-hover:text-blue-400 transition-colors font-[var(--font-space)] flex-1">
+        <h3 className="mb-2 line-clamp-3 flex-1 font-[var(--font-space)] font-semibold leading-snug tracking-tight text-white transition-colors group-hover:text-zinc-200">
           {title}
         </h3>
         {summary ? (
-          <p className="text-gray-400 text-sm leading-relaxed line-clamp-3 mb-3">{summary}</p>
+          <p className="mb-3 line-clamp-3 text-sm leading-relaxed text-zinc-400">{summary}</p>
         ) : null}
-        <span className="text-xs text-gray-500 flex items-center gap-1 font-semibold font-[var(--font-inter)] group-hover:gap-2 transition-all mt-auto">
+        <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-zinc-300 transition-all group-hover:gap-2 font-[var(--font-inter)]">
           Citește articolul <ArrowRight size={12} />
         </span>
       </div>

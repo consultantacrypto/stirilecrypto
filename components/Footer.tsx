@@ -14,19 +14,19 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#020617] border-t border-white/5 pt-16 pb-8 font-[var(--font-inter)] mt-auto">
+    <footer className="mt-auto border-t border-white/[0.08] bg-[#090a0d] pb-8 pt-16 font-[var(--font-inter)]">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:rotate-12 transition-transform">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-bold text-black">
                 SC
               </div>
               <span className="text-xl font-black text-white font-[var(--font-space)]">
                 Știrile Crypto
               </span>
             </Link>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed text-zinc-400">
               Știri crypto, analiză on-chain și intelligence de piață. Transformăm complexitatea
               pieței în context clar pentru investitori.
             </p>
@@ -38,7 +38,7 @@ export default function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-gray-300 underline decoration-white/20 underline-offset-4 hover:text-white"
+                    className="text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 hover:text-white"
                     onClick={() => trackEvent('social_share', { platform: link.shortLabel, location: 'footer' })}
                   >
                     {link.label}
@@ -50,7 +50,7 @@ export default function Footer() {
                   href="https://www.linkedin.com/in/mihaidanielmarius/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-gray-300 underline decoration-white/20 underline-offset-4 hover:text-white"
+                  className="text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 hover:text-white"
                 >
                   LinkedIn, Daniel Mihai
                 </a>
@@ -60,73 +60,73 @@ export default function Footer() {
 
           <div>
             <h3 className="text-white font-bold mb-6 flex items-center gap-2">
-              <Globe size={18} className="text-blue-500" /> Platformă
+              <Globe size={18} className="text-[var(--signal)]" /> Platformă
             </h3>
-            <ul className="space-y-4 text-sm text-gray-400">
+            <ul className="space-y-3 text-sm text-zinc-400">
               <li>
-                <Link href="/incepe-aici" className="hover:text-blue-400 transition-colors">
+                <Link href="/incepe-aici" className="hover:text-white transition-colors">
                   Începe aici
                 </Link>
               </li>
               <li>
-                <Link href="/market" className="hover:text-blue-400 transition-colors">
+                <Link href="/market" className="hover:text-white transition-colors">
                   Piața azi
                 </Link>
               </li>
               <li>
-                <Link href="/stiri" className="hover:text-blue-400 transition-colors">
+                <Link href="/stiri" className="hover:text-white transition-colors">
                   Știri care îți ating banii
                 </Link>
               </li>
               <li>
-                <Link href="/airdrop-alert" className="hover:text-blue-400 transition-colors">
+                <Link href="/airdrop-alert" className="hover:text-white transition-colors">
                   Airdrop Alert
                 </Link>
               </li>
               <li>
-                <Link href="/academie" className="hover:text-blue-400 transition-colors">
+                <Link href="/academie" className="hover:text-white transition-colors">
                   Academia Crypto
                 </Link>
               </li>
               <li>
-                <Link href="/interviuri" className="hover:text-blue-400 transition-colors">
+                <Link href="/interviuri" className="hover:text-white transition-colors">
                   Interviuri
                 </Link>
               </li>
               <li>
-                <Link href="/glosar" className="hover:text-blue-400 transition-colors">
+                <Link href="/glosar" className="hover:text-white transition-colors">
                   Glosar
                 </Link>
               </li>
               <li>
-                <Link href="/lichidari" className="hover:text-blue-400 transition-colors">
+                <Link href="/lichidari" className="hover:text-white transition-colors">
                   Harta pieței
                 </Link>
               </li>
               <li>
-                <Link href="/taxe" className="hover:text-blue-400 transition-colors">
+                <Link href="/taxe" className="hover:text-white transition-colors">
                   Taxe crypto 2026
                 </Link>
               </li>
               <li>
-                <Link href="/raport-strategic" className="hover:text-blue-400 transition-colors">
+                <Link href="/raport-strategic" className="hover:text-white transition-colors">
                   Ce cumpără balenele
                 </Link>
               </li>
               {NEWSLETTER_WAITLIST_VISIBLE ? (
                 <li>
-                  <Link href="/#newsletter" className="hover:text-blue-400 transition-colors">
+                  <Link href="/#newsletter" className="hover:text-white transition-colors">
                     Lista de așteptare
                   </Link>
                 </li>
               ) : null}
               <li>
-                <Link href="/analiza-tehnica?src=footer" className="hover:text-blue-400 transition-colors">
+                <Link href="/analiza-tehnica?src=footer" className="hover:text-white transition-colors">
                   Analiză tehnică, de la 79 lei
                 </Link>
               </li>
               <li>
-                <Link href="/verificare-portofel?src=footer" className="hover:text-blue-400 transition-colors">
+                <Link href="/verificare-portofel?src=footer" className="hover:text-white transition-colors">
                   Verificare portofel crypto
                 </Link>
               </li>
@@ -135,50 +135,50 @@ export default function Footer() {
 
           <div>
             <h3 className="text-white font-bold mb-6 flex items-center gap-2">
-              <ShieldCheck size={18} className="text-green-500" /> Editorial
+              <ShieldCheck size={18} className="text-[var(--sand)]" /> Editorial
             </h3>
-            <ul className="space-y-4 text-sm text-gray-400">
+            <ul className="space-y-3 text-sm text-zinc-400">
               <li>
                 <Link
                   href="/despre"
-                  className="hover:text-green-400 transition-colors flex items-center gap-2"
+                  className="hover:text-white transition-colors flex items-center gap-2"
                 >
                   Despre Noi{' '}
-                  <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-gray-300">
+                  <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-zinc-300">
                     Info
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/intrebari-frecvente" className="hover:text-green-400 transition-colors">
+                <Link href="/intrebari-frecvente" className="hover:text-white transition-colors">
                   Întrebări frecvente
                 </Link>
               </li>
               <li>
-                <Link href="/hub/stiri-crypto-romania" className="hover:text-green-400 transition-colors">
+                <Link href="/hub/stiri-crypto-romania" className="hover:text-white transition-colors">
                   Știri crypto România
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-green-400 transition-colors">
+                <Link href="/contact" className="hover:text-white transition-colors">
                   Contact & Suport
                 </Link>
               </li>
               <li>
-                <Link href="/redactie" className="hover:text-green-400 transition-colors">
+                <Link href="/redactie" className="hover:text-white transition-colors">
                   Redacție
                 </Link>
               </li>
               {PERSON_AUTHORS.map((author) => (
                 <li key={author.path}>
-                  <Link href={author.path} className="hover:text-green-400 transition-colors">
+                  <Link href={author.path} className="hover:text-white transition-colors">
                     {author.key === 'daniel-mihai' ? `${author.name}, redactor și analist` : author.name}
                   </Link>
                 </li>
               ))}
               {EDITORIAL_POLICY_LINKS.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="hover:text-green-400 transition-colors">
+                  <Link href={link.href} className="hover:text-white transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -188,23 +188,23 @@ export default function Footer() {
                   href="https://www.mihaidaniel.ro/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-green-400 transition-colors"
+                  className="hover:text-white transition-colors"
                 >
                   Consultanță
                 </a>
               </li>
               <li>
-                <Link href="/termeni" className="hover:text-green-400 transition-colors">
+                <Link href="/termeni" className="hover:text-white transition-colors">
                   Termeni & Condiții
                 </Link>
               </li>
               <li>
-                <Link href="/confidentialitate" className="hover:text-green-400 transition-colors">
+                <Link href="/confidentialitate" className="hover:text-white transition-colors">
                   Confidențialitate
                 </Link>
               </li>
               <li>
-                <Link href="/cookies" className="hover:text-green-400 transition-colors">
+                <Link href="/cookies" className="hover:text-white transition-colors">
                   Cookies
                 </Link>
               </li>
@@ -213,11 +213,11 @@ export default function Footer() {
 
           <div>
             <h3 className="text-white font-bold mb-6 flex items-center gap-2">
-              <Mail size={18} className="text-purple-500" /> Contact
+              <Mail size={18} className="text-zinc-300" /> Contact
             </h3>
-            <ul className="space-y-4 text-sm text-gray-400">
+            <ul className="space-y-3 text-sm text-zinc-400">
               <li className="flex items-center gap-3">
-                <Mail className="text-gray-600 shrink-0" size={16} />
+                <Mail className="shrink-0 text-zinc-500" size={16} />
                 <a
                   href="mailto:contact@stirilecrypto.ro"
                   className="hover:text-white transition-colors"
@@ -226,7 +226,7 @@ export default function Footer() {
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Clock className="text-gray-600 shrink-0" size={16} />
+                <Clock className="shrink-0 text-zinc-500" size={16} />
                 <span>Luni – Vineri, 09:00 – 18:00</span>
               </li>
             </ul>
@@ -234,19 +234,19 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/5 pt-8 space-y-2">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs leading-relaxed text-zinc-500">
             Știrile Crypto este operată de {SITE_OPERATOR.name}, cu sediul la {SITE_OPERATOR.address}.{' '}
             {SITE_OPERATOR.taxIdLabel}: {SITE_OPERATOR.taxId}. Redactor:{' '}
-            <Link href="/autori/daniel-mihai" className="text-gray-400 underline decoration-white/20 underline-offset-2 hover:text-white">
+            <Link href="/autori/daniel-mihai" className="text-zinc-300 underline decoration-white/20 underline-offset-2 hover:text-white">
               Daniel Mihai
             </Link>
             .{' '}
-            <Link href="/despre#date-operator" className="text-gray-400 underline decoration-white/20 underline-offset-2 hover:text-white">
+            <Link href="/despre#date-operator" className="text-zinc-300 underline decoration-white/20 underline-offset-2 hover:text-white">
               Date operator
             </Link>
             .
           </p>
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-zinc-500">
             © {currentYear} Știrile Crypto. Toate drepturile rezervate.
           </p>
         </div>

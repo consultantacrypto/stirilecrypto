@@ -97,7 +97,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ro" className="scroll-smooth">
-      <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased bg-black text-white`}>
+      <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased bg-[var(--background)] text-white`}>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-94JGNJHNBZ"
           strategy="lazyOnload"
