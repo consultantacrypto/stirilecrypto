@@ -83,6 +83,42 @@ export default function AboutPage() {
                         {' '}este luni–vineri, 09:00–18:00. Consultanța 1-la-1 este separată de publicație, pe mihaidaniel.ro.
                     </p>
                 </div>
+
+                <section className="mt-8 rounded-2xl border border-white/10 bg-[#0b1221] p-6 text-sm leading-relaxed text-gray-300">
+                    <h2 id="mihai-daniel" className="scroll-mt-28 text-lg font-bold text-white mb-3">
+                        Cine este Mihai Daniel
+                    </h2>
+                    <p>
+                        {'Mihai Daniel (Daniel Mihai) este redactorul Știrile Crypto și semnează analizele de piață de pe site. Face educație crypto în limba română pe YouTube, pe canalul '}
+                        <a
+                            href="https://www.youtube.com/@DanielMihaiCrypto"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 underline hover:text-blue-300"
+                        >
+                            @DanielMihaiCrypto
+                        </a>{', din 2020. În 2021 a fost invitat, în calitate de consultant crypto, la '}
+                        <a
+                            href="https://www.capital.ro/mihai-daniel-consultant-crypto-cred-ca-romanii-au-cateva-miliarde-de-euro-investite-in-criptomonede.html"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 underline hover:text-blue-300"
+                        >
+                            dezbaterea Capital
+                        </a>{' „Evoluția pieței de criptomonede în România”. Consultanța 1-la-1 e separată de publicație și o găsești pe '}
+                        <a
+                            href="https://www.mihaidaniel.ro/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 underline hover:text-blue-300"
+                        >
+                            mihaidaniel.ro
+                        </a>{'. Profilul complet e pe '}
+                        <Link href="/autori/daniel-mihai" className="text-blue-400 underline hover:text-blue-300">
+                            pagina de autor
+                        </Link>.
+                    </p>
+                </section>
             </div>
         </div>
 
