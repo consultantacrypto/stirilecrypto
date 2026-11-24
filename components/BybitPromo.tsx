@@ -56,6 +56,8 @@ export default function BybitPromo() {
             <Link 
               href={AFFILIATE_LINK} 
               target="_blank"
+              rel="noopener noreferrer sponsored"
+              data-placement="bybit-promo"
               className="group/btn relative flex items-center justify-center gap-3 bg-[#F7A600] hover:bg-[#ffb300] text-black font-black text-lg px-10 py-5 rounded-xl transition-all transform hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(247,166,0,0.4)] w-full md:w-auto"
             >
               Deschide Cont

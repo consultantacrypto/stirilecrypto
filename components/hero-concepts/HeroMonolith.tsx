@@ -36,6 +36,7 @@ export default function HeroMonolith() {
           </p>
           <a
             href={CONSULT_URL}
+            data-placement="hero"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-full items-center justify-center bg-blue-500 text-white font-bold py-4 rounded-xl text-sm sm:text-base shadow-[0_0_40px_rgba(59,130,246,0.4)] hover:bg-blue-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"

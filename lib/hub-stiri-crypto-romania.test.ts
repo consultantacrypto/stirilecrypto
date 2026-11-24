@@ -42,6 +42,8 @@ describe('crypto Romania hub copy', () => {
     assert.match(HUB_WHO, /Consultanța 1-la-1 este separată de publicație, pe mihaidaniel\.ro\./);
 
     const blob = hubCopyBlob();
+    assert.equal(blob.includes('verificare-portofel'), false);
+    assert.equal(blob.includes('Verificare portofel'), false);
     for (const forbidden of ['stirea-zilei', 'zilnic', '#1', 'lider', 'Cryptology', 'bitcoinromania', 'Mediafax', 'financer', 'ora 19']) {
       assert.equal(blob.toLowerCase().includes(forbidden.toLowerCase()), false, forbidden);
     }

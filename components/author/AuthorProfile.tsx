@@ -61,6 +61,7 @@ export default async function AuthorProfile({ authorKey }: { authorKey: PersonAu
               href={author.consultancyUrl}
               target="_blank"
               rel="noopener noreferrer"
+              data-placement="author"
               className="text-slate-300 underline decoration-white/20 underline-offset-2"
             >
               mihaidaniel.ro

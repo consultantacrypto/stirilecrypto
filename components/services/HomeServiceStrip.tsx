@@ -11,8 +11,8 @@ export default function HomeServiceStrip() {
       <h2 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white md:text-2xl">
         Serviciile noastre
       </h2>
-      <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2">
-        <article className={cardClass}>
+      <div className="mt-6 grid grid-cols-1">
+        <article className={`${cardClass} max-w-xl`}>
           <h3 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white">
             Analiză tehnică pe tokenul tău
           </h3>
@@ -21,18 +21,6 @@ export default function HomeServiceStrip() {
           </p>
           <Link href="/analiza-tehnica?src=home" className={buttonClass}>
             Comandă analiza
-          </Link>
-        </article>
-
-        <article className={cardClass}>
-          <h3 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white">
-            Verificare portofel crypto
-          </h3>
-          <p className="text-sm leading-relaxed text-slate-300">
-            Află înainte să trimiți bani dacă o adresă e legată de țepe, hack-uri sau fonduri furate.
-          </p>
-          <Link href="/verificare-portofel?src=home" className={buttonClass}>
-            Verifică o adresă
           </Link>
         </article>
       </div>

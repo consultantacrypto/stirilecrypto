@@ -13,9 +13,8 @@ export default function PremiumTaSection() {
         </p>
         <h3 className="mt-2 font-[var(--font-space)] text-lg font-bold text-white">{catalog.ta.name}</h3>
         <p className="mt-2 text-sm leading-relaxed text-slate-300">
-          Un activ, șapte grafice (1h, 4h, 12h, 1D, 3D, 1W, 1M) și secțiunea Risc token. {catalog.ta.majorPriceRon}{' '}
-          lei pentru o monedă mare, {catalog.ta.altcoinPriceRon} lei pentru un altcoin. Material educațional, fără
-          apel de tranzacționare.
+          Un activ, șapte grafice (1h, 4h, 12h, 1D, 3D, 1W, 1M) și secțiunea Risc token. De la{' '}
+          {catalog.ta.majorPriceRon} lei. Material educațional, fără apel de tranzacționare.
         </p>
         <Link
           href="/analiza-tehnica?src=dashboard"

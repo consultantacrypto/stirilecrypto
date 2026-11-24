@@ -19,6 +19,7 @@ export default function ArticleConsultBox() {
         href={CONSULT_URL}
         target="_blank"
         rel="noopener noreferrer"
+        data-placement="article"
         className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold text-black hover:bg-slate-100"
       >
         Programează o discuție

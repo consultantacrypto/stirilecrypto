@@ -10,6 +10,9 @@ describe('sitemap indexable URLs', () => {
     assert.equal(isIndexableSitemapUrl(`${SITE_URL}/cauta?q=bitcoin`), false);
     assert.equal(isIndexableSitemapUrl(`${SITE_URL}/cauta?query=ethereum&page=2`), false);
     assert.equal(isIndexableSitemapUrl(`${SITE_URL}/cauta?`), false);
+    assert.equal(isIndexableSitemapUrl(`${SITE_URL}/verificare-portofel`), false);
+    assert.equal(isIndexableSitemapUrl(`${SITE_URL}/verificare-portofel?src=nav`), false);
+    assert.equal(isIndexableSitemapUrl(`${SITE_URL}/verifica-adresa/plata/succes`), true);
 
     assert.equal(isIndexableSitemapUrl(SITE_URL), true);
     assert.equal(isIndexableSitemapUrl(`${SITE_URL}/stiri`), true);

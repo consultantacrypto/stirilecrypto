@@ -17,7 +17,7 @@ export default function AffiliateSection() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
         
         {/* BYBIT (Link extras: LUCKY7777) */}
-        <a href={withAffiliateTags('https://partner.bybit.eu/b/LUCKY7777', 'market-bybit')} target="_blank" rel="noopener noreferrer sponsored" className="group bg-[#17181e] border border-white/10 hover:border-[#f7a600] p-6 rounded-2xl transition-all hover:-translate-y-1">
+        <a href={withAffiliateTags('https://partner.bybit.eu/b/LUCKY7777', 'market-bybit')} target="_blank" rel="noopener noreferrer sponsored" data-placement="market-bybit" className="group bg-[#17181e] border border-white/10 hover:border-[#f7a600] p-6 rounded-2xl transition-all hover:-translate-y-1">
             <div className="flex items-center justify-between mb-4">
                 <span className="text-xl font-black text-white">BYBIT</span>
                 <span className="bg-[#f7a600]/20 text-[#f7a600] text-[10px] font-bold px-2 py-1 rounded">LINK AFILIAT</span>
@@ -29,7 +29,7 @@ export default function AffiliateSection() {
         </a>
 
         {/* BINANCE (Link extras: 35329648) */}
-        <a href={withAffiliateTags('https://www.binance.com/join?ref=35329648', 'market-binance')} target="_blank" rel="noopener noreferrer sponsored" className="group bg-[#17181e] border border-white/10 hover:border-[#FCD535] p-6 rounded-2xl transition-all hover:-translate-y-1">
+        <a href={withAffiliateTags('https://www.binance.com/join?ref=35329648', 'market-binance')} target="_blank" rel="noopener noreferrer sponsored" data-placement="market-binance" className="group bg-[#17181e] border border-white/10 hover:border-[#FCD535] p-6 rounded-2xl transition-all hover:-translate-y-1">
             <div className="flex items-center justify-between mb-4">
                 <span className="text-xl font-black text-white">BINANCE</span>
                 <span className="bg-[#FCD535]/20 text-[#FCD535] text-[10px] font-bold px-2 py-1 rounded">CEL MAI MARE</span>
@@ -41,7 +41,7 @@ export default function AffiliateSection() {
         </a>
 
         {/* OKX (Link extras: 77249876) */}
-        <a href={withAffiliateTags('https://www.okx.com/join/77249876', 'market-okx')} target="_blank" rel="noopener noreferrer sponsored" className="group bg-[#17181e] border border-white/10 hover:border-white p-6 rounded-2xl transition-all hover:-translate-y-1">
+        <a href={withAffiliateTags('https://www.okx.com/join/77249876', 'market-okx')} target="_blank" rel="noopener noreferrer sponsored" data-placement="market-okx" className="group bg-[#17181e] border border-white/10 hover:border-white p-6 rounded-2xl transition-all hover:-translate-y-1">
             <div className="flex items-center justify-between mb-4">
                 <span className="text-xl font-black text-white">OKX</span>
                 <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-1 rounded">WEB3</span>

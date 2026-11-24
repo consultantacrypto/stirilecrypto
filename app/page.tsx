@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ScrollProgress from '@/components/ScrollProgress';
 import NewsFeed from '@/components/NewsFeed';
-import MarketPulseSection from '@/components/MarketPulseSection';
+import HomeMarketTerminal from '@/components/HomeMarketTerminal';
 import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
 import HomeMarketBar from '@/components/HomeMarketBar';
@@ -41,7 +41,7 @@ export default function Home() {
         <NewsFeed />
         <div className="container mx-auto w-full max-w-6xl px-4 sm:px-6">
           <HomeServiceStrip />
-          <MarketPulseSection />
+          <HomeMarketTerminal />
         </div>
         <div className="container mx-auto mt-16 w-full max-w-6xl border-t border-white/10 px-4 pt-8 sm:px-6">
           <InterviewsSection />

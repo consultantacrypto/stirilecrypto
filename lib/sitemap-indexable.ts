@@ -2,11 +2,12 @@
  * Paths whose pages send `noindex`. They stay out of the sitemap, including
  * any query-string variant (`/cauta?q=bitcoin`).
  *
- * Scan of the routes this sitemap emits: `/cauta` is the only noindex URL.
+ * `/cauta` and `/verificare-portofel` send noindex. The wallet page stays
+ * reachable, including `/verifica-adresa/plata/*`, and stays out of the sitemap.
  * Other noindex pages (admin, payment and order result pages, the 404)
  * are not generated here.
  */
-const SITEMAP_NOINDEX_PATHS = new Set(['/cauta']);
+const SITEMAP_NOINDEX_PATHS = new Set(['/cauta', '/verificare-portofel']);
 
 function pathnameOf(url: string): string | null {
   try {
