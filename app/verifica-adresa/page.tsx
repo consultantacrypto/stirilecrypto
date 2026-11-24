@@ -5,6 +5,7 @@ import { checkerFormEmbedSrc } from '@/lib/products/placement';
 export const metadata: Metadata = {
   title: 'Verifică portofelul înainte să trimiți bani',
   description: 'Afli dacă adresa crypto e legată de țepe, hackuri sau fonduri furate.',
+  robots: { index: false, follow: true },
 };
 
 export const dynamic = 'force-dynamic';

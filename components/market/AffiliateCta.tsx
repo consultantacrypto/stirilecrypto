@@ -53,6 +53,7 @@ export default function AffiliateCta() {
               href={BYBIT_AFFILIATE_URL}
               target="_blank"
               rel="noopener noreferrer sponsored"
+              data-placement="cta-bybit"
               className="group inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-[#f7a600]/30 bg-[#f7a600]/10 px-5 py-3.5 text-sm font-bold text-white transition-all hover:border-[#f7a600]/60 hover:bg-[#f7a600]/20 hover:shadow-[0_0_24px_rgba(247,166,0,0.25)] hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f7a600]/50"
             >
               Tranzacționează pe Bybit
@@ -66,6 +67,7 @@ export default function AffiliateCta() {
               href={BINANCE_AFFILIATE_URL}
               target="_blank"
               rel="noopener noreferrer sponsored"
+              data-placement="cta-binance"
               className="group inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-[#FCD535]/25 bg-[#FCD535]/[0.08] px-5 py-3.5 text-sm font-bold text-white transition-all hover:border-[#FCD535]/50 hover:bg-[#FCD535]/15 hover:shadow-[0_0_24px_rgba(252,213,53,0.2)] hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FCD535]/40"
             >
               Tranzacționează pe Binance

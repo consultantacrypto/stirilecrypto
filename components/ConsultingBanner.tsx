@@ -58,6 +58,7 @@ Nu vorbim despre ce „ar putea” să se întâmple. Vorbim despre banii tăi �
             href={CONSULT_URL}
             target="_blank"
             rel="noopener noreferrer"
+            data-placement="homepage_banner"
             onClick={() =>
               trackEvent('mentorat_cta_click', {
                 page: typeof window !== 'undefined' ? window.location.pathname : '/',

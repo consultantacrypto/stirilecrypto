@@ -20,6 +20,7 @@ export default function PremiumSponsorBanner() {
             href="https://mihaidaniel.ro"
             target="_blank"
             rel="noopener noreferrer"
+            data-placement="sponsor"
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-slate-200 transition-colors duration-300 shrink-0"
           >
             Aplică pentru Mentorat

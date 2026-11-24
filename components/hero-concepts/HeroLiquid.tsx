@@ -41,6 +41,7 @@ export default function HeroLiquid() {
           </p>
           <a
             href={CONSULT_URL}
+            data-placement="hero"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-full sm:w-auto items-center justify-center bg-white text-black font-bold px-8 py-4 rounded-xl text-sm sm:text-base transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"

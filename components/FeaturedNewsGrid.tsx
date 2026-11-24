@@ -41,6 +41,7 @@ function ConsultingWidget() {
       </div>
       <a
         href="https://mihaidaniel.ro"
+        data-placement="featured"
         target="_blank"
         rel="noopener noreferrer"
         className="w-full text-center bg-white text-black font-bold py-3.5 rounded-xl text-sm transition-transform hover:scale-[1.02] block mt-auto"

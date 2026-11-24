@@ -58,6 +58,7 @@ export default function HeroHorology() {
                 </dl>
                 <a
                   href={CONSULT_URL}
+                  data-placement="hero"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full text-center border border-amber-500/60 bg-amber-500/10 text-amber-100 font-bold py-3.5 text-xs sm:text-sm uppercase tracking-wider hover:bg-amber-500/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"

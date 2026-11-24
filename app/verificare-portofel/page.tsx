@@ -14,6 +14,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
+  robots: { index: false, follow: true },
   alternates: withRssAlternate({ canonical: `${SITE_URL}/verificare-portofel` }),
   ...buildWebsiteShareMetadata({
     title: TITLE,

@@ -88,7 +88,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     })),
     { url: `${SITE_URL}/analiza-tehnica`, lastModified: sitemapDate(SITEMAP_LASTMOD.analizaTehnica), changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${SITE_URL}/verificare-portofel`, lastModified: sitemapDate(SITEMAP_LASTMOD.verificarePortofel), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/despre`, lastModified: sitemapDate(SITEMAP_LASTMOD.despre), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/intrebari-frecvente`, lastModified: sitemapDate(SITEMAP_LASTMOD.intrebari), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/contact`, lastModified: sitemapDate(SITEMAP_LASTMOD.contact), changeFrequency: 'monthly', priority: 0.6 },

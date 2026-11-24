@@ -7,6 +7,7 @@ import { SITE_URL } from "@/lib/json-ld";
 import { rssAlternateTypes } from "@/lib/rss-alternate";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import { Analytics } from "@vercel/analytics/next";
+import { deploymentEnv } from "@/lib/analytics";
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"],
@@ -95,26 +96,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const vercelEnv = deploymentEnv();
   return (
     <html lang="ro" className="scroll-smooth">
       <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased bg-[var(--background)] text-white`}>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-94JGNJHNBZ"
-          strategy="lazyOnload"
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__SC_VERCEL_ENV=${JSON.stringify(vercelEnv)};`,
+          }}
         />
-        <Script id="google-analytics" strategy="lazyOnload">
-          {`
-            (function () {
-              var host = window.location.hostname;
-              if (host === 'localhost' || host === '127.0.0.1') return;
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              window.gtag = gtag;
-              gtag('js', new Date());
-              gtag('config', 'G-94JGNJHNBZ');
-            })();
-          `}
-        </Script>
+        {vercelEnv === 'production' ? (
+          <>
+            <Script
+              src="https://www.googletagmanager.com/gtag/js?id=G-94JGNJHNBZ"
+              strategy="lazyOnload"
+            />
+            <Script id="google-analytics" strategy="lazyOnload">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                window.gtag = gtag;
+                gtag('js', new Date());
+                gtag('config', 'G-94JGNJHNBZ');
+              `}
+            </Script>
+          </>
+        ) : null}
         <AnalyticsTracker />
         <Analytics />
         {children}

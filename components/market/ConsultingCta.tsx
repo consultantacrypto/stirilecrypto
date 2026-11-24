@@ -37,6 +37,7 @@ export default function ConsultingCta() {
           href={CONSULT_HREF}
           target="_blank"
           rel="noopener noreferrer"
+          data-placement="market-consult"
           className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3.5 text-sm font-bold text-black shadow-lg shadow-amber-900/30 transition-all hover:from-amber-400 hover:to-orange-400 hover:shadow-amber-500/25 hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/60 md:min-w-[260px]"
         >
           Programează o sesiune 1-la-1

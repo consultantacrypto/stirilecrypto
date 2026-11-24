@@ -2,13 +2,15 @@
 
 import { Crown, ArrowRight, FileText, Zap, Star } from 'lucide-react';
 import Image from 'next/image';
+import { trackEvent } from '@/lib/analytics';
 
 const BOOKING_URL = 'https://www.mihaidaniel.ro/';
 
 export default function Consultancy() {
   const handleOpenBooking = () => {
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'begin_checkout', {
+    trackEvent('consultancy_click', { link: BOOKING_URL, placement: 'consultancy' });
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'begin_checkout', {
         currency: 'USD',
         value: 250,
         items: [{ item_name: 'Consultanta VIP 1 la 1', item_id: 'consultancy_vip' }],

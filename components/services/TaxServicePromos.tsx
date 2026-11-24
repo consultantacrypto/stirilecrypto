@@ -18,8 +18,8 @@ export default function TaxServicePromos({
 
   return (
     <section aria-label="Mai departe" className="mt-10">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <article className={cardClass}>
+      <div className="grid grid-cols-1">
+        <article className={`${cardClass} max-w-xl`}>
           <h2 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white">
             Vrei să știi ce faci mai departe cu crypto?
           </h2>
@@ -28,18 +28,6 @@ export default function TaxServicePromos({
           </p>
           <Link href="/analiza-tehnica?src=taxe" className={buttonClass}>
             Comandă analiza
-          </Link>
-        </article>
-
-        <article className={cardClass}>
-          <h2 className="font-[var(--font-space)] text-xl font-bold tracking-tight text-white">
-            Înainte să muți crypto, verifică portofelul
-          </h2>
-          <p className="text-sm leading-relaxed text-slate-300">
-            Află înainte să trimiți bani dacă o adresă e legată de țepe, hack-uri sau fonduri furate.
-          </p>
-          <Link href="/verificare-portofel?src=taxe" className={buttonClass}>
-            Verifică o adresă
           </Link>
         </article>
       </div>
@@ -53,6 +41,7 @@ export default function TaxServicePromos({
             href={consultancyUrl}
             target="_blank"
             rel="noopener noreferrer"
+            data-placement="taxe"
             className="text-slate-200 underline decoration-white/20 underline-offset-2"
           >
             mihaidaniel.ro

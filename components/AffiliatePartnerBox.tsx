@@ -21,6 +21,7 @@ export default function AffiliatePartnerBox() {
           href={BYBIT_URL}
           target="_blank"
           rel="noopener noreferrer sponsored"
+          data-placement="article-bybit"
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-bold text-white hover:bg-blue-500"
         >
           Deschide Bybit
@@ -30,6 +31,7 @@ export default function AffiliatePartnerBox() {
           href={REDOTPAY_URL}
           target="_blank"
           rel="noopener noreferrer sponsored"
+          data-placement="article-redotpay"
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-5 text-sm font-bold text-white hover:bg-white/10"
         >
           RedotPay, tot link afiliat

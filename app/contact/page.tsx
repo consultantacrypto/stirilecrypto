@@ -53,6 +53,7 @@ export default function ContactPage() {
                 href="https://www.mihaidaniel.ro/"
                 target="_blank"
                 rel="noopener noreferrer"
+                data-placement="contact"
                 className="mt-2 block text-sm text-slate-400 underline decoration-white/20 underline-offset-2 hover:text-white"
               >
                 mihaidaniel.ro

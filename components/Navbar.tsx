@@ -17,13 +17,10 @@ import { MAJOR_PRICE_RON } from '@/lib/products/tiers';
 type NavItem = { href: string; label: string };
 type ToneState = MarketTone | 'unknown';
 
-const WALLET_LINK: NavItem = { href: '/verificare-portofel?src=nav', label: 'Verificare portofel' };
-
 const MAIN_LINKS: NavItem[] = [
   { href: '/airdrop-alert', label: 'Airdrop Alert' },
   { href: '/market', label: 'Piața azi' },
   { href: '/market-pulse', label: 'Pulsul Bitcoin' },
-  WALLET_LINK,
   { href: '/taxe', label: 'Taxe crypto 2026' },
 ];
 
@@ -41,7 +38,6 @@ const ANALYSIS_HREF = '/analiza-tehnica?src=nav';
 
 function accentFor(href: string, tone: ToneState): { background: string; foreground: string } | null {
   const path = pathOf(href);
-  if (path === '/verificare-portofel') return NAV_ACCENT.wallet;
   if (path === '/market-pulse') return NAV_ACCENT.pulse;
   if (path === '/market' && tone !== 'unknown') return NAV_ACCENT[tone];
   return null;

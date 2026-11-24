@@ -48,6 +48,7 @@ export default function HeroTicker() {
           </p>
           <a
             href={CONSULT_URL}
+            data-placement="hero"
             target="_blank"
             rel="noopener noreferrer"
             className="block w-full text-center bg-green-500 text-black font-bold py-4 rounded-sm text-sm sm:text-base uppercase tracking-wider hover:bg-green-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400"

@@ -106,13 +106,6 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
     ],
   },
   {
-    question: "Cum verific un portofel crypto înainte să trimit bani?",
-    answer: "Înainte să trimiți criptomonede, verifică adresa caracter cu caracter și rețeaua (blockchain-ul) pe care trimiți, pentru că o tranzacție trimisă pe blockchain nu poate fi anulată. Pe pagina Verificare portofel (stirilecrypto.ro/verificare-portofel) afli dacă o adresă crypto e legată de țepe, hackuri sau fonduri furate. Adresa crypto este codul public al portofelului: raportul nu mută banii și nu cere cheia privată sau cele 12 cuvinte (seed). Plata pentru raport se face la QuickExit LLC, nu pe Știrile Crypto.",
-    links: [
-      { phrase: "Verificare portofel", href: "/verificare-portofel" },
-    ],
-  },
-  {
     question: "Cum contactez redacția Știrile Crypto?",
     answer: "Redacția Știrile Crypto poate fi contactată la adresa contact@stirilecrypto.ro. Pentru semnalarea unei erori într-un articol, vezi pagina Corecturi; pentru colaborări comerciale, pagina Publicitate.",
     links: [

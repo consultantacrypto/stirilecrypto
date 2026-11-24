@@ -71,12 +71,12 @@ export default function IncepeAiciPage() {
           <li className="rounded-3xl border border-white/5 bg-[#1c1c1e] p-5 sm:p-6">
             <StepHead n="4" title="Cum eviți țepele" />
             <p className="mt-3 text-sm leading-relaxed text-slate-300">
-              Înainte să trimiți crypto, verifici dacă adresa apare lângă țepe, hack-uri sau fonduri furate.
-              Același lucru dacă tocmai ai primit o adresă pe care nu o cunoști. Verificarea citește istoricul
-              public și nu îți cere fraza secretă.
+              Înainte să trimiți crypto, compară adresa caracter cu caracter și verifică rețeaua. Nu trimite
+              nimănui fraza de 12 sau 24 de cuvinte. Ghidurile despre phishing, hack-uri și portofele sunt în
+              hub-ul de securitate.
             </p>
-            <Link href="/verificare-portofel?src=incepe-aici" className={linkClass}>
-              Verificare portofel
+            <Link href="/hub/securitate" className={linkClass}>
+              Hub securitate
             </Link>
           </li>
 

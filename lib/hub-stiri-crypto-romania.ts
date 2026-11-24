@@ -81,11 +81,6 @@ export const HUB_ENTRIES: readonly HubEntry[] = [
     text: 'Pagina Taxe crypto 2026 are calculatorul și ghidul despre impozitarea câștigurilor din crypto în România.',
   },
   {
-    href: '/verificare-portofel',
-    title: 'Verificare portofel',
-    text: 'Pagina Verificare portofel spune dacă o adresă crypto e legată de țepe, hackuri sau fonduri furate.',
-  },
-  {
     href: '/incepe-aici',
     title: 'Începe aici',
     text: 'Începe aici adună pașii de bază pentru cine citește crypto în română.',

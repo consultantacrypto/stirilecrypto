@@ -125,11 +125,6 @@ export default function Footer() {
                   Analiză tehnică, de la 79 lei
                 </Link>
               </li>
-              <li>
-                <Link href="/verificare-portofel?src=footer" className="hover:text-white transition-colors">
-                  Verificare portofel crypto
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -188,6 +183,7 @@ export default function Footer() {
                   href="https://www.mihaidaniel.ro/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-placement="footer"
                   className="hover:text-white transition-colors"
                 >
                   Consultanță
