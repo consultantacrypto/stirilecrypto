@@ -39,10 +39,11 @@ export async function generateMetadata({
   const title =
     page >= 2
       ? `Știri crypto explicate — pagina ${page}`
-      : STIRI_H1;
+      : 'Știri crypto și criptomonede';
 
   const canonical = stiriListCanonical(page, category);
-  const description = STIRI_DESCRIPTION;
+  const description =
+    'Știri crypto și criptomonede, plus noutăți blockchain, traduse și explicate în română de Știrile Crypto.';
 
   return {
     title,
@@ -154,7 +155,7 @@ export default async function NewsPage({
                     </div>
 
                     <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white leading-[1.1]">
-                        Știri care îți <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">ating banii</span>
+                        Știri crypto și criptomonede
                     </h1>
 
                     <div className="h-px w-24 bg-blue-500/30"></div>
