@@ -3,7 +3,11 @@
 import { useState } from 'react';
 import { Loader2, Mail, CheckCircle2, AlertCircle } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
-import { NEWSLETTER_WAITLIST_VISIBLE } from '@/lib/newsletter';
+import {
+  NEWSLETTER_FORM_DESCRIPTION,
+  NEWSLETTER_SIGNUP_SUCCESS,
+  NEWSLETTER_WAITLIST_VISIBLE,
+} from '@/lib/newsletter';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -12,8 +16,7 @@ type EmailCaptureBoxProps = {
   location?: string;
 };
 
-const WAITLIST_SUCCESS = 'Înscrierea pe lista de așteptare a fost înregistrată.';
-const WAITLIST_DUPLICATE = 'Această adresă este deja pe lista de așteptare.';
+const DUPLICATE = 'Această adresă primește deja emailul de dimineață.';
 
 export default function EmailCaptureBox({
   id,
@@ -50,12 +53,12 @@ export default function EmailCaptureBox({
 
       if (data.alreadySubscribed) {
         setStatus('success');
-        setMessage(data.message ?? WAITLIST_DUPLICATE);
+        setMessage(data.message ?? DUPLICATE);
         return;
       }
 
       setStatus('success');
-      setMessage(data.message ?? WAITLIST_SUCCESS);
+      setMessage(data.message ?? NEWSLETTER_SIGNUP_SUCCESS);
       trackEvent('newsletter_subscribe', {
         location,
         page: window.location.pathname,
@@ -74,7 +77,7 @@ export default function EmailCaptureBox({
     <section
       id={id}
       className="my-10 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 scroll-mt-24"
-      aria-label="Lista de așteptare"
+      aria-label="Știrile Crypto de dimineață"
     >
       <div className="flex items-start gap-3 mb-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/15 border border-blue-500/25">
@@ -82,11 +85,10 @@ export default function EmailCaptureBox({
         </div>
         <div>
           <h2 className="text-xl md:text-2xl font-bold text-white font-[var(--font-space)] tracking-tight">
-            Lista de așteptare
+            Știrile Crypto de dimineață
           </h2>
           <p className="mt-2 text-sm md:text-base text-gray-400 leading-relaxed font-[var(--font-inter)]">
-            Newsletterul nu este încă activ. Poți lăsa emailul pentru lista de așteptare; nu
-            trimitem mesaje în acest moment.
+            {NEWSLETTER_FORM_DESCRIPTION}
           </p>
         </div>
       </div>
@@ -131,7 +133,7 @@ export default function EmailCaptureBox({
                   Se înregistrează...
                 </>
               ) : (
-                'Înscrie-te pe listă'
+                'Abonează-te'
               )}
             </button>
           </div>

@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { normalizeEmail } from '@/lib/newsletter/email';
+import { NEWSLETTER_SIGNUP_SUCCESS } from '@/lib/newsletter';
 import { registerSubscriber } from '@/lib/newsletter/signup';
 import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service';
 
-const SIGNUP_SUCCESS = 'Ești înscris la Știrile Crypto de dimineață.';
 const SIGNUP_DUPLICATE = 'Această adresă primește deja emailul de dimineață.';
 
 export async function POST(request: Request) {
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: SIGNUP_SUCCESS,
+      message: NEWSLETTER_SIGNUP_SUCCESS,
     });
   } catch (err) {
     console.error('[subscribe]', err instanceof Error ? err.name : 'unavailable');

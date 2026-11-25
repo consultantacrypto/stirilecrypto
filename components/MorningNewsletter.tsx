@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { AlertCircle, CheckCircle2, Loader2, Mail } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
+import { NEWSLETTER_SIGNUP_SUCCESS } from '@/lib/newsletter';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
-const SUCCESS = 'Ești înscris la Știrile Crypto de dimineață.';
 const DUPLICATE = 'Această adresă primește deja emailul de dimineață.';
 
 export default function MorningNewsletter({
@@ -47,7 +47,7 @@ export default function MorningNewsletter({
       }
 
       setStatus('success');
-      setMessage(data.alreadySubscribed ? data.message ?? DUPLICATE : data.message ?? SUCCESS);
+      setMessage(data.alreadySubscribed ? data.message ?? DUPLICATE : data.message ?? NEWSLETTER_SIGNUP_SUCCESS);
       if (!data.alreadySubscribed) {
         trackEvent('newsletter_subscribe', {
           location,
