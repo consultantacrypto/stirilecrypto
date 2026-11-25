@@ -1,9 +1,12 @@
--- Run in Supabase SQL Editor: newsletter / lead capture table
+-- Run in Supabase SQL Editor: newsletter / lead capture table.
+-- Existing production databases already have this table. Add unsubscribe
+-- support with supabase/abonati-unsubscribe.sql instead of re-running this file.
 
 create table if not exists public.abonati (
   id uuid primary key default gen_random_uuid(),
   email text not null unique,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  unsubscribed_at timestamptz
 );
 
 create index if not exists abonati_email_idx on public.abonati (email);

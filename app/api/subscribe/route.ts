@@ -1,17 +1,9 @@
 import { NextResponse } from 'next/server';
+import { normalizeEmail } from '@/lib/newsletter/email';
+import { NEWSLETTER_SIGNUP_DUPLICATE, NEWSLETTER_SIGNUP_SUCCESS } from '@/lib/newsletter';
+import { registerSubscriber } from '@/lib/newsletter/signup';
 import { createClient } from '@/lib/supabase/server';
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const SIGNUP_SUCCESS = 'Ești înscris la Știrile Crypto de dimineață.';
-const SIGNUP_DUPLICATE = 'Această adresă primește deja emailul de dimineață.';
-
-function normalizeEmail(value: unknown): string | null {
-  if (typeof value !== 'string') return null;
-  const email = value.trim().toLowerCase();
-  if (!email || !EMAIL_REGEX.test(email)) return null;
-  return email;
-}
+import { createServiceClient } from '@/lib/supabase/service';
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -36,31 +28,74 @@ export async function POST(request: Request) {
 
   try {
     const supabase = await createClient();
+    const outcome = await registerSubscriber(email, {
+      async insert(value) {
+        const { error } = await supabase.from('abonati').insert({ email: value });
+        if (!error) return { errorCode: null };
+        return { errorCode: error.code || 'unknown' };
+      },
+      async findByEmail(value) {
+        try {
+          const service = createServiceClient();
+          const { data, error } = await service
+            .from('abonati')
+            .select('unsubscribed_at')
+            .eq('email', value)
+            .maybeSingle();
+          if (error || !data) return { ok: false };
+          const unsubscribedAt = (data as { unsubscribed_at?: unknown }).unsubscribed_at;
+          return {
+            ok: true,
+            unsubscribedAt: typeof unsubscribedAt === 'string' ? unsubscribedAt : null,
+          };
+        } catch {
+          return { ok: false };
+        }
+      },
+      async clearUnsubscribed(value) {
+        try {
+          const service = createServiceClient();
+          const { error } = await service
+            .from('abonati')
+            .update({ unsubscribed_at: null })
+            .eq('email', value)
+            .not('unsubscribed_at', 'is', null);
+          return { ok: !error };
+        } catch {
+          return { ok: false };
+        }
+      },
+    });
 
-    const { error } = await supabase.from('abonati').insert({ email });
+    if (outcome === 'invalid') {
+      return NextResponse.json(
+        { error: 'Introdu o adresă de email validă.' },
+        { status: 400 },
+      );
+    }
 
-    if (error) {
-      if (error.code === '23505') {
-        return NextResponse.json({
-          success: true,
-          message: SIGNUP_DUPLICATE,
-          alreadySubscribed: true,
-        });
-      }
-
-      console.error('[subscribe]', error.message);
+    if (outcome === 'error') {
+      console.error('[subscribe] save failed');
       return NextResponse.json(
         { error: 'Nu am putut înregistra înscrierea. Încearcă din nou.' },
         { status: 500 },
       );
     }
 
+    if (outcome === 'duplicate') {
+      return NextResponse.json({
+        success: true,
+        message: NEWSLETTER_SIGNUP_DUPLICATE,
+        alreadySubscribed: true,
+      });
+    }
+
     return NextResponse.json({
       success: true,
-      message: SIGNUP_SUCCESS,
+      message: NEWSLETTER_SIGNUP_SUCCESS,
     });
   } catch (err) {
-    console.error('[subscribe]', err);
+    console.error('[subscribe]', err instanceof Error ? err.name : 'unavailable');
     return NextResponse.json(
       { error: 'Înscrierea nu este disponibilă momentan.' },
       { status: 503 },

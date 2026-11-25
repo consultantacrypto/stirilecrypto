@@ -18,6 +18,7 @@ const PRIVATE_PATHS = [
   '/login',
   '/editeaza',
   '/articol-nou',
+  '/newsletter/',
 ] as const;
 
 export default function robots(): MetadataRoute.Robots {

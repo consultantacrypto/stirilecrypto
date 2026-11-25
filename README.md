@@ -18,6 +18,17 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## Newsletter unsubscribe
+
+Subscribers are rows in `public.abonati`. Each unsubscribe link is an HMAC of that row's id (`NEWSLETTER_UNSUBSCRIBE_SECRET`); the email is not in the link. Generate one with:
+
+```bash
+export NEWSLETTER_UNSUBSCRIBE_SECRET='...'
+npx tsx scripts/unsubscribe-link.ts --id <subscriber-uuid>
+```
+
+`--email` and `--all` only SELECT. They do not write. Confirmation is a POST on `/newsletter/dezabonare`; opening the link does not unsubscribe. Apply `supabase/abonati-unsubscribe.sql` by hand and set `NEWSLETTER_UNSUBSCRIBE_SECRET` before the flow can record anything. Details: [docs/newsletter-unsubscribe.md](docs/newsletter-unsubscribe.md).
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
