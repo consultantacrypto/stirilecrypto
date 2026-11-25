@@ -49,11 +49,14 @@ npx tsx scripts/unsubscribe-link.ts --email reader@example.com
 ```
 
 ```bash
-# One SELECT of id and email for every row, then a link per subscriber. No write.
+# One SELECT. Skips test@example.com (EXCLUDED_NEWSLETTER_EMAILS in lib/newsletter/link-cli.ts)
+# and rows with unsubscribed_at set, when that column exists. No write.
+# Optional extra addresses, comma-separated, local to this command:
+#   NEWSLETTER_EXCLUDED_EMAILS=other@example.com
 npx tsx scripts/unsubscribe-link.ts --all
 ```
 
-`--origin` defaults to `https://www.stirilecrypto.ro`. `http://localhost:3000` is allowed for local checks. The command prints `page_url` for the email body and the two headers below. Do not commit the output: `--all` includes email addresses.
+`--all` prints a count of the links, the test addresses it skipped, and the already-unsubscribed rows it skipped. If `unsubscribed_at` is not on the table yet, it says so and does not guess. `--origin` defaults to `https://www.stirilecrypto.ro`. `http://localhost:3000` is allowed for local checks. The command prints `page_url` for the email body and the two headers below, including a column for each header on `--all`. Do not commit the output: `--all` includes email addresses.
 
 ```text
 List-Unsubscribe: <https://www.stirilecrypto.ro/api/newsletter/unsubscribe?token=...>

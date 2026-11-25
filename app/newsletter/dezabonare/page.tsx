@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { CheckCircle2, Mail } from 'lucide-react';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
@@ -27,10 +26,20 @@ function first(value: string | string[] | undefined): string | null {
   return null;
 }
 
+const HOME_URL = 'https://www.stirilecrypto.ro';
+
 function ContactLine() {
   return (
     <a href={`mailto:${CONTACT_EMAIL}`} className="text-blue-400 underline hover:text-blue-300">
       {CONTACT_EMAIL}
+    </a>
+  );
+}
+
+function HomeLink() {
+  return (
+    <a href={HOME_URL} className="text-blue-400 underline hover:text-blue-300">
+      Înapoi la Știrile Crypto
     </a>
   );
 }
@@ -75,11 +84,13 @@ function Card({ state }: { state: UnsubscribePageState }) {
           Gata
         </p>
         <h1 className="mt-3 font-[var(--font-space)] text-3xl font-black tracking-tight md:text-4xl">
-          Dezabonarea a fost înregistrată
+          Te-ai dezabonat
         </h1>
         <p role="status" className="mt-4 text-base leading-relaxed text-gray-400">
-          Nu vei mai primi newsletterul Știrile Crypto de dimineață. Te poți înscrie din nou
-          oricând, de pe site.
+          Te-ai dezabonat. Nu vei mai primi newsletterul Știrile Crypto.
+        </p>
+        <p className="mt-6 text-sm">
+          <HomeLink />
         </p>
       </>
     );
@@ -94,6 +105,9 @@ function Card({ state }: { state: UnsubscribePageState }) {
         </h1>
         <p role="status" className="mt-4 text-base leading-relaxed text-gray-400">
           Această adresă nu mai primește newsletterul. Nu trebuie să confirmi din nou.
+        </p>
+        <p className="mt-6 text-sm">
+          <HomeLink />
         </p>
       </>
     );
@@ -137,6 +151,9 @@ function Card({ state }: { state: UnsubscribePageState }) {
         Linkul de dezabonare este invalid. Folosește linkul din ultimul email sau scrie-ne la{' '}
         <ContactLine />.
       </p>
+      <p className="mt-6 text-sm">
+        <HomeLink />
+      </p>
     </>
   );
 }
@@ -169,11 +186,11 @@ export default async function DezabonarePage({
             <Mail size={18} className="text-blue-400" aria-hidden />
           </div>
           <Card state={state} />
-          <p className="mt-8 text-sm text-gray-500">
-            <Link href="/" className="text-blue-400 underline hover:text-blue-300">
-              Înapoi la Știrile Crypto
-            </Link>
-          </p>
+          {state.kind === 'confirm' || state.kind === 'expired' || state.kind === 'unavailable' ? (
+            <p className="mt-8 text-sm">
+              <HomeLink />
+            </p>
+          ) : null}
         </section>
       </main>
       <Footer />

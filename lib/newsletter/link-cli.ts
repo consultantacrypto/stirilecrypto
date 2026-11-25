@@ -1,5 +1,57 @@
 import { normalizeEmail } from './email';
-import type { SubscriberDirectory } from './store';
+import type { SubscriberDirectory, SubscriberList } from './store';
+
+/** Addresses left out of `--all`. `test@example.com` was removed from the send segment. */
+export const EXCLUDED_NEWSLETTER_EMAILS = ['test@example.com'] as const;
+
+/**
+ * Extra addresses from `NEWSLETTER_EXCLUDED_EMAILS` (comma-separated) are added
+ * to {@link EXCLUDED_NEWSLETTER_EMAILS}. This is a local script setting, not a server secret.
+ */
+export function excludedNewsletterEmails(env: NodeJS.ProcessEnv = process.env): string[] {
+  const extra = (env.NEWSLETTER_EXCLUDED_EMAILS ?? '')
+    .split(/[,\s]+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return [...EXCLUDED_NEWSLETTER_EMAILS, ...extra];
+}
+
+export type UnsubscribeAudience = {
+  included: Array<{ id: string; email: string }>;
+  excludedTest: number;
+  excludedUnsubscribed: number;
+};
+
+/** Drops the test addresses and, when the column exists, rows with `unsubscribed_at` set. */
+export function selectUnsubscribeAudience(
+  list: SubscriberList,
+  excludedEmails: readonly string[],
+): UnsubscribeAudience {
+  const excluded = new Set(
+    excludedEmails
+      .map((email) => normalizeEmail(email))
+      .filter((email): email is string => email !== null),
+  );
+  const included: Array<{ id: string; email: string }> = [];
+  let excludedTest = 0;
+  let excludedUnsubscribed = 0;
+
+  for (const row of list.rows) {
+    const email = normalizeEmail(row.email);
+    if (!email) continue;
+    if (excluded.has(email)) {
+      excludedTest += 1;
+      continue;
+    }
+    if (list.unsubscribedColumn && row.unsubscribedAt) {
+      excludedUnsubscribed += 1;
+      continue;
+    }
+    included.push({ id: row.id, email });
+  }
+
+  return { included, excludedTest, excludedUnsubscribed };
+}
 import {
   DEFAULT_UNSUBSCRIBE_ORIGIN,
   readUnsubscribeSecret,
@@ -24,7 +76,8 @@ No database:
 One SELECT by email (no write). Needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY:
   ${UNSUBSCRIBE_SECRET_ENV}=... npx tsx scripts/unsubscribe-link.ts --email reader@example.com
 
-One SELECT of id and email for every row (no write):
+One SELECT of id, email, and unsubscribed_at when that column exists (no write).
+Skips ${EXCLUDED_NEWSLETTER_EMAILS.join(', ')} and rows that are already unsubscribed:
   ${UNSUBSCRIBE_SECRET_ENV}=... npx tsx scripts/unsubscribe-link.ts --all
 
 Options:
@@ -163,13 +216,21 @@ export async function runUnsubscribeLinkCli(
       return 0;
     }
 
-    const rows = await options.lookup.list();
-    options.stdout('email\tpage_url\tone_click_url');
-    for (const row of rows) {
+    const listed = await options.lookup.list();
+    const audience = selectUnsubscribeAudience(listed, excludedNewsletterEmails(options.env));
+    options.stdout('email\tpage_url\tone_click_url\tList-Unsubscribe\tList-Unsubscribe-Post');
+    for (const row of audience.included) {
       const links = unsubscribeUrls({ id: row.id, secret, origin: parsed.origin });
-      options.stdout(`${cell(row.email)}\t${links.pageUrl}\t${links.oneClickUrl}`);
+      options.stdout(
+        `${cell(row.email)}\t${links.pageUrl}\t${links.oneClickUrl}\t${links.listUnsubscribeHeader}\t${links.listUnsubscribePostHeader}`,
+      );
     }
-    options.stderr(`Listed ${rows.length} subscriber link(s). Read only; nothing was written.`);
+    const columnNote = listed.unsubscribedColumn
+      ? `Excluded ${audience.excludedUnsubscribed} already-unsubscribed row(s).`
+      : 'unsubscribed_at is not on the table yet, so already-unsubscribed rows were not filtered.';
+    options.stderr(
+      `Listed ${audience.included.length} subscriber link(s). Excluded ${audience.excludedTest} test address(es). ${columnNote} Read only; nothing was written.`,
+    );
     return 0;
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Could not build the unsubscribe link.';

@@ -52,10 +52,40 @@ export function createUnsubscribeStore(client: SupabaseClient) {
   };
 }
 
+export type DirectorySubscriber = {
+  id: string;
+  email: string;
+  /** Null when the person is still subscribed, or when the column is not available. */
+  unsubscribedAt: string | null;
+};
+
+export type SubscriberList = {
+  rows: DirectorySubscriber[];
+  /** False when `unsubscribed_at` is not on the table yet. Those rows are not treated as unsubscribed. */
+  unsubscribedColumn: boolean;
+};
+
 export type SubscriberDirectory = {
   findIdByEmail(email: string): Promise<{ id: string } | null>;
-  list(): Promise<Array<{ id: string; email: string }>>;
+  list(): Promise<SubscriberList>;
 };
+
+function isMissingUnsubscribedColumn(error: { code?: string; message?: string } | null): boolean {
+  if (!error) return false;
+  if (error.code === '42703' || error.code === 'PGRST204') return true;
+  return /unsubscribed_at/i.test(error.message ?? '');
+}
+
+function readDirectoryRows(data: unknown, withStatus: boolean): DirectorySubscriber[] {
+  const rows = Array.isArray(data) ? data : [];
+  return rows.flatMap((row) => {
+    const record = row as { id?: unknown; email?: unknown; unsubscribed_at?: unknown };
+    if (typeof record.id !== 'string' || typeof record.email !== 'string') return [];
+    const unsubscribedAt =
+      withStatus && typeof record.unsubscribed_at === 'string' ? record.unsubscribed_at : null;
+    return [{ id: record.id, email: record.email, unsubscribedAt }];
+  });
+}
 
 /**
  * Read-only directory for the link script. There is no insert, update, or delete.
@@ -77,19 +107,26 @@ export function createSubscriberDirectory(client: SupabaseClient): SubscriberDir
     },
 
     async list() {
-      const { data, error } = await client
+      const listed = await client
         .from('abonati')
-        .select('id, email')
+        .select('id, email, unsubscribed_at')
         .order('created_at', { ascending: true });
-      if (error) {
+
+      if (listed.error && isMissingUnsubscribedColumn(listed.error)) {
+        const fallback = await client
+          .from('abonati')
+          .select('id, email')
+          .order('created_at', { ascending: true });
+        if (fallback.error) {
+          throw new Error('Could not list subscribers. If this is a database error, no row was changed.');
+        }
+        return { rows: readDirectoryRows(fallback.data, false), unsubscribedColumn: false };
+      }
+
+      if (listed.error) {
         throw new Error('Could not list subscribers. If this is a database error, no row was changed.');
       }
-      const rows = Array.isArray(data) ? data : [];
-      return rows.flatMap((row) => {
-        const record = row as { id?: unknown; email?: unknown };
-        if (typeof record.id !== 'string' || typeof record.email !== 'string') return [];
-        return [{ id: record.id, email: record.email }];
-      });
+      return { rows: readDirectoryRows(listed.data, true), unsubscribedColumn: true };
     },
   };
 }

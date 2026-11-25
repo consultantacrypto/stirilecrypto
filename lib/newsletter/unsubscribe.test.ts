@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { runUnsubscribeLinkCli } from './link-cli';
-import type { SubscriberDirectory } from './store';
+import { runUnsubscribeLinkCli, selectUnsubscribeAudience } from './link-cli';
+import { createSubscriberDirectory, type SubscriberDirectory } from './store';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import {
   createUnsubscribeToken,
   unsubscribeUrls,
@@ -267,6 +268,9 @@ describe('unsubscribe page', () => {
     assert.equal(page.includes('method="post"'), true);
     assert.equal(page.includes('name="confirm"'), true);
     assert.equal(page.includes('Doar deschiderea acestui link nu te dezabonează.'), true);
+    assert.equal(page.includes('Te-ai dezabonat. Nu vei mai primi newsletterul Știrile Crypto.'), true);
+    assert.equal(page.includes("const HOME_URL = 'https://www.stirilecrypto.ro'"), true);
+    assert.equal(page.includes('<HomeLink />'), true);
 
     assert.equal(route.includes('export function GET()'), true);
     assert.equal(route.includes('methodNotAllowed'), true);
@@ -360,7 +364,7 @@ describe('unsubscribe link command', () => {
       },
       async list() {
         reads += 1;
-        return [];
+        return { rows: [], unsubscribedColumn: true };
       },
     };
     const code = await runUnsubscribeLinkCli(['--id', ID], {
@@ -372,6 +376,8 @@ describe('unsubscribe link command', () => {
     assert.equal(code, 0);
     assert.equal(reads, 0);
     assert.equal(lines[0].startsWith('page_url\thttps://www.stirilecrypto.ro/newsletter/dezabonare?token='), true);
+    assert.match(lines.join('\n'), /List-Unsubscribe\t</);
+    assert.match(lines.join('\n'), /List-Unsubscribe-Post\tList-Unsubscribe=One-Click/);
     assert.equal(lines.join('\n').includes(EMAIL), false);
     assert.equal(lines.join('\n').includes(SECRET), false);
   });
@@ -407,5 +413,108 @@ describe('unsubscribe link command', () => {
     });
     assert.equal(missing, 1);
     assert.match(errors.at(-1) ?? '', /no read-only directory/i);
+  });
+
+  it('omits the test address and already-unsubscribed rows, and keeps the one-click headers', async () => {
+    const lines: string[] = [];
+    const errors: string[] = [];
+    const gone = '44444444-4444-4444-8444-444444444444';
+    const code = await runUnsubscribeLinkCli(['--all'], {
+      env,
+      lookup: {
+        async findIdByEmail() {
+          throw new Error('find should not run');
+        },
+        async list() {
+          return {
+            unsubscribedColumn: true,
+            rows: [
+              { id: ID, email: EMAIL, unsubscribedAt: null },
+              { id: gone, email: 'Test@Example.com', unsubscribedAt: null },
+              { id: OTHER_ID, email: 'gone@example.com', unsubscribedAt: '2026-11-01T00:00:00.000Z' },
+            ],
+          };
+        },
+      },
+      stdout: (line) => lines.push(line),
+      stderr: (line) => errors.push(line),
+    });
+    assert.equal(code, 0);
+    assert.equal(lines[0], 'email\tpage_url\tone_click_url\tList-Unsubscribe\tList-Unsubscribe-Post');
+    assert.equal(lines.length, 2);
+    assert.match(lines[1], new RegExp(`^${EMAIL}\\t`));
+    assert.match(lines[1], /List-Unsubscribe=One-Click/);
+    assert.match(lines[1], /<https:\/\/www\.stirilecrypto\.ro\/api\/newsletter\/unsubscribe\?token=/);
+    assert.equal(lines.join('\n').includes('test@example.com'), false);
+    assert.equal(lines.join('\n').includes('gone@example.com'), false);
+    assert.match(errors[0], /Listed 1 subscriber link\(s\)/);
+    assert.match(errors[0], /Excluded 1 test address\(es\)/);
+    assert.match(errors[0], /Excluded 1 already-unsubscribed row\(s\)/);
+    assert.match(errors[0], /Read only/);
+  });
+});
+
+describe('subscriber directory', () => {
+  function listingClient(responses: Array<{ data: unknown; error: { code?: string; message?: string } | null }>) {
+    const selects: string[] = [];
+    const client = {
+      from(table: string) {
+        assert.equal(table, 'abonati');
+        return {
+          select(columns: string) {
+            return {
+              order() {
+                const response = responses[selects.length];
+                selects.push(columns);
+                return Promise.resolve(response);
+              },
+              eq() {
+                return this;
+              },
+              maybeSingle() {
+                return Promise.resolve(responses[0]);
+              },
+            };
+          },
+        };
+      },
+    };
+    return { client: client as unknown as SupabaseClient, selects };
+  }
+
+  it('reads unsubscribed_at when the column exists and does not write', async () => {
+    const { client, selects } = listingClient([
+      {
+        data: [
+          { id: ID, email: EMAIL, unsubscribed_at: null },
+          { id: OTHER_ID, email: 'gone@example.com', unsubscribed_at: '2026-11-01T00:00:00.000Z' },
+        ],
+        error: null,
+      },
+    ]);
+    const list = await createSubscriberDirectory(client).list();
+    assert.deepEqual(selects, ['id, email, unsubscribed_at']);
+    assert.equal(list.unsubscribedColumn, true);
+    assert.equal(list.rows[1].unsubscribedAt, '2026-11-01T00:00:00.000Z');
+    const audience = selectUnsubscribeAudience(list, ['test@example.com']);
+    assert.equal(audience.included.length, 1);
+    assert.equal(audience.excludedUnsubscribed, 1);
+  });
+
+  it('falls back to id and email when unsubscribed_at is missing', async () => {
+    const { client, selects } = listingClient([
+      { data: null, error: { code: '42703', message: 'column unsubscribed_at does not exist' } },
+      { data: [{ id: ID, email: 'Test@Example.com' }, { id: OTHER_ID, email: EMAIL }], error: null },
+    ]);
+    const list = await createSubscriberDirectory(client).list();
+    assert.deepEqual(selects, ['id, email, unsubscribed_at', 'id, email']);
+    assert.equal(list.unsubscribedColumn, false);
+    const audience = selectUnsubscribeAudience(list, ['test@example.com']);
+    assert.deepEqual(
+      audience.included.map((row) => row.email),
+      [EMAIL],
+    );
+    assert.equal(audience.excludedTest, 1);
+    assert.equal(audience.excludedUnsubscribed, 0);
   });
 });
