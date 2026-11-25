@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
 import { normalizeEmail } from '@/lib/newsletter/email';
-import { NEWSLETTER_SIGNUP_SUCCESS } from '@/lib/newsletter';
+import { NEWSLETTER_SIGNUP_DUPLICATE, NEWSLETTER_SIGNUP_SUCCESS } from '@/lib/newsletter';
 import { registerSubscriber } from '@/lib/newsletter/signup';
 import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service';
-
-const SIGNUP_DUPLICATE = 'Această adresă primește deja emailul de dimineață.';
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -87,7 +85,7 @@ export async function POST(request: Request) {
     if (outcome === 'duplicate') {
       return NextResponse.json({
         success: true,
-        message: SIGNUP_DUPLICATE,
+        message: NEWSLETTER_SIGNUP_DUPLICATE,
         alreadySubscribed: true,
       });
     }

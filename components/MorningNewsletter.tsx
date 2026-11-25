@@ -3,11 +3,9 @@
 import { useState } from 'react';
 import { AlertCircle, CheckCircle2, Loader2, Mail } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
-import { NEWSLETTER_SIGNUP_SUCCESS } from '@/lib/newsletter';
+import { NEWSLETTER_SIGNUP_DUPLICATE, NEWSLETTER_SIGNUP_SUCCESS } from '@/lib/newsletter';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
-
-const DUPLICATE = 'Această adresă primește deja emailul de dimineață.';
 
 export default function MorningNewsletter({
   id = 'newsletter',
@@ -47,7 +45,9 @@ export default function MorningNewsletter({
       }
 
       setStatus('success');
-      setMessage(data.alreadySubscribed ? data.message ?? DUPLICATE : data.message ?? NEWSLETTER_SIGNUP_SUCCESS);
+      setMessage(
+        data.alreadySubscribed ? data.message ?? NEWSLETTER_SIGNUP_DUPLICATE : data.message ?? NEWSLETTER_SIGNUP_SUCCESS,
+      );
       if (!data.alreadySubscribed) {
         trackEvent('newsletter_subscribe', {
           location,
@@ -122,9 +122,9 @@ export default function MorningNewsletter({
 
   if (variant === 'compact') {
     return (
-      <section id={id} aria-label="Știrile Crypto de dimineață" className="scroll-mt-24">
-        <p className="font-[var(--font-space)] text-sm font-bold text-white">Știrile Crypto de dimineață</p>
-        <p className="mt-1 text-xs leading-relaxed text-gray-400">Un email pe zi. Îl poți opri oricând.</p>
+      <section id={id} aria-label="Newsletterul Știrile Crypto" className="scroll-mt-24">
+        <p className="font-[var(--font-space)] text-sm font-bold text-white">Newsletterul Știrile Crypto</p>
+        <p className="mt-1 text-xs leading-relaxed text-gray-400">Un email pe săptămână, duminica. Îl poți opri oricând.</p>
         {body}
         {error}
       </section>
@@ -134,7 +134,7 @@ export default function MorningNewsletter({
   return (
     <section
       id={id}
-      aria-label="Știrile Crypto de dimineață"
+      aria-label="Newsletterul Știrile Crypto"
       className="my-8 scroll-mt-24 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-md md:px-5"
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -144,10 +144,10 @@ export default function MorningNewsletter({
           </div>
           <div>
             <h2 className="font-[var(--font-space)] text-base font-bold tracking-tight text-white">
-              Știrile Crypto de dimineață
+              Newsletterul Știrile Crypto
             </h2>
             <p className="mt-1 text-sm leading-relaxed text-gray-400">
-              Un email pe zi, dimineața, cu ce contează în piață. Îl poți opri oricând.
+              Un email pe săptămână, duminica, cu ce contează în piață. Îl poți opri oricând.
             </p>
           </div>
         </div>

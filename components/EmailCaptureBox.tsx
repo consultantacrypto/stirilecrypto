@@ -5,6 +5,7 @@ import { Loader2, Mail, CheckCircle2, AlertCircle } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 import {
   NEWSLETTER_FORM_DESCRIPTION,
+  NEWSLETTER_SIGNUP_DUPLICATE,
   NEWSLETTER_SIGNUP_SUCCESS,
   NEWSLETTER_WAITLIST_VISIBLE,
 } from '@/lib/newsletter';
@@ -15,8 +16,6 @@ type EmailCaptureBoxProps = {
   id?: string;
   location?: string;
 };
-
-const DUPLICATE = 'Această adresă primește deja emailul de dimineață.';
 
 export default function EmailCaptureBox({
   id,
@@ -53,7 +52,7 @@ export default function EmailCaptureBox({
 
       if (data.alreadySubscribed) {
         setStatus('success');
-        setMessage(data.message ?? DUPLICATE);
+        setMessage(data.message ?? NEWSLETTER_SIGNUP_DUPLICATE);
         return;
       }
 
@@ -77,7 +76,7 @@ export default function EmailCaptureBox({
     <section
       id={id}
       className="my-10 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 scroll-mt-24"
-      aria-label="Știrile Crypto de dimineață"
+      aria-label="Newsletterul Știrile Crypto"
     >
       <div className="flex items-start gap-3 mb-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/15 border border-blue-500/25">
@@ -85,7 +84,7 @@ export default function EmailCaptureBox({
         </div>
         <div>
           <h2 className="text-xl md:text-2xl font-bold text-white font-[var(--font-space)] tracking-tight">
-            Știrile Crypto de dimineață
+            Newsletterul Știrile Crypto
           </h2>
           <p className="mt-2 text-sm md:text-base text-gray-400 leading-relaxed font-[var(--font-inter)]">
             {NEWSLETTER_FORM_DESCRIPTION}

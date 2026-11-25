@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Dezabonare newsletter',
-  description: 'Confirmă că nu mai vrei să primești newsletterul Știrile Crypto de dimineață.',
+  description: 'Confirmă că nu mai vrei să primești newsletterul Știrile Crypto.',
   robots: { index: false, follow: false },
   referrer: 'no-referrer',
 };
@@ -53,8 +53,7 @@ function Card({ state }: { state: UnsubscribePageState }) {
           Confirmă dezabonarea
         </h1>
         <p className="mt-4 text-base leading-relaxed text-gray-400">
-          Ești abonat la newsletterul Știrile Crypto de dimineață. Apasă butonul ca să nu îl mai
-          primești. Doar deschiderea acestui link nu te dezabonează.
+          Ești abonat la newsletterul Știrile Crypto. Apasă butonul ca să nu îl mai primești. Doar deschiderea acestui link nu te dezabonează.
         </p>
         <form
           method="post"
