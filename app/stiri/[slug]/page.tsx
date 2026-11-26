@@ -7,6 +7,7 @@ import MorningNewsletter from '@/components/MorningNewsletter';
 import RelatedArticles from '@/components/RelatedArticles';
 import { splitArticleContent } from '@/lib/split-article-content';
 import { removeDuplicateLeadParagraph } from '@/lib/dedupe-lead';
+import { articleSeoOverride, articleSeoTitle } from '@/lib/article-seo';
 import { stripBrandSuffix } from '@/lib/seo-title';
 import { formatPublishedDisplay } from '@/lib/published-time';
 import {
@@ -47,8 +48,11 @@ export async function generateMetadata({
 
   if (!article) return { title: 'Articol Inexistent' };
 
-  const seoTitle = stripBrandSuffix(article.meta_title?.trim() || article.title);
-  const seoDescription = article.meta_description?.trim() || article.excerpt;
+  const override = articleSeoOverride(slug);
+  const seoTitle = override
+    ? articleSeoTitle(override)
+    : stripBrandSuffix(article.meta_title?.trim() || article.title);
+  const seoDescription = override?.description ?? (article.meta_description?.trim() || article.excerpt);
   const canonicalUrl = `${SITE_URL}/stiri/${slug}`;
   const encodedTitle = encodeURIComponent(seoTitle);
   const encodedCategory = encodeURIComponent(article.category);
@@ -117,6 +121,8 @@ function ArticlePageContent({
   article: ArticlePageData;
   slug: string;
 }) {
+  const override = articleSeoOverride(slug);
+  const heading = override?.h1 ?? article.title;
   const { main, conclusion } = splitArticleContent(article.content);
   const { content: mainWithoutLead } = removeDuplicateLeadParagraph(article.excerpt, main);
   const coverSrc = normalizeImageUrl(article.image_url);
@@ -184,7 +190,7 @@ function ArticlePageContent({
             </div>
 
             <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight mb-6 text-white font-[var(--font-space)]">
-              {article.title}
+              {heading}
             </h1>
           </header>
 

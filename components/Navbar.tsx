@@ -5,7 +5,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import BrandMark from '@/components/BrandMark';
-import { isPathActive, pathOf } from '@/lib/nav-path';
+import { bitcoinNavLabel, isPathActive, pathOf } from '@/lib/nav-path';
 import {
   MARKET_TONE_DISCLAIMER,
   marketToneLabel,
@@ -26,6 +26,7 @@ const MAIN_LINKS: NavItem[] = [
 
 const MORE_LINKS: NavItem[] = [
   { href: '/stiri', label: 'Știri' },
+  { href: '/hub/bitcoin', label: 'Știri Bitcoin' },
   { href: '/raport-strategic', label: 'Ce cumpără balenele' },
   { href: '/incepe-aici', label: 'Începe aici' },
   { href: '/interviuri', label: 'Interviuri' },
@@ -148,7 +149,7 @@ export default function Navbar() {
         title={showTone ? `${marketToneLabel(tone)}. ${MARKET_TONE_DISCLAIMER}` : undefined}
         onClick={desktop ? undefined : () => setMobileOpen(false)}
       >
-        <span>{item.label}</span>
+        <span>{item.href === '/hub/bitcoin' ? bitcoinNavLabel(pathname) : item.label}</span>
         {showTone ? (
           <span className={desktop ? 'ml-1.5 text-[11px] font-bold tracking-wide' : 'text-xs font-bold tracking-wide'}>
             {' '}
@@ -196,7 +197,7 @@ export default function Navbar() {
                     }`}
                     onClick={() => setMoreOpen(false)}
                   >
-                    {item.label}
+                    {item.href === '/hub/bitcoin' ? bitcoinNavLabel(pathname) : item.label}
                   </Link>
                 ))}
               </div>

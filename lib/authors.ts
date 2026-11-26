@@ -39,7 +39,7 @@ export const DANIEL_MIHAI: PersonAuthor = {
     'https://www.tiktok.com/@mihaidanielmarius',
     'https://www.linkedin.com/in/mihaidanielmarius/',
   ],
-  pageHeading: 'Mihai Daniel (Daniel Mihai)',
+  pageHeading: 'Daniel Mihai (Mihai Daniel), analist crypto',
   shortBio:
     'Redactorul publicației. Semnează știrile și analizele de piață. Materialele sunt educative și nu sunt recomandări personalizate de investiții.',
   lead:
@@ -47,6 +47,11 @@ export const DANIEL_MIHAI: PersonAuthor = {
   leadLinks: [{ phrase: 'mihaidaniel.ro', href: 'https://www.mihaidaniel.ro/' }],
   bio: 'Daniel Mihai este redactorul publicației Știrile Crypto. Semnează știrile și analizele de piață publicate pe site. Textele explică contextul de piață pornind de la surse publice; nu sunt consultanță financiară autorizată și nu conțin apeluri de cumpărare sau de vânzare.',
 };
+
+export const DANIEL_MIHAI_PAGE_TITLE =
+  'Daniel Mihai, analist crypto în România | Știrile Crypto';
+export const DANIEL_MIHAI_PAGE_DESCRIPTION =
+  'Daniel Mihai, cunoscut și ca Mihai Daniel, este redactor la Știrile Crypto și consultant crypto în România. Profil, articole și consultanță 1-la-1.';
 
 /** No photo, bio, or social profiles are published for Cristian in this repo. */
 export const CRISTIAN_VASILE: PersonAuthor = {

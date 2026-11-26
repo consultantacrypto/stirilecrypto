@@ -8,8 +8,10 @@ import {
   stiriNormalizedPath,
 } from '@/lib/stiri-url';
 import { buildArticleItemListJsonLd, buildCollectionPageJsonLd } from '@/lib/collection-json-ld';
+import { STIRI_BITCOIN_ANCHOR, STIRI_MARKET_ANCHOR } from '@/lib/editorial-links';
 import { SITE_URL, buildBreadcrumbJsonLd, buildWebsiteShareMetadata } from '@/lib/json-ld';
 import { withRssAlternate } from '@/lib/rss-alternate';
+import { stiriListingSeo } from '@/lib/stiri-listing-seo';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CategoryFilter from '@/components/CategoryFilter';
@@ -36,14 +38,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const params = await searchParams;
   const { page, category } = parseStiriListParams(params);
-  const title =
-    page >= 2
-      ? `Știri crypto explicate — pagina ${page}`
-      : 'Știri crypto și criptomonede';
+  const { title, description } = stiriListingSeo(page, category);
 
   const canonical = stiriListCanonical(page, category);
-  const description =
-    'Știri crypto și criptomonede, plus noutăți blockchain, traduse și explicate în română de Știrile Crypto.';
 
   return {
     title,
@@ -70,6 +67,7 @@ export default async function NewsPage({
 }) {
   const params = await searchParams;
   const { page: currentPage, category: categoryFilter } = parseStiriListParams(params);
+  const listingSeo = stiriListingSeo(currentPage, categoryFilter);
 
   const parsed = { page: currentPage, category: categoryFilter };
   if (stiriListNeedsNormalization(params, parsed)) {
@@ -155,7 +153,7 @@ export default async function NewsPage({
                     </div>
 
                     <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white leading-[1.1]">
-                        Știri crypto și criptomonede
+                        {listingSeo.h1}
                     </h1>
 
                     <div className="h-px w-24 bg-blue-500/30"></div>
@@ -170,6 +168,16 @@ export default async function NewsPage({
                             Știri crypto România
                         </Link>
                         .
+                    </p>
+                    <p className="text-sm text-blue-100/70 leading-relaxed max-w-lg">
+                        <Link href="/hub/bitcoin" className="text-blue-300 underline">
+                            {STIRI_BITCOIN_ANCHOR}
+                        </Link>
+                        {' și '}
+                        <Link href="/market" className="text-blue-300 underline">
+                            {STIRI_MARKET_ANCHOR}
+                        </Link>
+                        {' sunt pe paginile lor.'}
                     </p>
                 </div>
 

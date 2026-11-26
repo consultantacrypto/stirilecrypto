@@ -10,6 +10,7 @@ import {
 } from '@/lib/authors';
 import { getMarketPulseArchive } from '@/lib/articles-db';
 import LinkedText from '@/components/LinkedText';
+import { AUTHOR_BITCOIN_ANCHOR } from '@/lib/editorial-links';
 import { EDITORIAL_POLICY_LINKS } from '@/lib/json-ld';
 
 export default async function AuthorProfile({ authorKey }: { authorKey: PersonAuthorKey }) {
@@ -113,6 +114,13 @@ export default async function AuthorProfile({ authorKey }: { authorKey: PersonAu
               Redacția Știrile Crypto
             </Link>
           </li>
+          {authorKey === 'daniel-mihai' ? (
+            <li>
+              <Link href="/hub/bitcoin" className="text-slate-300 underline decoration-white/20 underline-offset-2 hover:text-white">
+                {AUTHOR_BITCOIN_ANCHOR}
+              </Link>
+            </li>
+          ) : null}
           {EDITORIAL_POLICY_LINKS.map((link) => (
             <li key={link.href}>
               <Link href={link.href} className="text-slate-300 underline decoration-white/20 underline-offset-2 hover:text-white">

@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
   DANIEL_MIHAI,
+  DANIEL_MIHAI_PAGE_DESCRIPTION,
+  DANIEL_MIHAI_PAGE_TITLE,
   articleAuthorMeta,
   authorKeyForArticle,
   authorKeyFromName,
@@ -98,7 +100,15 @@ describe('news schema', () => {
   it('keeps Daniel Mihai photo and profiles on his Person node', () => {
     const author = personAuthorJsonLd('daniel-mihai');
     assert.equal(author.name, 'Daniel Mihai');
-    assert.equal(DANIEL_MIHAI.pageHeading, 'Mihai Daniel (Daniel Mihai)');
+    assert.equal(DANIEL_MIHAI.pageHeading, 'Daniel Mihai (Mihai Daniel), analist crypto');
+    assert.equal(
+      DANIEL_MIHAI_PAGE_TITLE,
+      'Daniel Mihai, analist crypto în România | Știrile Crypto',
+    );
+    assert.equal(
+      DANIEL_MIHAI_PAGE_DESCRIPTION,
+      'Daniel Mihai, cunoscut și ca Mihai Daniel, este redactor la Știrile Crypto și consultant crypto în România. Profil, articole și consultanță 1-la-1.',
+    );
     assert.equal(author.jobTitle, 'Redactor și analist');
     assert.deepEqual(author.alternateName, ['Mihai Daniel', 'Mihai Daniel Marius']);
     assert.deepEqual(author.worksFor, { '@id': 'https://www.stirilecrypto.ro/#organization' });

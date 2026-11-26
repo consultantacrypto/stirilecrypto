@@ -13,11 +13,9 @@ import { getGlobalData, getFearGreed } from '@/lib/market-api';
 import { Activity, DollarSign, Layers, BarChart3, Zap, TrendingUp, ArrowRight, BrainCircuit, LineChart } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { MARKET_DESCRIPTION, MARKET_H1, MARKET_TITLE } from '@/lib/market-seo';
+import { MARKET_BITCOIN_ANCHOR } from '@/lib/editorial-links';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
-
-const MARKET_TITLE = 'Piața azi: prețuri';
-const MARKET_DESCRIPTION =
-  'Informații instituționale, sentimentul pieței și fluxurile de bani în timp real.';
 
 export const metadata: Metadata = {
   title: MARKET_TITLE,
@@ -112,11 +110,15 @@ export default async function MarketPage() {
                     <Activity className="text-white" size={24} />
                 </div>
                 <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white">
-                    Date de <span className="text-blue-500">piață</span>
+                    {MARKET_H1}
                 </h1>
             </div>
             <p className="text-gray-400 text-sm md:text-base max-w-2xl">
-                Informații instituționale, sentimentul pieței și fluxurile de bani în timp real.
+                Informații instituționale, sentimentul pieței și fluxurile de bani în timp real. Noutățile sunt în{' '}
+                <Link href="/hub/bitcoin" className="text-blue-400 underline hover:text-blue-300">
+                    {MARKET_BITCOIN_ANCHOR}
+                </Link>
+                .
             </p>
         </div>
 
