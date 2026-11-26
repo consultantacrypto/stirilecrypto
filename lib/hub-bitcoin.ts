@@ -3,10 +3,16 @@ import { ORGANIZATION_ID, SITE_URL, WEBSITE_ID } from '@/lib/json-ld';
 
 export const BITCOIN_HUB_PATH = '/hub/bitcoin';
 export const BITCOIN_HUB_URL = `${SITE_URL}${BITCOIN_HUB_PATH}`;
-export const BITCOIN_TITLE =
-  'Știri Bitcoin România: analize și Pulsul Bitcoin, în română | Știrile Crypto';
-export const BITCOIN_H1 = 'Știri Bitcoin în română, pentru cititorii din România';
+export const BITCOIN_TITLE = 'Știri Bitcoin azi, în română | Știrile Crypto';
+export const BITCOIN_H1 = 'Știri Bitcoin azi, pentru cititorii din România';
 export const BITCOIN_DESCRIPTION =
+  'Știri Bitcoin în română: ultimele noutăți, analize on-chain și Pulsul Bitcoin, actualizate zilnic de Știrile Crypto.';
+/**
+ * CollectionPage name and description stay on the previous copy.
+ * The visible title, H1, and meta are the fields above.
+ */
+export const BITCOIN_JSONLD_NAME = 'Știri Bitcoin în română, pentru cititorii din România';
+export const BITCOIN_JSONLD_DESCRIPTION =
   'Unde citești știri despre Bitcoin în română: hub-ul Bitcoin al Știrile Crypto, analize on-chain și Pulsul Bitcoin, publicat 7 zile din 7.';
 /** Same content revision as the Romania hub update. Not a request clock. */
 export const BITCOIN_DATE_MODIFIED = '2026-11-16';
@@ -69,8 +75,8 @@ export function buildBitcoinCollectionJsonLd() {
     '@type': 'CollectionPage',
     '@id': `${BITCOIN_HUB_URL}#webpage`,
     url: BITCOIN_HUB_URL,
-    name: BITCOIN_H1,
-    description: BITCOIN_DESCRIPTION,
+    name: BITCOIN_JSONLD_NAME,
+    description: BITCOIN_JSONLD_DESCRIPTION,
     inLanguage: 'ro-RO',
     isPartOf: { '@id': WEBSITE_ID },
     about: [

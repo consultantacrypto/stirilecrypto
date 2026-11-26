@@ -10,6 +10,11 @@ export function pathOf(href: string): string {
  * Piața azi is only `/market`. Harta pieței (`/lichidari`) and Tablou (`/dashboard`)
  * stay their own items.
  */
+/** Menu label for /hub/bitcoin. The news index uses the longer anchor. */
+export function bitcoinNavLabel(pathname: string): string {
+  return pathname === '/stiri' ? 'Știri Bitcoin azi' : 'Știri Bitcoin';
+}
+
 export function isPathActive(pathname: string, href: string): boolean {
   const path = pathOf(href);
   if (path === '/') return pathname === '/';

@@ -9,13 +9,10 @@ import InterviewsSection from '@/components/InterviewsSection';
 import HomeJsonLd from '@/components/HomeJsonLd';
 import HomeMarketBar from '@/components/HomeMarketBar';
 import HomeServiceStrip from '@/components/services/HomeServiceStrip';
+import { HOME_DESCRIPTION, HOME_TITLE } from '@/lib/home-seo';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
 export const revalidate = 120;
-
-const HOME_TITLE = 'Informație Financiară & Date On-Chain | Știrile Crypto';
-const HOME_DESCRIPTION =
-  'Platformă de informații crypto și date on-chain instituționale. Știri, interviuri și analiză de piață.';
 
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },

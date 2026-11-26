@@ -13,6 +13,7 @@ import {
   BITCOIN_DEFINITION_LINKS,
   BITCOIN_DESCRIPTION,
   BITCOIN_H1,
+  BITCOIN_JSONLD_NAME,
   BITCOIN_SITE_ANSWER,
   BITCOIN_SITE_H3,
   BITCOIN_SITE_LINKS,
@@ -116,7 +117,7 @@ export default async function HubPage({
   const isBitcoin = topic === 'bitcoin';
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Acasă', path: '/' },
-    { name: hub.h1, path: `/hub/${topic}` },
+    { name: isBitcoin ? BITCOIN_JSONLD_NAME : hub.h1, path: `/hub/${topic}` },
   ]);
   const collectionJsonLd = isBitcoin
     ? null

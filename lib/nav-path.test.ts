@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { isPathActive } from './nav-path';
+import { bitcoinNavLabel, isPathActive } from './nav-path';
 
 describe('nav path active', () => {
   it('lights Piața azi only on /market and /market/*', () => {
@@ -18,6 +18,14 @@ describe('nav path active', () => {
     assert.equal(isPathActive('/stiri', '/stiri'), true);
     assert.equal(isPathActive('/stiri/bitcoin', '/stiri'), true);
     assert.equal(isPathActive('/airdrop-alert', '/stiri'), false);
+  });
+
+  it('uses the briefed Bitcoin hub anchor in the menu', () => {
+    assert.equal(bitcoinNavLabel('/'), 'Știri Bitcoin');
+    assert.equal(bitcoinNavLabel('/market'), 'Știri Bitcoin');
+    assert.equal(bitcoinNavLabel('/stiri'), 'Știri Bitcoin azi');
+    assert.equal(bitcoinNavLabel('/stiri/un-articol'), 'Știri Bitcoin');
+    assert.equal(bitcoinNavLabel('/hub/bitcoin'), 'Știri Bitcoin');
   });
 
   it('matches Airdrop Alert and strips query strings', () => {

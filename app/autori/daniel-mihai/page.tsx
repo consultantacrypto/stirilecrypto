@@ -1,12 +1,11 @@
 import { withRssAlternate } from '@/lib/rss-alternate';
 import type { Metadata } from 'next';
 import AuthorProfile from '@/components/author/AuthorProfile';
-import { DANIEL_MIHAI } from '@/lib/authors';
+import { DANIEL_MIHAI, DANIEL_MIHAI_PAGE_DESCRIPTION, DANIEL_MIHAI_PAGE_TITLE } from '@/lib/authors';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
-const TITLE = 'Mihai Daniel (Daniel Mihai), redactor și consultant crypto | Știrile Crypto';
-const DESCRIPTION =
-  'Mihai Daniel, cunoscut și ca Daniel Mihai, este redactor și analist la Știrile Crypto și consultant crypto în România. Consultanța 1-la-1 este pe mihaidaniel.ro, separată de publicație.';
+const TITLE = DANIEL_MIHAI_PAGE_TITLE;
+const DESCRIPTION = DANIEL_MIHAI_PAGE_DESCRIPTION;
 
 export const revalidate = 60;
 
