@@ -21,6 +21,7 @@ const MAIN_LINKS: NavItem[] = [
   { href: '/airdrop-alert', label: 'Airdrop Alert' },
   { href: '/market', label: 'Piața azi' },
   { href: '/market-pulse', label: 'Pulsul Bitcoin' },
+  { href: '/portofele', label: 'Portofele crypto' },
   { href: '/taxe', label: 'Taxe crypto 2026' },
 ];
 
@@ -33,6 +34,7 @@ const MORE_LINKS: NavItem[] = [
   { href: '/lichidari', label: 'Harta pieței' },
   { href: '/glosar', label: 'Glosar' },
   { href: '/academie', label: 'Educație' },
+  { href: '/verificare-portofel?src=nav', label: 'Verificare portofel' },
 ];
 
 const ANALYSIS_HREF = '/analiza-tehnica?src=nav';

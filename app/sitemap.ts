@@ -98,6 +98,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/taxe`, lastModified: sitemapDate(SITEMAP_LASTMOD.taxe), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/glosar`, lastModified: sitemapDate(SITEMAP_LASTMOD.glosar), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/incepe-aici`, lastModified: sitemapDate(SITEMAP_LASTMOD.incepeAici), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/portofele`, lastModified: sitemapDate(SITEMAP_LASTMOD.portofele), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/hub/mica`, lastModified: sitemapDate(SITEMAP_LASTMOD.hubTopic), changeFrequency: 'weekly', priority: 0.75 },
     { url: `${SITE_URL}/hub/bitcoin`, lastModified: sitemapDate(SITEMAP_LASTMOD.hubBitcoin), changeFrequency: 'weekly', priority: 0.75 },
     { url: `${SITE_URL}/hub/securitate`, lastModified: sitemapDate(SITEMAP_LASTMOD.hubTopic), changeFrequency: 'weekly', priority: 0.7 },
