@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import TangemBlackFridayBanner from '@/components/wallets/TangemBlackFridayBanner';
 import WalletCatalog from '@/components/wallets/WalletCatalog';
 import { SITE_URL, buildWebsiteShareMetadata } from '@/lib/json-ld';
 
@@ -38,6 +39,7 @@ export default function PortofelePage() {
           </Link>
           .
         </p>
+        <TangemBlackFridayBanner />
         <WalletCatalog />
       </main>
       <Footer />
