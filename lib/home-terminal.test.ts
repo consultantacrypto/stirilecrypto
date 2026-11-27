@@ -2,8 +2,6 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
   assembleTerminal,
-  formatSnapshotDay,
-  latestFlowByAsset,
   parseBinanceKlines,
   parseCoinGeckoQuotes,
   rangeFromDailyCandles,
@@ -52,26 +50,11 @@ describe('home terminal parsers', () => {
     assert.equal(parseBinanceKlines({}).length, 0);
   });
 
-  it('keeps the latest ETF snapshot per asset and formats the calendar day', () => {
-    const flows = latestFlowByAsset([
-      { asset: 'BTC', snapshot_date: '2026-11-20', net_flow_usd: 10 },
-      { asset: 'BTC', snapshot_date: '2026-11-22', net_flow_usd: -5 },
-      { asset: 'ETH', snapshot_date: '2026-11-21', net_flow_usd: 2 },
-      { asset: 'ETH', snapshot_date: 'not-a-date', net_flow_usd: 9 },
-    ]);
-    assert.deepEqual(flows, [
-      { asset: 'BTC', date: '2026-11-22', netFlowUsd: -5 },
-      { asset: 'ETH', date: '2026-11-21', netFlowUsd: 2 },
-    ]);
-    assert.equal(formatSnapshotDay('2026-11-22'), '22.11.2026');
-  });
-
   it('assembles a snapshot with fallbacks and omits the clock when nothing arrived', () => {
     const empty = assembleTerminal({
       quotes: [],
       candles: [],
       fearGreed: null,
-      etf: [],
       now: '2026-11-24T08:00:00.000Z',
     });
     assert.equal(empty.fetchedAt, null);
@@ -81,7 +64,6 @@ describe('home terminal parsers', () => {
       quotes: [],
       candles: [],
       fearGreed: { value: 24, label: 'Teamă extremă' },
-      etf: [],
       now: '2026-11-24T08:00:00.000Z',
     });
     assert.equal(partial.fetchedAt, '2026-11-24T08:00:00.000Z');

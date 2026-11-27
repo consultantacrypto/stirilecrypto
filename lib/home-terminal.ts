@@ -21,17 +21,10 @@ export type TerminalRange = {
   spark: number[];
 };
 
-export type EtfFlowPoint = {
-  asset: 'BTC' | 'ETH';
-  date: string;
-  netFlowUsd: number;
-};
-
 export type HomeTerminalSnapshot = {
   quotes: TerminalQuote[];
   range: TerminalRange | null;
   fearGreed: { value: number; label: string } | null;
-  etf: EtfFlowPoint[];
   fetchedAt: string | null;
 };
 
@@ -107,36 +100,6 @@ export function rangePosition(last: number, low: number, high: number): number {
   return Math.min(100, Math.max(0, raw));
 }
 
-export function latestFlowByAsset(
-  rows: { asset: 'BTC' | 'ETH'; snapshot_date: string; net_flow_usd: number }[],
-): EtfFlowPoint[] {
-  const best = new Map<'BTC' | 'ETH', EtfFlowPoint>();
-  for (const row of rows) {
-    if (row.asset !== 'BTC' && row.asset !== 'ETH') continue;
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(row.snapshot_date)) continue;
-    if (!Number.isFinite(row.net_flow_usd)) continue;
-    const current = best.get(row.asset);
-    if (!current || row.snapshot_date > current.date) {
-      best.set(row.asset, {
-        asset: row.asset,
-        date: row.snapshot_date,
-        netFlowUsd: row.net_flow_usd,
-      });
-    }
-  }
-  return (['BTC', 'ETH'] as const).flatMap((asset) => {
-    const point = best.get(asset);
-    return point ? [point] : [];
-  });
-}
-
-/** Calendar date, not a timezone-shifted instant. */
-export function formatSnapshotDay(isoDate: string): string {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate);
-  if (!match) return isoDate;
-  return `${Number(match[3])}.${match[2]}.${match[1]}`;
-}
-
 export function quoteFor(quotes: TerminalQuote[], symbol: TerminalQuote['symbol']): TerminalQuote | null {
   return quotes.find((quote) => quote.symbol === symbol) ?? null;
 }
@@ -145,16 +108,14 @@ export function assembleTerminal(input: {
   quotes: TerminalQuote[];
   candles: DailyCandle[];
   fearGreed: { value: number; label: string } | null;
-  etf: EtfFlowPoint[];
   now?: string | null;
 }): HomeTerminalSnapshot {
   const range = rangeFromDailyCandles(input.candles);
-  const hasData = input.quotes.length > 0 || range !== null || input.fearGreed !== null || input.etf.length > 0;
+  const hasData = input.quotes.length > 0 || range !== null || input.fearGreed !== null;
   return {
     quotes: input.quotes,
     range,
     fearGreed: input.fearGreed,
-    etf: input.etf,
     fetchedAt: hasData ? (input.now ?? null) : null,
   };
 }

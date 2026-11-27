@@ -5,7 +5,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import BrandMark from '@/components/BrandMark';
-import { bitcoinNavLabel, isPathActive, pathOf } from '@/lib/nav-path';
+import { bitcoinNavLabel, HEADER_LINKS, isPathActive, MORE_NAV_LINKS, pathOf } from '@/lib/nav-path';
 import {
   MARKET_TONE_DISCLAIMER,
   marketToneLabel,
@@ -17,25 +17,8 @@ import { MAJOR_PRICE_RON } from '@/lib/products/tiers';
 type NavItem = { href: string; label: string };
 type ToneState = MarketTone | 'unknown';
 
-const MAIN_LINKS: NavItem[] = [
-  { href: '/airdrop-alert', label: 'Airdrop Alert' },
-  { href: '/market', label: 'Piața azi' },
-  { href: '/market-pulse', label: 'Pulsul Bitcoin' },
-  { href: '/portofele', label: 'Portofele crypto' },
-  { href: '/taxe', label: 'Taxe crypto 2026' },
-];
-
-const MORE_LINKS: NavItem[] = [
-  { href: '/stiri', label: 'Știri' },
-  { href: '/hub/bitcoin', label: 'Știri Bitcoin' },
-  { href: '/raport-strategic', label: 'Ce cumpără balenele' },
-  { href: '/incepe-aici', label: 'Începe aici' },
-  { href: '/interviuri', label: 'Interviuri' },
-  { href: '/lichidari', label: 'Harta pieței' },
-  { href: '/glosar', label: 'Glosar' },
-  { href: '/academie', label: 'Educație' },
-  { href: '/verificare-portofel?src=nav', label: 'Verificare portofel' },
-];
+const MAIN_LINKS: NavItem[] = HEADER_LINKS;
+const MORE_LINKS: NavItem[] = MORE_NAV_LINKS;
 
 const ANALYSIS_HREF = '/analiza-tehnica?src=nav';
 
