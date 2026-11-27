@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import {
-  buildWalletOutboundUrl,
   hasRealCheckoutCode,
   walletBrandShelves,
   walletModelName,
@@ -8,6 +7,7 @@ import {
   type WalletBrandProfile,
   type WalletProduct,
 } from '@/lib/wallets/quickexit-catalog.sync';
+import { stirilecryptoWalletUrl } from '@/lib/wallets/site-links';
 
 const AFFILIATE_REL = 'sponsored nofollow noopener';
 
@@ -52,7 +52,7 @@ function BrandCard({ brand, models }: { brand: WalletBrandProfile; models: Walle
             return (
               <li key={model.slug} className="border-b border-white/10">
                 <a
-                  href={buildWalletOutboundUrl(model)}
+                  href={stirilecryptoWalletUrl(model)}
                   target="_blank"
                   rel={AFFILIATE_REL}
                   className="flex min-h-11 flex-col gap-1 py-3 text-left hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:flex-row sm:items-start sm:justify-between sm:gap-3"

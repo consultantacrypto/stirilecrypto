@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+import { urlsMatchExceptUtmSource } from '../../scripts/wallets-sync-compare.mjs';
+import { stirilecryptoWalletUrl } from './site-links';
 import {
   QUICKEXIT_WALLETS_SYNC,
   WALLET_PRODUCTS,
@@ -16,20 +18,29 @@ describe('QuickExit wallet deep links', () => {
   });
 
   it('keeps the known partner parameters and adds none for BitBox, Trezor, or NGRAVE', () => {
-    const bySlug = new Map(WALLET_PRODUCTS.map((product) => [product.slug, buildWalletOutboundUrl(product)]));
+    const bySlug = new Map(WALLET_PRODUCTS.map((product) => [product.slug, stirilecryptoWalletUrl(product)]));
 
     assert.equal(
       bySlug.get('safepal-s1'),
-      'https://www.safepal.com/store/s1?ref=n2rmyza&utm_source=quickexit&utm_medium=affiliate&utm_campaign=wallets&utm_content=safepal-safepal-s1',
+      'https://www.safepal.com/store/s1?ref=n2rmyza&utm_source=stirilecrypto&utm_medium=affiliate&utm_campaign=wallets&utm_content=safepal-safepal-s1',
     );
     assert.equal(
       bySlug.get('ledger-nano-gen5'),
-      'https://shop.ledger.com/products/ledger-nano-gen5?r=9111c54498ec&utm_source=quickexit&utm_medium=affiliate&utm_campaign=wallets&utm_content=ledger-ledger-nano-gen5',
+      'https://shop.ledger.com/products/ledger-nano-gen5?r=9111c54498ec&utm_source=stirilecrypto&utm_medium=affiliate&utm_campaign=wallets&utm_content=ledger-ledger-nano-gen5',
     );
     assert.equal(
       bySlug.get('keystone-3-pro-1-year'),
       'https://shop.keyst.one/products/keystone-3-pro?variant=44416761102489&rfsn=9430621.40149c9&utm_source=refersion&utm_medium=affiliate&utm_campaign=9430621.40149c9&utm_content=keystone-keystone-3-pro-1-year',
     );
+    for (const product of WALLET_PRODUCTS) {
+      const published = bySlug.get(product.slug) ?? '';
+      const quickexit = buildWalletOutboundUrl(product);
+      assert.equal(urlsMatchExceptUtmSource(quickexit, published), true, product.slug);
+      const publishedUtm = new URL(published).searchParams.get('utm_source');
+      const quickexitUtm = new URL(quickexit).searchParams.get('utm_source');
+      if (quickexitUtm === 'quickexit') assert.equal(publishedUtm, 'stirilecrypto', product.slug);
+      else assert.equal(publishedUtm, quickexitUtm, product.slug);
+    }
     assert.match(bySlug.get('tangem-2-cards') ?? '', /^https:\/\/tangem\.com\/en\/pricing\/\?/);
     assert.equal(
       WALLET_PRODUCTS.find((product) => product.slug === 'tangem-2-cards')?.affiliateCode,
