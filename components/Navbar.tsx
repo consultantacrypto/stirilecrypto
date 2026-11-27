@@ -64,16 +64,21 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const tone = useBtcMarketTone();
   const moreRef = useRef<HTMLDivElement>(null);
   const moreId = useId();
+  const mobileMoreId = useId();
   const toneHintId = useId();
+  const walletsLink = MAIN_LINKS.find((item) => pathOf(item.href) === '/portofele') ?? null;
+  const mobilePrimary = MAIN_LINKS.filter((item) => pathOf(item.href) !== '/portofele');
   const moreActive = MORE_LINKS.some((item) => isPathActive(pathname, item.href));
   const toneKnown = tone !== 'unknown';
 
   useEffect(() => {
     setMobileOpen(false);
     setMoreOpen(false);
+    setMobileMoreOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -148,9 +153,9 @@ export default function Navbar() {
   return (
     <>
     <header className="fixed inset-x-0 top-0 z-50 h-16 border-b border-white/[0.08] bg-[#090a0d]/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-2 px-3 sm:gap-3 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Știrile Crypto — Acasă">
-          <BrandMark />
+          <BrandMark className="h-6 w-auto sm:h-8" />
         </Link>
 
         <nav aria-label="Principal" className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex">
@@ -190,7 +195,17 @@ export default function Navbar() {
           </div>
         </nav>
 
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+          {walletsLink ? (
+            <Link
+              href={walletsLink.href}
+              className={`inline-flex h-10 items-center whitespace-nowrap rounded-full px-2.5 text-[13px] hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white xl:hidden ${
+                isPathActive(pathname, walletsLink.href) ? 'bg-white/10 font-semibold text-white' : 'font-semibold text-zinc-200'
+              }`}
+            >
+              {walletsLink.label}
+            </Link>
+          ) : null}
           <Link
             href="/cauta"
             aria-label="Caută articole"
@@ -234,7 +249,10 @@ export default function Navbar() {
             Analiză tehnică – de la {MAJOR_PRICE_RON} lei
           </Link>
           <div className="flex flex-col gap-0.5">
-            {[...MAIN_LINKS, ...MORE_LINKS].map((item) => (
+            {walletsLink ? (
+              <div>{renderLink(walletsLink, 'mobile')}</div>
+            ) : null}
+            {mobilePrimary.map((item) => (
               <div key={item.href}>
                 {renderLink(item, 'mobile')}
                 {pathOf(item.href) === '/market' && toneKnown ? (
@@ -242,6 +260,25 @@ export default function Navbar() {
                 ) : null}
               </div>
             ))}
+            <button
+              type="button"
+              className={`flex min-h-12 items-center justify-between gap-3 rounded-xl px-3 py-3 text-[17px] tracking-tight hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                moreActive || mobileMoreOpen ? 'bg-white/10 font-semibold text-white' : 'text-zinc-100'
+              }`}
+              aria-expanded={mobileMoreOpen}
+              aria-controls={mobileMoreId}
+              onClick={() => setMobileMoreOpen((open) => !open)}
+            >
+              Mai mult
+              <ChevronDown size={18} aria-hidden className={mobileMoreOpen ? 'rotate-180' : ''} />
+            </button>
+            {mobileMoreOpen ? (
+              <div id={mobileMoreId} className="flex flex-col gap-0.5 border-l border-white/10 pl-2">
+                {MORE_LINKS.map((item) => (
+                  <div key={item.href}>{renderLink(item, 'mobile')}</div>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}
