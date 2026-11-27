@@ -35,6 +35,7 @@ export const SITEMAP_LASTMOD = {
   cauta: '2026-10-24T19:23:34+03:00',
   glosar: '2026-10-24T19:23:34+03:00',
   incepeAici: '2026-11-01T12:33:43+02:00',
+  portofele: '2026-11-27T00:00:00.000Z',
   hubTopic: '2026-11-01T12:33:43+02:00',
   hubBitcoin: AEO_SC3_SC5_LASTMOD,
   hubStiriRomania: AEO_SC3_SC5_LASTMOD,
