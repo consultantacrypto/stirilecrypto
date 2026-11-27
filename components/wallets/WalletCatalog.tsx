@@ -55,7 +55,7 @@ function BrandCard({ brand, models }: { brand: WalletBrandProfile; models: Walle
                   href={buildWalletOutboundUrl(model)}
                   target="_blank"
                   rel={AFFILIATE_REL}
-                  className="flex min-h-11 items-start justify-between gap-3 py-3 text-left hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="flex min-h-11 flex-col gap-1 py-3 text-left hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:flex-row sm:items-start sm:justify-between sm:gap-3"
                 >
                   <span className="min-w-0">
                     <span className="block text-sm leading-snug text-slate-100">{name}</span>
@@ -66,12 +66,12 @@ function BrandCard({ brand, models }: { brand: WalletBrandProfile; models: Walle
                     ) : null}
                   </span>
                   {price ? (
-                    <span className="shrink-0 text-right">
-                      <span className="block whitespace-nowrap text-sm font-semibold text-white">{price.primary}</span>
+                    <span className="shrink-0 sm:text-right">
+                      <span className="block text-sm font-semibold text-white">{price.primary}</span>
                       {price.extra ? (
                         <span className="mt-0.5 block text-[11px] leading-snug text-slate-400">{price.extra}</span>
                       ) : null}
-                      <span className="mt-0.5 block whitespace-nowrap text-[11px] text-slate-500">{price.checked}</span>
+                      <span className="mt-0.5 block text-[11px] text-slate-500">{price.checked}</span>
                     </span>
                   ) : null}
                 </a>
