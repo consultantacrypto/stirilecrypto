@@ -1,8 +1,6 @@
-import { fetchEtfSnapshots } from '@/lib/etf/fetchEtfData';
 import { fetchFearGreed } from '@/lib/fear-greed';
 import {
   assembleTerminal,
-  latestFlowByAsset,
   parseBinanceKlines,
   parseCoinGeckoQuotes,
   type HomeTerminalSnapshot,
@@ -45,30 +43,6 @@ async function fetchCandles() {
   }
 }
 
-async function fetchEtfFlows() {
-  try {
-    const [btc, eth] = await Promise.all([
-      fetchEtfSnapshots('BTC', '5d'),
-      fetchEtfSnapshots('ETH', '5d'),
-    ]);
-    return latestFlowByAsset([
-      ...btc.map((row) => ({
-        asset: 'BTC' as const,
-        snapshot_date: row.snapshot_date,
-        net_flow_usd: row.net_flow_usd,
-      })),
-      ...eth.map((row) => ({
-        asset: 'ETH' as const,
-        snapshot_date: row.snapshot_date,
-        net_flow_usd: row.net_flow_usd,
-      })),
-    ]);
-  } catch (error) {
-    console.error('[home-terminal] etf', error instanceof Error ? error.message : 'unknown');
-    return [];
-  }
-}
-
 function withTimeout<T>(promise: Promise<T>, fallback: T): Promise<T> {
   return new Promise((resolve) => {
     const timer = setTimeout(() => resolve(fallback), FETCH_TIMEOUT_MS);
@@ -87,18 +61,16 @@ function withTimeout<T>(promise: Promise<T>, fallback: T): Promise<T> {
 
 /** Public market data already used on the site. A failed source is omitted, not invented. */
 export async function loadHomeTerminal(): Promise<HomeTerminalSnapshot> {
-  const [quotes, candles, fearGreed, etf] = await Promise.all([
+  const [quotes, candles, fearGreed] = await Promise.all([
     fetchQuotes(),
     fetchCandles(),
     withTimeout(fetchFearGreed(), null),
-    fetchEtfFlows(),
   ]);
 
   return assembleTerminal({
     quotes,
     candles,
     fearGreed,
-    etf,
     now: new Date().toISOString(),
   });
 }

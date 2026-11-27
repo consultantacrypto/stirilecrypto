@@ -2,12 +2,9 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import HomeYoutube from '@/components/HomeYoutube';
 import { loadHomeTerminal } from '@/lib/home-terminal-data';
-import { formatFlowMillions } from '@/lib/etf/format';
 import {
-  formatSnapshotDay,
   quoteFor,
   rangePosition,
-  type EtfFlowPoint,
   type TerminalQuote,
   type TerminalRange,
 } from '@/lib/home-terminal';
@@ -100,27 +97,6 @@ function RangeCell({ range }: { range: TerminalRange | null }) {
   );
 }
 
-function EtfCell({ flows }: { flows: EtfFlowPoint[] }) {
-  if (flows.length === 0) return <Unavailable />;
-  return (
-    <ul className="space-y-2">
-      {flows.map((flow) => (
-        <li key={flow.asset} className="flex items-baseline justify-between gap-3 text-sm">
-          <span className="font-semibold text-white">{flow.asset}</span>
-          <span className="text-right">
-            <span className={flow.netFlowUsd >= 0 ? 'text-emerald-400' : 'text-red-400'}>
-              {formatFlowMillions(flow.netFlowUsd)} USD
-            </span>
-            <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
-              {formatSnapshotDay(flow.date)}
-            </span>
-          </span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export default async function HomeMarketTerminal() {
   const terminal = await loadHomeTerminal();
   const btc = quoteFor(terminal.quotes, 'BTC');
@@ -128,8 +104,7 @@ export default async function HomeMarketTerminal() {
   const sol = quoteFor(terminal.quotes, 'SOL');
   const price = btc?.price ?? terminal.range?.last ?? null;
   const updated = formatScreenerFetchedAt(terminal.fetchedAt);
-  const hasMarket =
-    terminal.quotes.length > 0 || terminal.range !== null || terminal.fearGreed !== null || terminal.etf.length > 0;
+  const hasMarket = terminal.quotes.length > 0 || terminal.range !== null || terminal.fearGreed !== null;
 
   return (
     <>
@@ -183,7 +158,7 @@ export default async function HomeMarketTerminal() {
                 Sursele de date nu răspund acum. Poți deschide Piața azi sau arhiva Pulsul Bitcoin.
               </p>
             ) : (
-              <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">
                 <Cell title="Frică și lăcomie">
                   {terminal.fearGreed ? (
                     <p className="font-[var(--font-space)] text-lg font-bold text-white">
@@ -196,9 +171,6 @@ export default async function HomeMarketTerminal() {
                 </Cell>
                 <Cell title={terminal.range ? `Interval ${terminal.range.days} zile, Binance` : 'Interval zilnic, Binance'}>
                   <RangeCell range={terminal.range} />
-                </Cell>
-                <Cell title="Flux net ETF, ultimul snapshot">
-                  <EtfCell flows={terminal.etf} />
                 </Cell>
                 <Cell title="Ethereum și Solana">
                   {eth || sol ? (
@@ -224,10 +196,9 @@ export default async function HomeMarketTerminal() {
             )}
 
             <p className="mt-4 text-xs leading-relaxed text-slate-500">
-              Prețurile vin de la CoinGecko, lumânările zilnice Bitcoin de la Binance, sentimentul de la
-              Alternative.me, iar fluxul ETF din snapshot-urile publicate pe site. Minimul și maximul sunt din
-              acele lumânări, nu niveluri alese de redacție. Nu este Pulsul Bitcoin și nu este sfat de
-              tranzacționare.
+              Prețurile vin de la CoinGecko, lumânările zilnice Bitcoin de la Binance, iar sentimentul de la
+              Alternative.me. Minimul și maximul sunt din acele lumânări, nu niveluri alese de redacție. Nu
+              este Pulsul Bitcoin și nu este sfat de tranzacționare.
             </p>
 
             <div className="mt-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
