@@ -45,14 +45,28 @@ describe('affiliate tags', () => {
 });
 
 describe('cover images', () => {
-  it('asks Supabase for a smaller cover', () => {
+  it('serves the original Supabase object for a cover', () => {
     const src =
       'https://ndnlhmzrflmtqchdrlbh.supabase.co/storage/v1/object/public/imagini-stiri/cover.webp';
     const next = new URL(displayCoverUrl(src, 800));
-    assert.equal(next.pathname, '/storage/v1/render/image/public/imagini-stiri/cover.webp');
-    assert.equal(next.searchParams.get('width'), '800');
-    assert.equal(next.searchParams.get('quality'), '60');
-    assert.equal(next.searchParams.get('resize'), 'contain');
+    assert.equal(next.pathname, '/storage/v1/object/public/imagini-stiri/cover.webp');
+    assert.equal(next.search, '');
+    assert.equal(next.searchParams.get('width'), null);
+    assert.equal(next.searchParams.get('quality'), null);
+    assert.equal(next.searchParams.get('resize'), null);
+  });
+
+  it('maps a render image url back to the public object', () => {
+    const src =
+      'https://ndnlhmzrflmtqchdrlbh.supabase.co/storage/v1/render/image/public/imagini-stiri/cover.webp?width=960&quality=60&resize=contain';
+    const next = new URL(displayCoverUrl(src));
+    assert.equal(next.pathname, '/storage/v1/object/public/imagini-stiri/cover.webp');
+    assert.equal(next.search, '');
+  });
+
+  it('leaves a non-Supabase cover unchanged', () => {
+    const src = 'https://images.example.com/cover.webp?width=960';
+    assert.equal(displayCoverUrl(src, 640), src);
   });
 });
 

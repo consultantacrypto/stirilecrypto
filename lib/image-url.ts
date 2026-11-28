@@ -68,27 +68,24 @@ export function resolveImageUrl(source: {
 }
 
 const SUPABASE_OBJECT_PATH = '/storage/v1/object/public/';
+const SUPABASE_RENDER_PATH = '/storage/v1/render/image/public/';
+
+function publicObjectUrl(src: string, marker: string): string | null {
+  const index = src.indexOf(marker);
+  if (index < 0) return null;
+  const objectPath = src.slice(index + marker.length).split('?')[0];
+  if (!objectPath) return null;
+  return `${src.slice(0, index)}${SUPABASE_OBJECT_PATH}${objectPath}`;
+}
 
 /**
- * Supabase image transform. The site leaves next/image unoptimized because the
- * Vercel image optimizer is not enabled, so card covers request a smaller file directly.
- *
- * `resize=contain` scales to `width` and keeps the source aspect ratio.
- * `resize=cover` (the render default) with no height keeps the source height
- * and center-crops, which turned 1140×650 covers into 720×650 on the homepage.
+ * Original public object. `/storage/v1/render/image` returns 400 with body 429
+ * under load, so covers use `/storage/v1/object/public` with no query string.
+ * `width` stays for callers and is unused.
  */
 export function displayCoverUrl(src: string, width = 960): string {
-  const marker = src.indexOf(SUPABASE_OBJECT_PATH);
-  if (marker < 0) return src;
-  const origin = src.slice(0, marker);
-  const objectPath = src.slice(marker + SUPABASE_OBJECT_PATH.length).split('?')[0];
-  if (!objectPath) return src;
-  const params = new URLSearchParams({
-    width: String(width),
-    quality: '60',
-    resize: 'contain',
-  });
-  return `${origin}/storage/v1/render/image/public/${objectPath}?${params.toString()}`;
+  void width;
+  return publicObjectUrl(src, SUPABASE_RENDER_PATH) ?? publicObjectUrl(src, SUPABASE_OBJECT_PATH) ?? src;
 }
 
 /** Persist only real URLs — never blob previews or the placeholder. */
